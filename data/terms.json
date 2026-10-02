@@ -1907,7 +1907,7 @@
     "web": "用 width 百分比或 progress 元素做进度条"
    },
    "vd_bad": "<div style='width:100%'><div style='height:8px;border-radius:4px;background:var(--line)'></div><div style='font-size:11px;color:var(--bad);margin-top:6px'>不知还要多久</div></div>",
-   "vd_good": "<div class='demo-row'><div class='an-bar'><div class='fill'></div></div></div>"
+   "vd_good": "<div class='demo-row'><div style='width:100%;max-width:220px'><div class='an-bar half'><div class='fill'></div></div><div style='font-size:11px;color:var(--good);margin-top:7px'>62% · 正在加载</div></div></div>"
   },
   {
    "id": "anim-tab",
