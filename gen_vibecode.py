@@ -1235,39 +1235,7 @@ VD = {
   ),
 }
 
-INTERACTIVE = {
-  "anim-fade",
-  "anim-flip",
-  "anim-list",
-  "anim-progress",
-  "anim-tab",
-  "btn-disabled",
-  "btn-group",
-  "btn-icon",
-  "btn-loading",
-  "btn-primary",
-  "carousel",
-  "form-checkbox",
-  "form-input",
-  "form-radio",
-  "form-select",
-  "form-switch",
-  "hover-lift",
-  "modal-dialog",
-  "modal-drawer",
-  "nav-anchor",
-  "nav-crumb",
-  "nav-dropdown",
-  "nav-hamburger",
-  "nav-mega",
-  "nav-overlay",
-  "nav-shrink",
-  "nav-sidebar",
-  "nav-sticky",
-  "popconfirm",
-  "skeleton",
-  "toast-msg"
-}
+INTERACTIVE = set(t["id"] for t in T)  # 全站术语详情页统一采用 data-demo 版式（与导航术语一致）
 
 HINT = {
   "anim-fade": "点「点击试用」淡入",
@@ -1758,22 +1726,9 @@ svg{display:block;flex:none}
 /* 在线对比体验：差距说明 */
 .vdemo-diff{margin-top:10px;font-size:11.5px;line-height:1.7;color:var(--ink-2);background:var(--accent-soft);border:1px solid #f0d9cf;border-radius:9px;padding:8px 11px}
 .vdemo-diff b{color:var(--accent)}
-/* 在线对比体验：交互演示抽屉（静态对照页通用，JS 注入） */
-.vlive{margin:12px 0 2px}
-.vplay{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--accent);color:var(--accent);background:#fff;border-radius:999px;padding:8px 16px;font-size:12.5px;font-weight:800;cursor:pointer;transition:background .2s,color .2s;min-height:38px;font-family:inherit}
-.vplay:hover{background:var(--accent);color:#fff}
-.vplay svg{flex:none}
-.vl-panel{margin-top:10px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#fffdfb,#fcfbf9);overflow:hidden}
-.vl-tabs{display:flex;gap:8px;padding:9px 10px;border-bottom:1px solid var(--line-2);background:#fff}
-.vl-tab{flex:1;max-width:190px;border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 10px;font-size:12.5px;font-weight:700;color:var(--ink-3);cursor:pointer;transition:.2s;min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
-.vl-tab::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--line);flex:none;transition:.2s}
-.vl-tab.b.on{border-color:var(--bad);color:var(--bad);background:#fdf1ee}
-.vl-tab.b.on::before{background:var(--bad)}
-.vl-tab.g.on{border-color:var(--good);color:var(--good);background:#eff7f1}
-.vl-tab.g.on::before{background:var(--good)}
-.vl-stage{min-height:130px;display:flex;align-items:center;justify-content:center;padding:18px 14px}
-.vl-view{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;opacity:0;transform:translateY(5px)}
-.vl-view.in{opacity:1;transform:translateY(0);transition:opacity .3s ease,transform .3s ease}
+/* 点击试用通用反馈：高亮「平台提示词」正确做法一侧（before/after 对照的体验感，全站统一） */
+.vbx.good.try-pulse{animation:tryPulse .55s ease}
+@keyframes tryPulse{0%{box-shadow:0 0 0 0 var(--accent)}55%{box-shadow:0 0 0 5px var(--accent-soft)}100%{box-shadow:0 0 0 0 transparent}}
 /* ===== 非导航章大幅前后对照（u-* 演示组件） ===== */
 .u-wrap{width:100%;display:flex;flex-direction:column;gap:7px;text-align:left}
 .u-cap{font-size:10.5px;font-weight:700;color:#a39d92;letter-spacing:.02em;line-height:1.5}
@@ -2820,7 +2775,10 @@ function doTry(id, good){
     case 'reduce-motion': var urm=q('.u-rm'); if(urm) urm.classList.toggle('on'); break;
     case 'lazy': var ulz=q('.u-lz'); if(ulz) ulz.classList.toggle('on'); break;
     case 'keyboard': var ukb=q('.u-kb-btn'); if(ukb) ukb.focus(); break;
-    default: break;
+    default:
+      // 通用：点击试用 -> 高亮「平台提示词」正确做法一侧（before/after 对照的体验感；不引入新功能）
+      good.classList.remove('try-pulse'); void good.offsetWidth; good.classList.add('try-pulse');
+      break;
   }
 }
 function wireInteractions(){
@@ -2987,47 +2945,7 @@ function wireInteractions(){
   });
 }
 
-/* ---------- 静态对照页升级：注入「交互演示」抽屉（坏/好切换 + 渐入动画） ---------- */
-function wireLiveDemos(){
-  document.querySelectorAll('.vdemo:not([data-demo])').forEach(function(root){
-    if(root.querySelector('.vplay')) return;
-    var row = root.querySelector('.vdemo-row');
-    var bad = root.querySelector('.vbx.bad'), good = root.querySelector('.vbx.good');
-    if(!row || !bad || !good) return;
-    var wrap = document.createElement('div'); wrap.className = 'vlive';
-    wrap.innerHTML = '<button class="vplay" type="button"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> 交互演示 · 前后切换对比</button>'
-      + '<div class="vl-panel" hidden><div class="vl-tabs"><button class="vl-tab b on" type="button" data-vl="bad">大白话效果</button><button class="vl-tab g" type="button" data-vl="good">平台效果</button></div>'
-      + '<div class="vl-stage"><div class="vl-view"></div></div></div>';
-    row.parentNode.insertBefore(wrap, row.nextSibling);
-    var panel = wrap.querySelector('.vl-panel'), view = wrap.querySelector('.vl-view');
-    var cache = { bad: bad.innerHTML, good: good.innerHTML }, cur = '';
-    function show(kind){
-      if(cur === kind) return; cur = kind;
-      view.classList.remove('in'); void view.offsetWidth;
-      view.innerHTML = cache[kind]; view.classList.add('in');
-      wrap.querySelectorAll('.vl-tab').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-vl') === kind); });
-    }
-    wrap.querySelector('.vplay').addEventListener('click', function(e){
-      e.stopPropagation();
-      var opening = panel.hidden;
-      panel.hidden = !panel.hidden;
-      if(opening) show('bad');
-    });
-    wrap.querySelectorAll('.vl-tab').forEach(function(b){
-      b.addEventListener('click', function(e){ e.stopPropagation(); show(b.getAttribute('data-vl')); });
-    });
-  });
-}
-/* ---------- 首屏自动演示：默认不可见的 demo 自动播一次，避免「好例子」看着像空白 ---------- */
-function initFirstGlance(){
-  var auto = { 'anim-fade':1, 'anim-list':1 };
-  document.querySelectorAll('.vdemo[data-demo]').forEach(function(root){
-    var id = root.getAttribute('data-demo');
-    if(!auto[id]) return;
-    var btn = root.querySelector('.vtry');
-    if(btn) setTimeout(function(){ try{ btn.click(); }catch(_e){} }, 700);
-  });
-}
+/* 交互演示抽屉已移除：全站术语详情页统一采用 data-demo 版式（与导航术语一致），不再注入额外抽屉 */
 
 /* ---------- 初始化（防御式：先数据后渲染） ---------- */
 function init(){
@@ -3039,8 +2957,6 @@ function init(){
   refreshAll();
   renderAgentCats(); renderAgent(); renderIcons(); initMorph();
   wireInteractions();
-  wireLiveDemos();
-  initFirstGlance();
 }
 if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded", init); } else { init(); }
 </script>
@@ -3543,7 +3459,7 @@ def export_static_dist(html):
     os.makedirs(os.path.join(out, "assets"), exist_ok=True)
     with io.open(os.path.join(out, "assets", "site.css"), "w", encoding="utf-8") as f:
         f.write(CSS + DIST_CSS)
-    demo_js = "\n".join(_extract_js_func(html, fn) for fn in ("toast", "copyText", "fallbackCopy", "doTry", "wireInteractions", "wireLiveDemos", "initFirstGlance"))
+    demo_js = "\n".join(_extract_js_func(html, fn) for fn in ("toast", "copyText", "fallbackCopy", "doTry", "wireInteractions"))
     demo_js += """
 (function(){
   // dist 专用：代码块展开/收起 + 提示词复制（单文件版在 #pgLib 里绑定，dist 无该节点故这里补上）
@@ -3563,7 +3479,7 @@ def export_static_dist(html):
     }
   });
 })();"""
-    demo_js += "\nif(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){wireInteractions();wireLiveDemos();initFirstGlance();});}else{wireInteractions();wireLiveDemos();initFirstGlance();}"
+    demo_js += "\nif(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){wireInteractions();});}else{wireInteractions();}"
     with io.open(os.path.join(out, "assets", "site.js"), "w", encoding="utf-8") as f:
         f.write(demo_js)
     # 站点 Logo（内联 SVG，零依赖；作 favicon 与品牌标）
@@ -3749,4 +3665,6 @@ def _load_terms_from_json():
 
 if __name__ == "__main__":
     _load_terms_from_json()
+    INTERACTIVE.clear()
+    INTERACTIVE.update(t["id"] for t in T)
     _build_and_export()

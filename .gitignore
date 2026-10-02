@@ -22,3 +22,6 @@ _*
 # 系统
 .DS_Store
 Thumbs.db
+
+# wrangler 本地缓存
+.wrangler/
