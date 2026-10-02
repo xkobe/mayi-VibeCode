@@ -1,0 +1,2005 @@
+{
+ "terms": [
+  {
+   "id": "nav-sticky",
+   "ch": 0,
+   "speak": "滚动的时候顶部的导航栏要一直停在那儿别跟着滚走",
+   "cn": "导航栏悬浮吸顶",
+   "en": "Sticky Header / Affix Navbar",
+   "anti": "用 position:fixed 但没给下方内容留 top 偏移，结果导航栏盖住了正文第一行",
+   "fix": "用 position:sticky; top:0 让导航栏滚到顶部就吸住，下方内容自然流式排列，不用手动补位",
+   "bad": ".nav{ position:fixed; top:0; } /* 内容被遮住，需要额外 padding-top 补位 */",
+   "good": ".nav{ position:sticky; top:0; z-index:50; background:#fff; } /* 下方内容不用补位 */",
+   "tip": [
+    "优先 sticky 而非 fixed，省去手动 padding 补位",
+    "加背景色加轻微阴影区分吸顶态",
+    "移动端注意安全区，吸顶栏底部留阴影"
+   ],
+   "plat": {
+    "web": "sticky 兼容性良好；注意父容器不能有 overflow:hidden 否则失效",
+    "app": "RN 用 scroll 监听或 react-navigation 的 header 吸顶",
+    "mini": "页面内用 scroll-view 的 bindscroll 自己实现吸顶"
+   },
+   "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>导航栏跟着滚走了</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>",
+   "vd_good": "<div class='m-phone m-scroll'><div class='m-bar m-sticky'>导航吸顶 · 上下滚动看它停住</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>"
+  },
+  {
+   "id": "nav-sidebar",
+   "ch": 0,
+   "speak": "左边放一排菜单，右边是内容，像后台管理那样",
+   "cn": "左侧边栏导航",
+   "en": "Sidebar / Navigation Drawer",
+   "anti": "用 float 左栏、内容用 margin-left 硬顶，窗口一窄就错位重叠",
+   "fix": "用 flex 横向布局：左栏定宽不伸缩，右栏 flex:1 自动占剩余宽度",
+   "bad": ".side{ float:left; width:200px; } .main{ margin-left:210px; } /* 窄屏重叠 */",
+   "good": ".layout{ display:flex; } .side{ width:200px; flex:none; } .main{ flex:1; min-width:0; }",
+   "tip": [
+    "flex 横向布局替代 float",
+    "侧栏固定宽度 flex:none，内容 flex:1",
+    "移动端侧栏改为抽屉（汉堡按钮唤出）"
+   ],
+   "plat": {
+    "web": "flex 布局最稳；响应式断点下转抽屉",
+    "app": "Drawer 或底部 Tab 更常见于移动端",
+    "mini": "微信侧边栏用自定义组件或官方 Drawer"
+   },
+   "vd_bad": "<div class='m-phone'><div class='m-bar'>≡ 我的网站</div><div class='m-row'><div class='m-side'><i class='on'></i><i></i><i></i><i></i></div><div class='m-body'><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div></div></div>",
+   "vd_good": "<div class='m-phone'><div class='m-bar m-act' data-toggle='v-sb'>≡ 我的网站</div><div class='m-row'><div class='m-side v-side'><i class='on'></i><i></i><i></i><i></i></div><div class='m-body'><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div></div></div>"
+  },
+  {
+   "id": "nav-crumb",
+   "ch": 0,
+   "speak": "在页面上方显示『首页 / 分类 / 当前页』这种路径",
+   "cn": "面包屑导航",
+   "en": "Breadcrumb",
+   "anti": "只放一个标题，用户不知道自己从哪一层进来，也回不去上一级",
+   "fix": "在页头放一组用 / 或 大于号 分隔的层级链接，最后一级高亮且不可点",
+   "bad": "<h1>商品详情</h1> <!-- 用户不知道上一级在哪 -->",
+   "good": "<nav class='crumb'><a>首页</a><span>/</span><a>数码</a><span>/</span><b>商品详情</b></nav>",
+   "tip": [
+    "最后一级用 b 加粗且不可点",
+    "分隔符用 / 或 大于号 统一",
+    "移动端可只保留『返回上一级』箭头"
+   ],
+   "plat": {
+    "web": "语义用 nav 且加 aria-label='breadcrumb'",
+    "app": "顶栏返回箭头加当前页标题",
+    "mini": "navigation-bar 返回键加标题"
+   },
+   "vd_bad": "<div class='m-phone'><div class='m-crumb'>首页 / 数码 / <b>详情</b></div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div>",
+   "vd_good": "<div class='m-phone'><div class='m-crumb v-crumb'>首页 / 数码 / <b>详情</b></div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div>"
+  },
+  {
+   "id": "nav-dropdown",
+   "ch": 0,
+   "speak": "鼠标移上去或者点一下，下面展开子菜单",
+   "cn": "下拉子菜单",
+   "en": "Dropdown Menu / Submenu",
+   "anti": "把所有二级入口平铺成一长串链接，页面又长又乱",
+   "fix": "一级菜单项 hover 或 click 展开一个浮层子菜单，浮层用 absolute 定位",
+   "bad": "<ul><li>产品</li><li>子产品A</li><li>子产品B</li><li>关于</li></ul>",
+   "good": ".menu li:hover .sub{ display:block; } .sub{ position:absolute; top:100%; left:0; }",
+   "tip": [
+    "浮层用 absolute 定位，注意别被父级 overflow 裁剪",
+    "hover 展开要兼顾点击（移动端无 hover）",
+    "子菜单加阴影圆角，和主菜单区分"
+   ],
+   "plat": {
+    "web": "hover 展开加键盘上下键导航",
+    "app": "用底部弹窗或展开列表替代 hover",
+    "mini": "小程序无 hover，用 bindtap 展开或跳转新页"
+   },
+   "vd_bad": "<div class='m-phone'><div style='padding:10px'><div class='m-line'></div><div class='m-line' style='width:60%'></div><div class='m-line' style='width:70%'></div></div></div>",
+   "vd_good": "<div class='m-phone'><div style='padding:10px'><div class='m-dd m-act' data-toggle='v-sub'>产品 ▾<div class='m-sub v-sub'><span>子产品A</span><span>子产品B</span><span>子产品C</span></div></div></div></div>"
+  },
+  {
+   "id": "nav-mega",
+   "ch": 0,
+   "speak": "鼠标移到『商品分类』，展开一个很大的面板，里面分好几列",
+   "cn": "巨型菜单",
+   "en": "Mega Menu",
+   "anti": "用普通小下拉只塞三五个字，内容多就挤、看不清",
+   "fix": "hover 时展开一个宽面板，内部用多列网格 grid 归类展示大量入口",
+   "bad": "<div class='dd'>3 个小链接挤在一起</div>",
+   "good": ".mega{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; width:600px; }",
+   "tip": [
+    "宽面板内部用 grid 分列归类",
+    "每列给个小标题分组",
+    "移动端降级为多级抽屉或独立分类页"
+   ],
+   "plat": {
+    "web": "grid 布局分列；注意浮层宽度与视口",
+    "app": "不适合 hover，改用分类页或抽屉",
+    "mini": "用分类页或 scroll-view 横滑分类"
+   },
+   "vd_bad": "<div class='m-phone'><div style='padding:10px'><div class='m-dd' style='width:120px'>分类<div class='m-sub' style='display:block;width:110px'><span>小</span><span>小</span><span>小</span></div></div></div></div>",
+   "vd_good": "<div class='m-phone'><div style='padding:10px'><div class='m-act' style='display:inline-block;padding:7px 10px;background:#faf8f4;border:1px solid var(--line-2);border-radius:8px;font-size:11px;width:120px' data-toggle='v-mega'>商品分类 ▾</div><div class='m-mega v-mega'><b>商品分类</b><span>手机</span><span>电脑</span><span>家电</span><span>服饰</span><span>美妆</span><span>食品</span></div></div></div>"
+  },
+  {
+   "id": "nav-hamburger",
+   "ch": 0,
+   "speak": "手机上点左上角三条杠，从侧面滑出一个菜单",
+   "cn": "汉堡菜单抽屉",
+   "en": "Hamburger Menu / Off-canvas Drawer",
+   "anti": "桌面那排菜单直接堆到手机上，挤成一团看不清也点不准",
+   "fix": "窄屏隐藏横排菜单，显示汉堡图标，点击后用 transform:translateX 从侧边滑出抽屉",
+   "bad": "/* 手机上把 8 个菜单平铺，互相挤压 */",
+   "good": ".drawer{ transform:translateX(-100%); transition:.3s; } .drawer.open{ transform:translateX(0); }",
+   "tip": [
+    "用 transform 做滑入（性能优于 left）",
+    "抽屉外点击或遮罩关闭",
+    "打开时锁 body 滚动，关闭恢复"
+   ],
+   "plat": {
+    "web": "transform 加 transition；遮罩层半透明",
+    "app": "Drawer 组件原生支持手势",
+    "mini": "小程序用 view 加 animation 或官方 drawer"
+   },
+   "vd_bad": "<div class='m-phone'><div class='m-bar m-dead'>☰ 点了没反应</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div></div>",
+   "vd_good": "<div class='m-phone'><div class='m-bar m-act' data-toggle='v-ham'>☰</div><div class='m-drawer v-drawer v-ham'><span>首页</span><span>分类</span><span>我的</span><span>设置</span></div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div><div class='m-overlay v-ov v-ham'><span>首页</span><span>分类</span><span>我的</span><span>✕ 关闭</span></div></div>"
+  },
+  {
+   "id": "nav-overlay",
+   "ch": 0,
+   "speak": "点一下菜单，整个屏幕变成导航页，大图标大链接",
+   "cn": "全屏遮罩导航",
+   "en": "Full-screen Overlay Navigation",
+   "anti": "只弹个小小的菜单，选项密密麻麻，手机上根本不好点",
+   "fix": "点击后用 fixed 全屏半透明遮罩盖住页面，里面放超大间距的导航链接，再给个关闭按钮",
+   "bad": "<div class='tiny'>小菜单 5 个挤一起</div>",
+   "good": ".overlay{ position:fixed; inset:0; background:rgba(0,0,0,.9); display:flex; flex-direction:column; } .overlay a{ font-size:22px; padding:18px; }",
+   "tip": [
+    "全屏遮罩用 position:fixed; inset:0",
+    "链接字号大、间距大，便于手机点击",
+    "务必给明显的关闭或返回按钮"
+   ],
+   "plat": {
+    "web": "inset:0 加 flex 纵向排列",
+    "app": "Modal 或全屏页面切换",
+    "mini": "用 cover-view 或独立页面"
+   },
+   "vd_bad": "<div class='m-phone'><div class='m-bar'>菜单</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div>",
+   "vd_good": "<div class='m-phone'><div class='m-bar m-act' data-toggle='v-ovl'>菜单</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div><div class='m-overlay v-ov2 v-ovl'><span>首页</span><span>分类</span><span>我的</span><span class='m-act' data-close='v-ovl'>✕ 关闭</span></div></div>"
+  },
+  {
+   "id": "nav-anchor",
+   "ch": 0,
+   "speak": "页面右边有一排小圆点，点一下跳到对应那一段",
+   "cn": "锚点导航",
+   "en": "Anchor Navigation / Scrollspy",
+   "anti": "长文章没有导航，用户不知道下面有什么，也回不到顶",
+   "fix": "右侧放一组锚点链接，点击平滑滚动到对应区块；滚动时高亮当前区块",
+   "bad": "<!-- 一整页长文，无任何跳转入口 -->",
+   "good": "<nav class='anchor'><a href='#s1'>一</a><a href='#s2'>二</a></nav> /* 加 scrollIntoView 与 scrollspy */",
+   "tip": [
+    "锚点用 id 加 scrollIntoView 平滑滚动",
+    "滚动时高亮当前段（scrollspy）",
+    "移动端可折叠为『目录』按钮"
+   ],
+   "plat": {
+    "web": "scroll-behavior:smooth 加 IntersectionObserver",
+    "app": "SectionList 原生索引",
+    "mini": "scroll-into-view 加自定义索引"
+   },
+   "vd_bad": "<div class='m-phone'><div class='m-body'><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div></div>",
+   "vd_good": "<div class='m-phone'><div class='m-body'><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div><div class='m-anchor v-anchor'><i class='on'></i><i></i><i></i></div></div>"
+  },
+  {
+   "id": "nav-shrink",
+   "ch": 0,
+   "speak": "往下滑的时候，顶部大图大标题慢慢缩成一条小导航条",
+   "cn": "滚动收缩头部",
+   "en": "Collapsing Header / Scroll-shrink Toolbar",
+   "anti": "头部一直那么大，占着屏幕，滑一点内容就被挡很多",
+   "fix": "监听滚动，头部从大尺寸（含大图、搜索框）过渡到紧凑尺寸（仅 logo 加菜单），用 transform 或 height 过渡",
+   "bad": "/* 头部固定 200px 高，滚动也不变，挡视野 */",
+   "good": "header.classList.toggle('compact', scrollY>80); /* CSS 用 height/transform 过渡 */",
+   "tip": [
+    "滚动阈值触发 compact 类",
+    "用 CSS transition 平滑缩放",
+    "收缩态保留核心入口（logo/搜索/菜单）"
+   ],
+   "plat": {
+    "web": "scroll 监听加 class 切换加 transition",
+    "app": "Animated.Header 原生支持",
+    "mini": "onPageScroll 加动态 style 或官方导航栏 API"
+   },
+   "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar m-big'>LOGO 大标题 搜索框</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>",
+   "vd_good": "<div class='m-phone m-scroll'><div class='m-bar m-big v-shrink'>LOGO 大标题 搜索框</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>"
+  },
+  {
+   "id": "center-icon",
+   "ch": 1,
+   "speak": "图标和文字对不齐，总是高低错落",
+   "cn": "图标和文字垂直居中",
+   "en": "Vertical Centering / align-items",
+   "anti": "用 margin-top 负数或 line-height 硬凑，换个字体或字号就又歪了",
+   "fix": "包一层 flex 容器，用 align-items:center 让图标和文字落在同一条中轴线上",
+   "bad": ".ico{ vertical-align:middle; margin-top:-3px; } /* 只对行内元素近似生效，基线不对齐 */",
+   "good": ".row{ display:flex; align-items:center; gap:6px; } /* 图标与文字同中轴，换字号也不歪 */",
+   "tip": [
+    "强调用 flex 的 align-items 而非 margin 凑",
+    "图标用 inline-flex 避免基线缝隙",
+    "多行文字仍要垂直居中时用 align-items:center"
+   ],
+   "plat": {
+    "web": "直接 flex + align-items:center；注意 inline 元素基线问题",
+    "app": "RN 用 alignItems:'center'，且默认主轴是纵向",
+    "mini": "用 flex 布局 + align-items，rpx 控制图标尺寸"
+   },
+   "vd_bad": "<span style='font-size:24px;line-height:1;vertical-align:top'>🔍</span> <span style='font-size:14px;vertical-align:top;color:#8f2b20'>搜索</span>",
+   "vd_good": "<span style='display:inline-flex;align-items:center;gap:7px'><span style='font-size:24px;line-height:1'>🔍</span><span style='font-size:14px;color:#155e3c'>搜索</span></span>"
+  },
+  {
+   "id": "center-both",
+   "ch": 1,
+   "speak": "让一个盒子在屏幕正中间",
+   "cn": "水平垂直都居中",
+   "en": "Perfect Centering",
+   "anti": "用 top/left 50% 忘了配 transform，元素永远偏右下角",
+   "fix": "现代做法：父级 display:flex + justify-content/align-items 都 center",
+   "bad": ".box{ position:absolute; top:50%; left:50%; } /* 只位移没回拉，永远偏右下 */",
+   "good": ".wrap{ display:flex; justify-content:center; align-items:center; min-height:100vh; } /* 一行搞定 */",
+   "tip": [
+    "优先用 flex 居中，少写 position",
+    "absolute 居中必须配 transform:translate(-50%,-50%)",
+    "不确定高度时用 flex 比 absolute 稳"
+   ],
+   "plat": {
+    "web": "flex 居中或 absolute+transform，二选一别混",
+    "app": "RN 父容器加 justifyContent/alignItems:'center'",
+    "mini": "wxss 同样支持 flex 居中，无特殊坑"
+   },
+   "vd_bad": "<div style='width:100%;height:56px;border:1px solid #d9d4ca;border-radius:6px;position:relative'><div style='position:absolute;right:6px;bottom:6px;width:30px;height:22px;background:#C0392B;border-radius:4px'></div></div>",
+   "vd_good": "<div style='width:100%;height:56px;border:1px solid #d9d4ca;border-radius:6px;display:flex;align-items:center;justify-content:center'><div style='width:30px;height:22px;background:#1C7A4E;border-radius:4px'></div></div>"
+  },
+  {
+   "id": "equal-width",
+   "ch": 1,
+   "speak": "一排几个东西平分宽度",
+   "cn": "等分布局",
+   "en": "Equal Width / flex:1",
+   "anti": "给每个写死 width:25%，加个间距或边框就溢出换行",
+   "fix": "容器 display:flex，子项 flex:1 自动平分，间距用 gap",
+   "bad": ".col{ width:25%; float:left; } /* 间距/边框会让总和超 100% 换行 */",
+   "good": ".row{ display:flex; gap:12px; } .col{ flex:1; } /* 自动平分，加间距也不溢出 */",
+   "tip": [
+    "用 flex:1 代替写死百分比",
+    "间距交给容器的 gap 而不是子项 margin",
+    "等高列 flex 默认就对齐"
+   ],
+   "plat": {
+    "web": "flex:1 + gap，最稳",
+    "app": "RN 子项 flex:1 即可平分",
+    "mini": "flex:1 在 wxss 同样有效"
+   },
+   "vd_bad": "<div style='font-size:0'><span style='display:inline-block;width:30%;height:22px;background:#E7C9C4;border-radius:4px;margin:1px'></span><span style='display:inline-block;width:30%;height:22px;background:#E7C9C4;border-radius:4px;margin:1px'></span><span style='display:inline-block;width:30%;height:22px;background:#E7C9C4;border-radius:4px;margin:1px'></span><span style='display:inline-block;width:30%;height:22px;background:#E7C9C4;border-radius:4px;margin:1px'></span></div>",
+   "vd_good": "<div style='display:flex;gap:6px'><span style='flex:1;height:22px;background:#BFE0CE;border-radius:4px'></span><span style='flex:1;height:22px;background:#BFE0CE;border-radius:4px'></span><span style='flex:1;height:22px;background:#BFE0CE;border-radius:4px'></span><span style='flex:1;height:22px;background:#BFE0CE;border-radius:4px'></span></div>"
+  },
+  {
+   "id": "space-between",
+   "ch": 1,
+   "speak": "左边标题右边按钮，贴两边",
+   "cn": "两端对齐",
+   "en": "Space Between",
+   "anti": "用 text-align:justify 或一堆 margin 硬推，换行就乱",
+   "fix": "flex 容器加 justify-content:space-between，两端贴边中间均分",
+   "bad": ".bar span{ margin:0 10px; } /* 手动推，元素一多就歪 */",
+   "good": ".bar{ display:flex; justify-content:space-between; align-items:center; }",
+   "tip": [
+    "两端对齐用 space-between",
+    "三个以上元素用 space-between 会自动均分剩余",
+    "垂直方向用 align-items 控制"
+   ],
+   "plat": {
+    "web": "标准 flex 属性，放心用",
+    "app": "RN 用 justifyContent:'space-between'",
+    "mini": "wxss 支持 justify-content"
+   },
+   "vd_bad": "<div style='display:flex;gap:6px'><span style='font-size:13px;color:#5B5852'>标题</span><span style='font-size:12px;background:#E7C9C4;color:#8f2b20;padding:3px 9px;border-radius:5px'>按钮</span></div>",
+   "vd_good": "<div style='display:flex;justify-content:space-between;align-items:center'><span style='font-size:13px;color:#5B5852'>标题</span><span style='font-size:12px;background:#BFE0CE;color:#155e3c;padding:3px 9px;border-radius:5px'>按钮</span></div>"
+  },
+  {
+   "id": "ellipsis",
+   "ch": 1,
+   "speak": "文字太长把页面撑破了",
+   "cn": "文字溢出省略号",
+   "en": "Text Overflow Ellipsis",
+   "anti": "只写 overflow:hidden，文字被切掉却没有省略号，像坏了一样",
+   "fix": "三件套：white-space:nowrap + overflow:hidden + text-overflow:ellipsis",
+   "bad": ".t{ overflow:hidden; } /* 文字硬切，没省略号，用户以为卡了 */",
+   "good": ".t{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }",
+   "tip": [
+    "三件套缺一不可",
+    "多行省略要用 -webkit-line-clamp",
+    "容器必须有明确宽度"
+   ],
+   "plat": {
+    "web": "-webkit-line-clamp 做两行/三行省略",
+    "app": "RN 用 numberOfLines 属性",
+    "mini": "wxss 支持 text-overflow，多行用 line-clamp"
+   },
+   "vd_bad": "<div style='width:100%;overflow:hidden;white-space:nowrap;background:#E7C9C4;border-radius:5px;padding:5px 8px;font-size:12px;color:#8f2b20'>这是一段特别特别长的文字被硬生生切掉没省略号</div>",
+   "vd_good": "<div style='width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;background:#BFE0CE;border-radius:5px;padding:5px 8px;font-size:12px;color:#155e3c'>这是一段特别特别长的文字被硬生生切掉没省略号</div>"
+  },
+  {
+   "id": "sticky-top",
+   "ch": 1,
+   "speak": "滚动时想让顶栏一直跟着",
+   "cn": "吸顶（滚动固定）",
+   "en": "Sticky Top",
+   "anti": "用 position:fixed 把元素钉死，结果脱离文档流把下面的内容盖住",
+   "fix": "用 position:sticky; top:0，它会在滚到顶部时自动吸住，不脱离流",
+   "bad": ".nav{ position:fixed; top:0; } /* 脱离文档流，下方内容被遮 */",
+   "good": ".nav{ position:sticky; top:0; z-index:10; background:#fff; } /* 滚到顶才吸住 */",
+   "tip": [
+    "吸顶首选 sticky 而非 fixed",
+    "sticky 要父容器没设 overflow:hidden",
+    "记得给背景色，不然内容透出来"
+   ],
+   "plat": {
+    "web": "sticky 现代浏览器都支持",
+    "app": "RN 用 stickyHeaderIndices 或 ScrollView",
+    "mini": "scroll-view 的 sticky 用 scroll-into-view 近似实现"
+   },
+   "vd_bad": "<div style='height:58px;position:relative'><div style='background:#E7C9C4;color:#8f2b20;font-size:10px;padding:3px 6px;border-radius:4px'>顶栏脱离流↓</div><div style='background:#F3F0EA;font-size:10px;color:#938E85;padding:3px 6px;margin-top:2px'>正文被遮住</div></div>",
+   "vd_good": "<div style='height:58px'><div style='background:#BFE0CE;color:#155e3c;font-size:10px;padding:3px 6px;border-radius:4px'>顶栏吸顶</div><div style='background:#F3F0EA;font-size:10px;color:#938E85;padding:3px 6px;margin-top:2px'>正文照常排列</div></div>"
+  },
+  {
+   "id": "equal-height",
+   "ch": 1,
+   "speak": "一行里几个卡片高度不一样丑",
+   "cn": "等高列",
+   "en": "Equal Height Columns",
+   "anti": "给每个写死 height，内容一多就溢出或留白",
+   "fix": "flex 容器里子项默认 align-items:stretch，自动等高",
+   "bad": ".card{ height:200px; } /* 写死高度，内容多就溢出 */",
+   "good": ".row{ display:flex; } .card{ flex:1; } /* 默认 stretch 自动等高 */",
+   "tip": [
+    "flex 默认就等高，别写死 height",
+    "想顶部对齐才用 align-items:flex-start",
+    "grid 也能自动等高"
+   ],
+   "plat": {
+    "web": "flex stretch 或 grid 都可",
+    "app": "RN 同 flex 默认等高",
+    "mini": "wxss flex 默认等高"
+   },
+   "vd_bad": "<div style='display:flex;gap:6px;align-items:flex-start'><div style='width:46px;height:34px;background:#E7C9C4;border-radius:5px;font-size:10px;color:#8f2b20;padding:4px'>短内容</div><div style='width:46px;height:54px;background:#E7C9C4;border-radius:5px;font-size:10px;color:#8f2b20;padding:4px'>长内容把卡片撑高</div></div>",
+   "vd_good": "<div style='display:flex;gap:6px;align-items:stretch'><div style='flex:1;background:#BFE0CE;border-radius:5px;font-size:10px;color:#155e3c;padding:4px'>短内容</div><div style='flex:1;background:#BFE0CE;border-radius:5px;font-size:10px;color:#155e3c;padding:4px'>长内容</div></div>"
+  },
+  {
+   "id": "inline-gap",
+   "ch": 1,
+   "speak": "几个元素横排，中间总有莫名缝隙",
+   "cn": "inline-block 间隙",
+   "en": "Inline-block Whitespace Gap",
+   "anti": "以为是 margin 问题疯狂调，其实是标签间的换行被当成空格",
+   "fix": "改用 flex 布局，或给父级 font-size:0 再给子项还原字号",
+   "bad": "<span>甲</span> <span>乙</span> /* 换行产生 4px 缝隙，调 margin 无效 */",
+   "good": ".row{ display:flex; gap:8px; } /* 彻底没有换行空格问题 */",
+   "tip": [
+    "横排首选 flex + gap",
+    "必须 inline-block 时父级 font-size:0",
+    "float 布局也有类似缝隙坑"
+   ],
+   "plat": {
+    "web": "flex 解决一切",
+    "app": "RN 无此问题，默认 flex",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='font-size:0'><span style='display:inline-block;background:#E7C9C4;color:#8f2b20;font-size:11px;padding:3px 7px;border-radius:4px'>甲</span> <span style='display:inline-block;background:#E7C9C4;color:#8f2b20;font-size:11px;padding:3px 7px;border-radius:4px'>乙</span></div><div style='font-size:9px;color:#938E85;margin-top:4px'>标签间有莫名缝隙</div>",
+   "vd_good": "<div style='display:flex;gap:6px'><span style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:3px 7px;border-radius:4px'>甲</span><span style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:3px 7px;border-radius:4px'>乙</span></div><div style='font-size:9px;color:#938E85;margin-top:4px'>flex 无换行缝隙</div>"
+  },
+  {
+   "id": "neg-margin",
+   "ch": 1,
+   "speak": "想微调位置用了负数 margin",
+   "cn": "负边距陷阱",
+   "en": "Negative Margin",
+   "anti": "用负 margin 把元素拉到该去的位置，一换内容/屏幕就错位",
+   "fix": "位置调整交给 flex/grid 的对齐与 gap，少碰 margin 尤其是负值",
+   "bad": ".x{ margin-left:-12px; margin-top:-4px; } /* 凑位置，脆弱易错 */",
+   "good": ".wrap{ display:flex; align-items:center; gap:10px; } /* 用布局而非 margin 凑 */",
+   "tip": [
+    "能用布局解决就别用 margin 凑",
+    "负值 margin 在不同盒模型下表现不一致",
+    "间距统一用 gap"
+   ],
+   "plat": {
+    "web": "flex/gap 替代负 margin",
+    "app": "RN 用 padding/margin 正数即可",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='position:relative;height:46px'><div style='background:#E7C9C4;color:#8f2b20;font-size:10px;padding:4px 7px;border-radius:4px;position:absolute;left:0;top:18px'>用负 margin 硬拉</div><div style='background:#F3F0EA;font-size:10px;color:#938E85;padding:4px 7px;border-radius:4px;position:absolute;left:82px;top:0'>被带偏</div></div>",
+   "vd_good": "<div style='display:flex;align-items:center;gap:8px'><div style='background:#BFE0CE;color:#155e3c;font-size:10px;padding:4px 7px;border-radius:4px'>对齐</div><div style='background:#BFE0CE;color:#155e3c;font-size:10px;padding:4px 7px;border-radius:4px'>对齐</div></div>"
+  },
+  {
+   "id": "flex-wrap",
+   "ch": 1,
+   "speak": "一排放不下却硬挤成一团",
+   "cn": "流式换行排列",
+   "en": "Flex Wrap",
+   "anti": "只设 flex 不设 wrap，元素被压缩变形也不换行",
+   "fix": "容器加 flex-wrap:wrap，放不下自动换到下一行",
+   "bad": ".row{ display:flex; } /* 子项被压扁也不换行 */",
+   "good": ".row{ display:flex; flex-wrap:wrap; gap:10px; } /* 放不下就换行 */",
+   "tip": [
+    "横向排标签/卡片用 wrap",
+    "配合 gap 控制换行间距",
+    "想不换行才用 nowrap"
+   ],
+   "plat": {
+    "web": "flex-wrap 标准支持",
+    "app": "RN flexWrap:'wrap'",
+    "mini": "wxss 支持 flex-wrap"
+   },
+   "vd_bad": "<div style='display:flex'><span style='background:#E7C9C4;color:#8f2b20;font-size:11px;padding:4px 8px;border-radius:4px;margin:2px'>标签一</span><span style='background:#E7C9C4;color:#8f2b20;font-size:11px;padding:4px 8px;border-radius:4px;margin:2px'>标签二</span><span style='background:#E7C9C4;color:#8f2b20;font-size:11px;padding:4px 8px;border-radius:4px;margin:2px'>标签三</span><span style='background:#E7C9C4;color:#8f2b20;font-size:11px;padding:4px 8px;border-radius:4px;margin:2px'>标签四被压扁</span></div>",
+   "vd_good": "<div style='display:flex;flex-wrap:wrap;gap:6px'><span style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:4px 8px;border-radius:4px'>标签一</span><span style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:4px 8px;border-radius:4px'>标签二</span><span style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:4px 8px;border-radius:4px'>标签三</span><span style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:4px 8px;border-radius:4px'>标签四换行</span></div>"
+  },
+  {
+   "id": "two-col",
+   "ch": 1,
+   "speak": "左边固定宽右边占满",
+   "cn": "左固定右自适应两栏",
+   "en": "Fixed+Fluid Two Column",
+   "anti": "两边各写 50%，左边图标一变就错位",
+   "fix": "用 flex：左边定宽，右边 flex:1 自动占剩余",
+   "bad": ".l{ width:120px; } .r{ width:calc(100% - 120px); } /* 加减稍错就溢出 */",
+   "good": ".box{ display:flex; } .l{ width:120px; flex:none; } .r{ flex:1; }",
+   "tip": [
+    "固定侧 flex:none 防被压缩",
+    "自适应侧 flex:1",
+    "grid 用 120px 1fr 更直观"
+   ],
+   "plat": {
+    "web": "flex 或 grid 120px 1fr",
+    "app": "RN 同 flex 写法",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='font-size:0'><span style='display:inline-block;width:40%;height:40px;background:#E7C9C4;border-radius:5px'></span><span style='display:inline-block;height:40px;background:#E7C9C4;border-radius:5px;margin-left:120px;width:30%'></span></div><div style='font-size:9px;color:#938E85;margin-top:4px'>固定宽算错就溢出</div>",
+   "vd_good": "<div style='display:flex;gap:8px'><div style='width:46px;flex:none;height:40px;background:#BFE0CE;border-radius:5px'></div><div style='flex:1;height:40px;background:#BFE0CE;border-radius:5px'></div></div>"
+  },
+  {
+   "id": "baseline",
+   "ch": 1,
+   "speak": "几个大小不同的字不在一条线上",
+   "cn": "基线对齐",
+   "en": "Baseline Alignment",
+   "anti": "用 vertical-align:middle 导致大字号元素整体偏移",
+   "fix": "理解 baseline：vertical-align:baseline 让文字底部对齐；图标才用 middle",
+   "bad": ".big, .small{ vertical-align:middle; } /* 文字用 middle 反而错位 */",
+   "good": ".txt{ vertical-align:baseline; } .ico{ vertical-align:middle; } /* 各司其职 */",
+   "tip": [
+    "文字用 baseline，图标/图片用 middle",
+    "flex 下用 align-items 控制整盒对齐",
+    "表格单元格默认 baseline"
+   ],
+   "plat": {
+    "web": "vertical-align 规则一致",
+    "app": "RN 用 textAlign 或 alignItems",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div><span style='font-size:22px;vertical-align:middle;color:#8f2b20'>大</span><span style='font-size:12px;vertical-align:middle;color:#8f2b20'>小字用 middle 反而错位</span></div>",
+   "vd_good": "<div><span style='font-size:22px;vertical-align:baseline;color:#155e3c'>大</span><span style='font-size:12px;vertical-align:baseline;color:#155e3c'>小字 baseline 对齐</span></div>"
+  },
+  {
+   "id": "clamp",
+   "ch": 2,
+   "speak": "字号想跟着屏幕大小变",
+   "cn": "响应式字号",
+   "en": "Clamp / Fluid Type",
+   "anti": "写死 font-size:16px，大屏小得像蚂蚁，小屏又挤",
+   "fix": "用 clamp(最小, 理想vw, 最大) 让字号在区间内随屏幕平滑变化",
+   "bad": "h1{ font-size:48px; } /* 写死，移动端巨大 PC 端又小 */",
+   "good": "h1{ font-size:clamp(28px, 5vw, 48px); } /* 随屏幕在 28~48 间变化 */",
+   "tip": [
+    "clamp 三参：最小/理想/最大",
+    "理想值用 vw 跟随视口",
+    "正文别太大，14-18px 合适"
+   ],
+   "plat": {
+    "web": "clamp 现代浏览器都支持",
+    "app": "RN 用 Dimensions 算或百分比",
+    "mini": "rpx 本身随屏自适应，少用 vw"
+   },
+   "vd_bad": "<div style='font-size:30px;color:#8f2b20;font-weight:700'>标题</div><div style='font-size:9px;color:#938E85'>写死 30px 小屏巨大</div>",
+   "vd_good": "<div style='font-size:clamp(20px,5vw,30px);color:#155e3c;font-weight:700'>标题</div><div style='font-size:9px;color:#938E85'>随屏平滑变化</div>"
+  },
+  {
+   "id": "hairline",
+   "ch": 2,
+   "speak": "1px 的线在手机上变粗了一截",
+   "cn": "高清 1px 边框",
+   "en": "Hairline Border / 0.5px",
+   "anti": "直接 border:1px，在 2x/3x 屏被渲染成 2-3px 显粗",
+   "fix": "用 transform:scale 缩放伪元素，或 border-width:0.5px（新设备）",
+   "bad": ".line{ border-bottom:1px solid #ddd; } /* 高清屏变 2px 显粗 */",
+   "good": ".line{ position:relative; } .line::after{ content:''; position:absolute; left:0; right:0; bottom:0; border-bottom:1px solid #ddd; transform:scaleY(.5); transform-origin:0 100%; }",
+   "tip": [
+    "高清屏用 scale 缩放出 0.5px",
+    "也可用 box-shadow 模拟细线",
+    "0.5px 在部分安卓不被识别"
+   ],
+   "plat": {
+    "web": "scale 伪元素最稳",
+    "app": "RN 用 StyleSheet.hairlineWidth",
+    "mini": "rpx 下 1rpx 近似物理 0.5px，直接用"
+   },
+   "vd_bad": "<div style='border-bottom:2px solid #C0392B;padding-bottom:3px;font-size:11px;color:#8f2b20'>1px 高清屏变粗</div>",
+   "vd_good": "<div style='position:relative;padding-bottom:3px;font-size:11px;color:#155e3c'>细线</div><div style='position:absolute;left:0;right:0;bottom:0;border-bottom:1px solid #1C7A4E;transform:scaleY(.5);transform-origin:0 100%'></div>"
+  },
+  {
+   "id": "line-height",
+   "ch": 2,
+   "speak": "字挤在一起看不清",
+   "cn": "行高可读性",
+   "en": "Line Height Readability",
+   "anti": "line-height 用 px 写死，换字号行距就错位",
+   "fix": "line-height 用无单位倍数（如 1.6），随字号自动缩放",
+   "bad": "p{ line-height:24px; font-size:18px; } /* 改字号行距不变，显挤 */",
+   "good": "p{ line-height:1.6; font-size:16px; } /* 行距=字号×1.6，永远协调 */",
+   "tip": [
+    "正文 1.5-1.7 最舒适",
+    "用无单位值而非 px",
+    "标题可收紧到 1.2-1.3"
+   ],
+   "plat": {
+    "web": "无单位 line-height 通用",
+    "app": "RN lineHeight 要 number（无单位）",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='line-height:24px;font-size:18px;color:#8f2b20'>行距写死<br>换字号就挤</div>",
+   "vd_good": "<div style='line-height:1.6;font-size:16px;color:#155e3c'>行距用倍数<br>永远协调</div>"
+  },
+  {
+   "id": "font-weight",
+   "ch": 2,
+   "speak": "标题正文一个粗细没层次",
+   "cn": "字重层次",
+   "en": "Font Weight Hierarchy",
+   "anti": "全用 400，靠加大字号区分，层次弱",
+   "fix": "建立 400/500/600/700 的字重阶梯，配合字号拉出层级",
+   "bad": "h3{ font-weight:400; font-size:18px; } /* 和正文一样重，分不清 */",
+   "good": "h3{ font-weight:600; } .sub{ font-weight:400; color:#888; } /* 轻重分明 */",
+   "tip": [
+    "标题 600-700，正文 400",
+    "同一屏别超过 3 种字重",
+    "用字重+颜色双保险分层"
+   ],
+   "plat": {
+    "web": "系统字体字重齐全",
+    "app": "RN fontWeight 用 '400'/'700' 字符串",
+    "mini": "wxss font-weight 同 web"
+   },
+   "vd_bad": "<div style='font-weight:400;color:#8f2b20'>标题与正文一样重</div><div style='font-weight:400;color:#938E85;font-size:11px'>分不清层级</div>",
+   "vd_good": "<div style='font-weight:700;color:#155e3c'>标题加粗</div><div style='font-weight:400;color:#938E85;font-size:11px'>正文常规</div>"
+  },
+  {
+   "id": "letter-spacing",
+   "ch": 2,
+   "speak": "字挨太紧或太松",
+   "cn": "字间距调整",
+   "en": "Letter Spacing",
+   "anti": "靠加空格调间距，中英文混排更乱",
+   "fix": "用 letter-spacing 控制字距，中文标题可略放大显精致",
+   "bad": "h1{ padding:0 4px; } /* 用空格凑，不可控 */",
+   "good": "h1{ letter-spacing:1px; } /* 精确控制字距 */",
+   "tip": [
+    "标题可加 0.5-1px 显精致",
+    "正文一般不动字距",
+    "英文 large 字距更有设计感"
+   ],
+   "plat": {
+    "web": "letter-spacing 标准",
+    "app": "RN letterSpacing（无单位，px）",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='padding:0 4px;color:#8f2b20;font-weight:700;font-size:15px'>标题间距凑</div>",
+   "vd_good": "<div style='letter-spacing:2px;color:#155e3c;font-weight:700;font-size:15px'>标题拉开间距</div>"
+  },
+  {
+   "id": "web-font",
+   "ch": 2,
+   "speak": "想用个特别的字体",
+   "cn": "自定义字体",
+   "en": "Web Font / @font-face",
+   "anti": "塞一个好几 MB 的字体文件，首屏卡半天",
+   "fix": "用 @font-face 只引需要的字重，并 font-display:swap 避免空白",
+   "bad": "@import url(big-font.css); /* 整包加载，首屏白屏 */",
+   "good": "@font-face{ font-family:'X'; src:url(x.woff2) format('woff2'); font-display:swap; }",
+   "tip": [
+    "用 woff2 体积最小",
+    "font-display:swap 防白屏",
+    "只引用到的字重/字符"
+   ],
+   "plat": {
+    "web": "woff2 + preload",
+    "app": "RN 用自定义字体需 bundled",
+    "mini": "wxss 不支持 @font-face，只能用系统字体"
+   },
+   "vd_bad": "<div style='color:#8f2b20;font-size:11px'>整包字体加载<br>首屏白屏</div>",
+   "vd_good": "<div style='color:#155e3c;font-size:11px'>woff2 + swap<br>即显即载</div>"
+  },
+  {
+   "id": "text-indent",
+   "ch": 2,
+   "speak": "段落开头想空两格",
+   "cn": "首行缩进",
+   "en": "Text Indent",
+   "anti": "用加空格或 padding 缩进，换行又不对了",
+   "fix": "用 text-indent:2em，随字号自动是两字符宽",
+   "bad": "p{ padding-left:2em; } /* 整段缩进，不是首行 */",
+   "good": "p{ text-indent:2em; } /* 仅首行缩进两字 */",
+   "tip": [
+    "首行缩进用 text-indent:2em",
+    "em 单位跟随字号",
+    "网页正文现在少用缩进，看风格"
+   ],
+   "plat": {
+    "web": "text-indent 标准",
+    "app": "RN 无原生，用 padding 模拟",
+    "mini": "wxss 支持 text-indent"
+   },
+   "vd_bad": "<div style='padding-left:2em;color:#8f2b20;font-size:11px'>整段缩进<br>不是首行</div>",
+   "vd_good": "<div style='text-indent:2em;color:#155e3c;font-size:11px'>仅首行缩进<br>两字符</div>"
+  },
+  {
+   "id": "justify",
+   "ch": 2,
+   "speak": "一段文字两端对齐更整齐",
+   "cn": "两端对齐",
+   "en": "Text Justify",
+   "anti": "用 justify 后单词间距被拉得忽大忽小很难看",
+   "fix": "中文可用 text-align:justify；英文长文才用，并配 hyphens",
+   "bad": "p{ text-align:justify; } /* 英文单词间距忽大忽小 */",
+   "good": "p{ text-align:justify; text-justify:inter-character; } /* 中文按字符对齐更匀 */",
+   "tip": [
+    "中文用 inter-character 更匀",
+    "英文慎用，易产生大缝隙",
+    "移动端窄栏不建议两端对齐"
+   ],
+   "plat": {
+    "web": "text-justify 支持",
+    "app": "RN 无 justify，需富文本组件",
+    "mini": "wxss 支持 text-align:justify"
+   },
+   "vd_bad": "<div style='text-align:justify;color:#8f2b20;font-size:10px;width:100%'>英文单词间距被拉得忽大忽小很难看</div>",
+   "vd_good": "<div style='text-align:justify;text-justify:inter-character;color:#155e3c;font-size:10px;width:100%'>中文按字符均匀对齐</div>"
+  },
+  {
+   "id": "z-index",
+   "ch": 3,
+   "speak": "弹窗盖不住别的元素",
+   "cn": "层级管理（z-index）",
+   "en": "Z-index / Stacking",
+   "anti": "到处写 z-index:9999，新弹窗永远盖不住旧的",
+   "fix": "建立层级规范（如遮罩 1000、弹窗 1001、Toast 2000），别随手堆大数",
+   "bad": ".a{ z-index:9999; } .b{ z-index:99999; } /* 数字失控，互相覆盖 */",
+   "good": ":root{ --z-mask:1000; --z-modal:1001; --z-toast:2000; } .modal{ z-index:var(--z-modal); }",
+   "tip": [
+    "用 CSS 变量统一管理层级",
+    "别无脑写 9999",
+    "z-index 只在定位元素上生效"
+   ],
+   "plat": {
+    "web": "配合 stacking context 理解",
+    "app": "RN 无 z-index，用 elevation 或顺序",
+    "mini": "wxss 支持 z-index，但原生组件永远在上"
+   },
+   "vd_bad": "<div style='position:relative;height:50px'><div style='position:absolute;left:0;top:14px;width:60px;height:22px;background:#E7C9C4;border-radius:4px;z-index:1'></div><div style='position:absolute;left:30px;top:6px;width:60px;height:22px;background:#C0392B;border-radius:4px;z-index:2'></div></div><div style='font-size:9px;color:#938E85'>弹窗被按钮盖住</div>",
+   "vd_good": "<div style='position:relative;height:50px'><div style='position:absolute;left:0;top:6px;width:60px;height:22px;background:#1C7A4E;border-radius:4px;z-index:10'></div><div style='position:absolute;left:30px;top:14px;width:60px;height:22px;background:#BFE0CE;border-radius:4px;z-index:1'></div></div><div style='font-size:9px;color:#938E85'>弹窗盖在最上</div>"
+  },
+  {
+   "id": "overlay",
+   "ch": 3,
+   "speak": "弹窗底下要有一层半透明蒙版",
+   "cn": "遮罩层",
+   "en": "Overlay / Mask",
+   "anti": "蒙版没铺满或没挡点击，点空白处弹窗关不掉",
+   "fix": "固定定位铺满全屏的半透明层，并拦截点击",
+   "bad": ".mask{ background:rgba(0,0,0,.5); } /* 没定位没铺满，盖不住 */",
+   "good": ".mask{ position:fixed; inset:0; background:rgba(0,0,0,.5); } /* 铺满+拦截 */",
+   "tip": [
+    "fixed + inset:0 铺满",
+    "蒙版要能点它关闭弹窗",
+    "层级要低于弹窗本体高于内容"
+   ],
+   "plat": {
+    "web": "inset:0 简洁写法",
+    "app": "RN 用绝对定位铺满 + 透明层",
+    "mini": "小程序用 cover-view 盖原生组件"
+   },
+   "vd_bad": "<div style='position:relative;height:50px;border:1px dashed #E7C9C4;border-radius:5px'><div style='position:absolute;right:6px;top:6px;width:26px;height:18px;background:#C0392B;border-radius:3px'></div><div style='font-size:9px;color:#938E85;padding:4px'>无蒙版 点空白关不掉</div></div>",
+   "vd_good": "<div style='position:relative;height:50px;border:1px dashed #BFE0CE;border-radius:5px'><div style='position:absolute;inset:0;background:rgba(20,18,15,.35);border-radius:5px'></div><div style='position:absolute;right:6px;top:6px;width:26px;height:18px;background:#1C7A4E;border-radius:3px'></div></div>"
+  },
+  {
+   "id": "fixed-center",
+   "ch": 3,
+   "speak": "把弹窗钉在屏幕中间",
+   "cn": "固定定位居中",
+   "en": "Fixed Centering",
+   "anti": "top/left 50% 后忘了 translate，弹窗偏在右下",
+   "fix": "fixed 定位 + left/top:50% + transform:translate(-50%,-50%)",
+   "bad": ".pop{ position:fixed; top:50%; left:50%; } /* 偏右下角 */",
+   "good": ".pop{ position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); }",
+   "tip": [
+    "fixed 居中必须配 transform 回拉",
+    "或用 flex 居中父级",
+    "移动端注意键盘弹起遮挡"
+   ],
+   "plat": {
+    "web": "translate 回拉最常用",
+    "app": "RN 居中用 alignItems+justifyContent",
+    "mini": "小程序用 flex 居中容器即可"
+   },
+   "vd_bad": "<div style='position:relative;height:50px;border:1px solid #E7C9C4;border-radius:5px'><div style='position:absolute;top:50%;left:50%;width:26px;height:18px;background:#C0392B;border-radius:3px'></div></div>",
+   "vd_good": "<div style='position:relative;height:50px;border:1px solid #BFE0CE;border-radius:5px'><div style='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:26px;height:18px;background:#1C7A4E;border-radius:3px'></div></div>"
+  },
+  {
+   "id": "stacking",
+   "ch": 3,
+   "speak": "明明 z-index 很大却还是被盖",
+   "cn": "层叠上下文",
+   "en": "Stacking Context",
+   "anti": "在不懂层叠规则时乱调 z-index，越调越乱",
+   "fix": "理解：z-index 只在同一个层叠上下文里比大小；新上下文会隔离比较",
+   "bad": "/* 父级有 transform/opacity 形成新上下文，子级 z-index 再大也出不去 */",
+   "good": "/* 规则：同上下文比 z-index；创建上下文的属性：transform/opacity/filter/position+z-index */",
+   "tip": [
+    "z-index 只在同一上下文内有效",
+    "transform/opacity 会创建新上下文",
+    "先理清上下文再调层级"
+   ],
+   "plat": {
+    "web": "层叠规则通用",
+    "app": "RN 无此概念，靠组件顺序",
+    "mini": "wxss 同 web，但要注意原生组件"
+   },
+   "vd_bad": "<div style='position:relative;height:50px'><div style='position:absolute;left:0;top:0;width:50px;height:30px;background:#E7C9C4;border-radius:4px;z-index:5'></div><div style='position:absolute;left:20px;top:8px;width:50px;height:30px;background:#C0392B;border-radius:4px;z-index:9'></div></div><div style='font-size:9px;color:#938E85'>父级新上下文隔离比较</div>",
+   "vd_good": "<div style='position:relative;height:50px'><div style='position:absolute;left:0;top:0;width:50px;height:30px;background:#BFE0CE;border-radius:4px;z-index:9'></div><div style='position:absolute;left:20px;top:8px;width:50px;height:30px;background:#1C7A4E;border-radius:4px;z-index:5'></div></div><div style='font-size:9px;color:#938E85'>理清上下文再调层级</div>"
+  },
+  {
+   "id": "relative",
+   "ch": 3,
+   "speak": "想让元素相对自己挪一点点",
+   "cn": "相对定位",
+   "en": "Relative Positioning",
+   "anti": "用 margin 挪位置导致后面元素也跟着动",
+   "fix": "position:relative + top/left 只移动自己，不影响文档流排布",
+   "bad": ".x{ margin-top:-10px; } /* 自己移了，后面也跟着上移 */",
+   "good": ".x{ position:relative; top:-10px; } /* 仅自身偏移，不挤别人 */",
+   "tip": [
+    "relative 不脱离文档流",
+    "用它做小幅微调或定位锚点",
+    "absolute 的参照物常是 relative 父级"
+   ],
+   "plat": {
+    "web": "relative 标准",
+    "app": "RN 用 marginTop 等正数模拟",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='height:46px;position:relative'><div style='background:#E7C9C4;color:#8f2b20;font-size:10px;padding:3px 6px;border-radius:4px'>用 margin 挪</div><div style='background:#F3F0EA;color:#938E85;font-size:10px;padding:3px 6px;border-radius:4px'>后面被带着动</div></div>",
+   "vd_good": "<div style='height:46px;position:relative'><div style='background:#BFE0CE;color:#155e3c;font-size:10px;padding:3px 6px;border-radius:4px'>relative 只挪自己</div><div style='background:#F3F0EA;color:#938E85;font-size:10px;padding:3px 6px;border-radius:4px;margin-top:6px'>别人不动</div></div>"
+  },
+  {
+   "id": "absolute",
+   "ch": 3,
+   "speak": "把元素从正常排版里抽出来摆",
+   "cn": "绝对定位",
+   "en": "Absolute Positioning",
+   "anti": "absolute 后元素乱飞，父级没定位它跑到页面角落",
+   "fix": "absolute 相对最近的有定位（非 static）的祖先；给父级加 relative 当锚",
+   "bad": ".child{ position:absolute; top:0; } /* 父级没定位，跑到最外层 */",
+   "good": ".parent{ position:relative; } .child{ position:absolute; top:0; left:0; }",
+   "tip": [
+    "absolute 找最近定位祖先",
+    "父级加 relative 当锚点",
+    "脱离文档流，不再占位置"
+   ],
+   "plat": {
+    "web": "relative+absolute 黄金搭档",
+    "app": "RN 用 absolute + 父 relative 同思路",
+    "mini": "wxss 同 web"
+   },
+   "vd_bad": "<div style='height:48px;border:1px solid #E7C9C4;border-radius:5px'><div style='position:absolute;left:0;top:0;width:40px;height:18px;background:#C0392B;border-radius:3px'></div></div><div style='font-size:9px;color:#938E85'>父级没定位 跑到角落</div>",
+   "vd_good": "<div style='height:48px;border:1px solid #BFE0CE;border-radius:5px;position:relative'><div style='position:absolute;left:6px;top:6px;width:40px;height:18px;background:#1C7A4E;border-radius:3px'></div></div><div style='font-size:9px;color:#938E85'>父级 relative 当锚</div>"
+  },
+  {
+   "id": "pseudo",
+   "ch": 3,
+   "speak": "想在元素前后加个装饰小东西",
+   "cn": "伪元素装饰",
+   "en": "::before / ::after",
+   "anti": "多写一个空标签只为放个装饰，HTML 变脏",
+   "fix": "用 ::before / ::after 配合 content 加装饰，不污染结构",
+   "bad": "<i class='dot'></i> /* 只为装饰多写标签 */",
+   "good": ".tip::before{ content:''; width:6px; height:6px; border-radius:50%; background:#c8442e; }",
+   "tip": [
+    "伪元素必须写 content（哪怕空）",
+    "装饰性内容优先伪元素",
+    "清浮动也常用 ::after"
+   ],
+   "plat": {
+    "web": "伪元素标准支持",
+    "app": "RN 无伪元素，写独立组件",
+    "mini": "wxss 支持 ::before/::after，但注意层级"
+   },
+   "vd_bad": "<div style='font-size:11px;color:#8f2b20'>多写一个空标签<br>只为装饰</div>",
+   "vd_good": "<div style='position:relative;font-size:11px;color:#155e3c;padding-left:12px'>用 ::before 装饰<span style='position:absolute;left:0;top:4px;width:6px;height:6px;border-radius:50%;background:#1C7A4E'></span></div>"
+  },
+  {
+   "id": "scroll-lock",
+   "ch": 3,
+   "speak": "弹窗出来后背景还能滚",
+   "cn": "弹窗滚动锁定",
+   "en": "Scroll Lock / Body Scroll",
+   "anti": "只盖蒙版不锁滚动，底层列表跟着滚很诡异",
+   "fix": "弹窗打开时给 body 加 overflow:hidden（移动端还要固定位置）",
+   "bad": "/* 只加了蒙版，背景照滚 */",
+   "good": "body.modal-open{ overflow:hidden; } /* 打开弹窗时给 body 加这个类 */",
+   "tip": [
+    "开弹窗锁 body 滚动",
+    "移动端用 position:fixed 防回弹",
+    "关闭时记得移除类"
+   ],
+   "plat": {
+    "web": "overflow:hidden + 记录滚动位置",
+    "app": "RN 蒙版盖住自然不滚",
+    "mini": "小程序用 catchtouchmove 阻止穿透"
+   },
+   "vd_bad": "<div style='height:50px;overflow:hidden;font-size:9px;color:#938E85;background:#E7C9C4;border-radius:5px;padding:4px'>弹窗开着<br>背景还在滚</div>",
+   "vd_good": "<div style='height:50px;overflow:hidden;font-size:9px;color:#155e3c;background:#BFE0CE;border-radius:5px;padding:4px'>弹窗开着<br>背景已锁住</div>"
+  },
+  {
+   "id": "fixed-bottom",
+   "ch": 3,
+   "speak": "底部按钮被手机小黑条挡住",
+   "cn": "底部固定 + 安全区",
+   "en": "Fixed Bottom + Safe Area",
+   "anti": "fixed 贴底没留安全区，iPhone 小黑条挡住按钮",
+   "fix": "fixed 底部 + padding-bottom:env(safe-area-inset-bottom)",
+   "bad": ".bar{ position:fixed; bottom:0; } /* 被刘海屏/小黑条挡 */",
+   "good": ".bar{ position:fixed; bottom:0; padding-bottom:env(safe-area-inset-bottom); }",
+   "tip": [
+    "底部固定必加安全区 padding",
+    "viewport 要加 viewport-fit=cover",
+    "高度测算要含安全区"
+   ],
+   "plat": {
+    "web": "env(safe-area-inset-bottom) 生效需 viewport-fit=cover",
+    "app": "RN 用 SafeAreaView",
+    "mini": "小程序用 env() 同样需 cover 配置"
+   },
+   "vd_bad": "<div style='position:relative;height:50px;border:1px solid #E7C9C4;border-radius:5px'><div style='position:absolute;left:0;right:0;bottom:0;height:16px;background:#C0392B'></div><div style='position:absolute;right:6px;bottom:2px;font-size:8px;color:#fff'>被小黑条挡</div></div>",
+   "vd_good": "<div style='position:relative;height:50px;border:1px solid #BFE0CE;border-radius:5px;padding-bottom:8px'><div style='position:absolute;left:0;right:0;bottom:8px;height:14px;background:#1C7A4E'></div></div>"
+  },
+  {
+   "id": "hover",
+   "ch": 4,
+   "speak": "鼠标移上去想变个样",
+   "cn": "悬停状态",
+   "en": "Hover State",
+   "anti": "只改背景色没过渡，鼠标移上去生硬闪一下",
+   "fix": "用 :hover 改样式并配合 transition 让变化平滑",
+   "bad": ".btn:hover{ background:#c8442e; } /* 瞬间变，没过渡显生硬 */",
+   "good": ".btn{ transition:background .2s; } .btn:hover{ background:#c8442e; }",
+   "tip": [
+    "hover 配 transition 才顺滑",
+    "移动端没有 hover，要另做 active",
+    "别在 hover 改布局尺寸"
+   ],
+   "plat": {
+    "web": "hover 仅鼠标设备",
+    "app": "RN 无 hover，用 Pressable 的 pressed",
+    "mini": "小程序无 hover，用 hover-class"
+   },
+   "vd_bad": "<div style='display:flex;gap:8px'><div style='background:#E7C9C4;color:#8f2b20;font-size:11px;padding:5px 10px;border-radius:5px'>移上去瞬变</div></div>",
+   "vd_good": "<div style='display:flex;gap:8px'><div style='background:#BFE0CE;color:#155e3c;font-size:11px;padding:5px 10px;border-radius:5px;transition:background .2s'>平滑过渡</div></div>"
+  },
+  {
+   "id": "focus-visible",
+   "ch": 4,
+   "speak": "键盘选中输入框没任何提示",
+   "cn": "键盘聚焦样式",
+   "en": "Focus-visible",
+   "anti": "只写 :focus 或干脆没聚焦样式，键盘用户不知道焦点在哪",
+   "fix": "用 :focus-visible 只在键盘聚焦时显示轮廓，鼠标点击不显示",
+   "bad": "/* 没聚焦样式，Tab 切过去毫无反馈 */",
+   "good": "input:focus-visible{ outline:2px solid #c8442e; outline-offset:2px; }",
+   "tip": [
+    "用 focus-visible 区分键鼠",
+    "聚焦轮廓别用 outline:none 直接去掉",
+    "输入框聚焦要给明确反馈"
+   ],
+   "plat": {
+    "web": "focus-visible 现代支持",
+    "app": "RN 用 onFocus 加边框",
+    "mini": "wxss 支持 :focus，focus-visible 谨慎"
+   },
+   "vd_bad": "<div style='border:1px solid #C0392B;border-radius:5px;padding:4px 8px;font-size:11px;color:#8f2b20'>输入框无焦点提示</div>",
+   "vd_good": "<div style='border:1px solid #1C7A4E;border-radius:5px;padding:4px 8px;font-size:11px;color:#155e3c;outline:2px solid #1C7A4E;outline-offset:2px'>键盘聚焦有轮廓</div>"
+  },
+  {
+   "id": "disabled",
+   "ch": 4,
+   "speak": "按钮不能点却看不出来",
+   "cn": "禁用状态",
+   "en": "Disabled State",
+   "anti": "只加 disabled 属性不换样式，用户以为能点一直戳",
+   "fix": "disabled 时降低透明度+改光标+去掉阴影，明确告知不可点",
+   "bad": "button[disabled]{ } /* 没视觉变化，用户不知道禁用 */",
+   "good": "button[disabled]{ opacity:.5; cursor:not-allowed; }",
+   "tip": [
+    "禁用要肉眼可辨（变灰/降透明）",
+    "cursor:not-allowed 提示",
+    "禁用时阻止点击逻辑"
+   ],
+   "plat": {
+    "web": "disabled 属性+样式",
+    "app": "RN disabled 属性 + 条件样式",
+    "mini": "小程序 button 的 disabled"
+   },
+   "vd_bad": "<div style='background:#C0392B;color:#fff;font-size:11px;padding:5px 12px;border-radius:5px'>按钮(看不出禁用)</div>",
+   "vd_good": "<div style='background:#C0392B;color:#fff;font-size:11px;padding:5px 12px;border-radius:5px;opacity:.45;cursor:not-allowed'>按钮(变灰禁用)</div>"
+  },
+  {
+   "id": "transition",
+   "ch": 4,
+   "speak": "点一下想有点变化动画",
+   "cn": "过渡动画",
+   "en": "CSS Transition",
+   "anti": "直接改样式没过渡，变化像瞬移一样生硬",
+   "fix": "对会变化的属性加 transition，指定时长与缓动",
+   "bad": ".box{ width:100px; } .box.big{ width:200px; } /* 瞬变，无动画 */",
+   "good": ".box{ transition:width .3s ease; } .box.big{ width:200px; }",
+   "tip": [
+    "transition 写在被改元素上",
+    "别对 display 做过渡（无效）",
+    "时长 0.2-0.3s 最自然"
+   ],
+   "plat": {
+    "web": "transition 标准",
+    "app": "RN 用 Animated / LayoutAnimation",
+    "mini": "小程序用 CSS transition，或 wx.createAnimation"
+   },
+   "vd_bad": "<div style='display:flex;gap:8px'><div style='width:22px;height:22px;background:#E7C9C4;border-radius:4px'></div><div style='width:44px;height:22px;background:#8f2b20;border-radius:4px;font-size:9px;color:#fff;text-align:center;padding-top:3px'>瞬变</div></div>",
+   "vd_good": "<div style='display:flex;gap:8px'><div style='width:22px;height:22px;background:#BFE0CE;border-radius:4px;transition:width .3s'></div><div style='width:44px;height:22px;background:#1C7A4E;border-radius:4px;font-size:9px;color:#fff;text-align:center;padding-top:3px'>平滑</div></div>"
+  },
+  {
+   "id": "transform",
+   "ch": 4,
+   "speak": "想让元素移动/放大/旋转",
+   "cn": "变换动画",
+   "en": "Transform",
+   "anti": "用改 top/left 做位移动画，每帧重排卡顿",
+   "fix": "位移/缩放/旋转用 transform，走 GPU 合成不掉帧",
+   "bad": ".box{ left:0; } .box.move{ left:100px; } /* 改布局属性，触发重排 */",
+   "good": ".box{ transform:translateX(0); } .box.move{ transform:translateX(100px); }",
+   "tip": [
+    "位移用 translate 而非 top/left",
+    "动画优先 transform/opacity",
+    "配合 will-change 提示浏览器"
+   ],
+   "plat": {
+    "web": "transform 走合成层",
+    "app": "RN transform 数组写法",
+    "mini": "wxss 支持 transform，注意单位"
+   },
+   "vd_bad": "<div style='position:relative;height:40px'><div style='position:absolute;left:0;top:14px;width:22px;height:18px;background:#E7C9C4;border-radius:3px'></div><div style='position:absolute;left:24px;top:0;width:22px;height:18px;background:#8f2b20;border-radius:3px;font-size:8px;color:#fff;text-align:center;padding-top:2px'>改left重排</div></div>",
+   "vd_good": "<div style='position:relative;height:40px'><div style='position:absolute;left:0;top:11px;width:22px;height:18px;background:#BFE0CE;border-radius:3px'></div><div style='position:absolute;left:0;top:11px;width:22px;height:18px;background:#1C7A4E;border-radius:3px;transform:translateX(24px);font-size:8px;color:#fff;text-align:center;padding-top:2px'>translate合成</div></div>"
+  },
+  {
+   "id": "easing",
+   "ch": 4,
+   "speak": "动画太生硬像机器",
+   "cn": "缓动曲线",
+   "en": "Easing Curve",
+   "anti": "用 linear 匀速，动画像幻灯片切换一样死板",
+   "fix": "用 ease / cubic-bezier 让启动结束有快慢节奏更自然",
+   "bad": "transition:all .3s linear; /* 匀速，生硬 */",
+   "good": "transition:all .3s cubic-bezier(.4,0,.2,1); /* 标准缓动，自然 */",
+   "tip": [
+    "默认 ease 已比 linear 自然",
+    "cubic-bezier(.4,0,.2,1) 是 Material 标准",
+    "回弹用 overshoot 曲线"
+   ],
+   "plat": {
+    "web": "cubic-bezier 通用",
+    "app": "RN Easing 模块",
+    "mini": "小程序同 web"
+   },
+   "vd_bad": "<div style='width:70px;height:8px;background:#E7C9C4;border-radius:4px;position:relative'><div style='position:absolute;left:0;top:0;width:18px;height:8px;background:#8f2b20;border-radius:4px'></div></div><div style='font-size:9px;color:#938E85;margin-top:3px'>linear 匀速生硬</div>",
+   "vd_good": "<div style='width:70px;height:8px;background:#BFE0CE;border-radius:4px;position:relative'><div style='position:absolute;left:0;top:0;width:18px;height:8px;background:#1C7A4E;border-radius:4px;transform:translateX(40px)'></div></div><div style='font-size:9px;color:#938E85;margin-top:3px'>缓动有节奏</div>"
+  },
+  {
+   "id": "debounce",
+   "ch": 4,
+   "speak": "边打字边搜索太费",
+   "cn": "防抖",
+   "en": "Debounce",
+   "anti": "input 每次按键都发请求，接口被打爆",
+   "fix": "防抖：停止输入 N 毫秒后才执行，连续输入只触发最后一次",
+   "bad": "input.oninput = search; /* 每敲一字请求一次，疯狂打接口 */",
+   "good": "function debounce(fn,wait){let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);}}",
+   "tip": [
+    "搜索/输入用防抖 300ms",
+    "防抖=等停了再执行",
+    "和节流区分清楚"
+   ],
+   "plat": {
+    "web": "手写或 lodash.debounce",
+    "app": "RN 同逻辑，注意卸载清理",
+    "mini": "小程序同 web，注意页面卸载清理定时器"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>每敲一字发请求</div><div style='display:flex;gap:2px;margin-top:4px'><span style='width:7px;height:7px;background:#C0392B;border-radius:50%'></span><span style='width:7px;height:7px;background:#C0392B;border-radius:50%'></span><span style='width:7px;height:7px;background:#C0392B;border-radius:50%'></span><span style='width:7px;height:7px;background:#C0392B;border-radius:50%'></span></div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>停手才发一次</div><div style='display:flex;gap:2px;margin-top:4px'><span style='width:7px;height:7px;background:#BFE0CE;border-radius:50%'></span><span style='width:7px;height:7px;background:#BFE0CE;border-radius:50%'></span><span style='width:14px;height:7px;background:#1C7A4E;border-radius:4px'></span></div>"
+  },
+  {
+   "id": "throttle",
+   "ch": 4,
+   "speak": "滚动时函数被疯狂调用",
+   "cn": "节流",
+   "en": "Throttle",
+   "anti": "scroll/resize 每帧都算，页面直接卡死",
+   "fix": "节流：固定时间间隔只执行一次，平滑又省资源",
+   "bad": "window.onscroll = onScroll; /* 每滚动一像素就执行，卡 */",
+   "good": "function throttle(fn,wait){let ok=true;return(...a)=>{if(!ok)return;ok=false;fn(...a);setTimeout(()=>ok=true,wait);}}",
+   "tip": [
+    "滚动/拖拽用节流",
+    "节流=每隔 N ms 执行一次",
+    "和防抖区分：节流限频率防抖等停止"
+   ],
+   "plat": {
+    "web": "手写或 lodash.throttle",
+    "app": "RN 同逻辑",
+    "mini": "小程序同 web"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>滚动每帧都算</div><div style='display:flex;gap:1px;margin-top:4px;flex-wrap:wrap;width:80px'><span style='width:5px;height:5px;background:#C0392B;border-radius:50%'></span><span style='width:5px;height:5px;background:#C0392B;border-radius:50%'></span><span style='width:5px;height:5px;background:#C0392B;border-radius:50%'></span><span style='width:5px;height:5px;background:#C0392B;border-radius:50%'></span><span style='width:5px;height:5px;background:#C0392B;border-radius:50%'></span></div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>每隔 N ms 一次</div><div style='display:flex;gap:6px;margin-top:4px'><span style='width:6px;height:6px;background:#1C7A4E;border-radius:50%'></span><span style='width:6px;height:6px;background:#1C7A4E;border-radius:50%'></span><span style='width:6px;height:6px;background:#1C7A4E;border-radius:50%'></span></div>"
+  },
+  {
+   "id": "active",
+   "ch": 4,
+   "speak": "按下按钮没任何反馈",
+   "cn": "按下状态",
+   "en": "Active / Pressed",
+   "anti": "没 :active 样式，点下去毫无反馈像没点上",
+   "fix": "用 :active 在按下瞬间给反馈（变深/缩小）",
+   "bad": "/* 点击无反馈，用户不确定有没有点到 */",
+   "good": ".btn:active{ transform:scale(.97); background:#a8351f; }",
+   "tip": [
+    "active 给按下即时反馈",
+    "配合 transform:scale 显灵动",
+    "移动端 active 有时不触发，用 touch"
+   ],
+   "plat": {
+    "web": ":active 鼠标/触摸生效",
+    "app": "RN Pressable 的 onPressIn",
+    "mini": "小程序用 hover-class 兼做按下"
+   },
+   "vd_bad": "<div style='background:#E7C9C4;color:#8f2b20;font-size:11px;padding:5px 12px;border-radius:5px'>按下无反馈</div>",
+   "vd_good": "<div style='background:#1C7A4E;color:#fff;font-size:11px;padding:5px 12px;border-radius:5px;transform:scale(.96)'>按下有反馈</div>"
+  },
+  {
+   "id": "viewport",
+   "ch": 5,
+   "speak": "手机上网页被缩小成一团",
+   "cn": "视口设置",
+   "en": "Viewport Meta",
+   "anti": "没设 viewport，手机按 980px 桌面宽度渲染再缩小",
+   "fix": "head 加 <meta name=viewport content='width=device-width,initial-scale=1'>",
+   "bad": "<!-- 没 viewport，移动端按桌面宽度缩显示 -->",
+   "good": "<meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>",
+   "tip": [
+    "移动端必备 viewport",
+    "initial-scale=1 防默认缩放",
+    "想用安全区加 viewport-fit=cover"
+   ],
+   "plat": {
+    "web": "viewport 是移动端第一步",
+    "app": "RN 无此概念，天然按设备宽",
+    "mini": "小程序默认已按屏宽，无需设"
+   },
+   "vd_bad": "<div style='width:120px;height:44px;border:1px solid #E7C9C4;border-radius:5px;transform:scale(.6);transform-origin:left top;font-size:8px;color:#938E85;padding:3px'>没 viewport 被缩小</div>",
+   "vd_good": "<div style='width:120px;height:44px;border:1px solid #BFE0CE;border-radius:5px;font-size:10px;color:#155e3c;padding:3px'>按设备宽度显示</div>"
+  },
+  {
+   "id": "safe-area",
+   "ch": 5,
+   "speak": "刘海/小黑条挡住内容",
+   "cn": "安全区适配",
+   "en": "Safe Area Inset",
+   "anti": "内容贴边被刘海、圆角、底部小黑条切掉",
+   "fix": "用 env(safe-area-inset-*) 给四边留安全间距",
+   "bad": ".page{ padding:0 12px; } /* 内容被刘海/小黑条切 */",
+   "good": ".page{ padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom); }",
+   "tip": [
+    "安全区要 viewport-fit=cover 才生效",
+    "顶部刘海/底部小黑条都要留",
+    "全面屏手机必做"
+   ],
+   "plat": {
+    "web": "env() 需 viewport-fit=cover",
+    "app": "RN 用 SafeAreaView",
+    "mini": "小程序 env() 同样需 cover 配置"
+   },
+   "vd_bad": "<div style='position:relative;width:120px;height:46px;background:#E7C9C4;border-radius:6px'><div style='position:absolute;left:0;right:0;top:0;height:9px;background:#C0392B'></div><div style='font-size:8px;color:#8f2b20;padding-top:12px;text-align:center'>内容被刘海切</div></div>",
+   "vd_good": "<div style='position:relative;width:120px;height:46px;background:#BFE0CE;border-radius:6px;padding-top:12px'><div style='font-size:8px;color:#155e3c;text-align:center'>留安全区不挡</div></div>"
+  },
+  {
+   "id": "media",
+   "ch": 5,
+   "speak": "按屏幕大小换样式",
+   "cn": "媒体查询断点",
+   "en": "Media Query Breakpoint",
+   "anti": "写死一套样式，PC 上挤移动端上炸",
+   "fix": "用 @media 设断点（如 768px）分桌面/平板/手机三套",
+   "bad": "/* 只有一种布局，任何屏都硬套 */",
+   "good": "@media (max-width:768px){ .nav{ flex-direction:column; } }",
+   "tip": [
+    "常用断点 768/1024",
+    "移动优先：先写小屏再 min-width 扩展",
+    "断点别太多，3 档足够"
+   ],
+   "plat": {
+    "web": "媒体查询标准",
+    "app": "RN 用 Dimensions 监听宽度",
+    "mini": "小程序用 rpx 自带响应，少数用媒体查询"
+   },
+   "vd_bad": "<div style='width:120px;height:44px;border:1px solid #E7C9C4;border-radius:5px;font-size:8px;color:#938E85;padding:3px'>一套布局硬套大小屏</div>",
+   "vd_good": "<div style='width:120px;height:44px;border:1px solid #BFE0CE;border-radius:5px;font-size:10px;color:#155e3c;padding:3px'>按断点切换布局</div>"
+  },
+  {
+   "id": "autofit",
+   "ch": 5,
+   "speak": "网格列数想跟着屏宽变",
+   "cn": "自适应列数网格",
+   "en": "Grid Auto-fit",
+   "anti": "写死 4 列，手机上一行挤 4 个看不清",
+   "fix": "用 grid-template-columns:repeat(auto-fit,minmax(160px,1fr)) 自动换行",
+   "bad": ".g{ display:grid; grid-template-columns:repeat(4,1fr); } /* 手机挤 4 列 */",
+   "good": ".g{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }",
+   "tip": [
+    "auto-fit 自动决定列数",
+    "minmax 控制每列最小宽度",
+    "比写媒体查询省心"
+   ],
+   "plat": {
+    "web": "grid auto-fit 现代支持",
+    "app": "RN 用 numColumns 或 flex 算",
+    "mini": "wxss 支持 grid，但兼容略弱"
+   },
+   "vd_bad": "<div style='display:grid;grid-template-columns:repeat(4,1fr);gap:3px;width:120px'><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span></div><div style='font-size:8px;color:#938E85'>手机挤 4 列</div>",
+   "vd_good": "<div style='display:grid;grid-template-columns:repeat(auto-fit,minmax(28px,1fr));gap:3px;width:120px'><span style='height:14px;background:#BFE0CE;border-radius:3px'></span><span style='height:14px;background:#BFE0CE;border-radius:3px'></span><span style='height:14px;background:#BFE0CE;border-radius:3px'></span></div><div style='font-size:8px;color:#938E85'>自动列数</div>"
+  },
+  {
+   "id": "vwvh",
+   "ch": 5,
+   "speak": "想按屏幕比例定位元素",
+   "cn": "视口单位",
+   "en": "vw / vh Units",
+   "anti": "用 px 写高度，不同屏高元素比例全乱",
+   "fix": "用 vw(视口宽%) / vh(视口高%) 让尺寸跟随屏幕",
+   "bad": ".banner{ height:300px; } /* 小屏占大半，大屏一小条 */",
+   "good": ".banner{ height:40vh; } /* 永远是屏高的 40% */",
+   "tip": [
+    "全屏弹窗高度用 100vh",
+    "配合 calc 加减固定值",
+    "移动端 100vh 含地址栏坑，用 dvh"
+   ],
+   "plat": {
+    "web": "vh 注意移动端地址栏，用 dvh",
+    "app": "RN 用百分比或 Dimensions",
+    "mini": "小程序慎用 vh，多用 rpx"
+   },
+   "vd_bad": "<div style='width:120px;height:50px;border:1px solid #E7C9C4;border-radius:5px'><div style='height:46px;background:#E7C9C4'></div></div><div style='font-size:8px;color:#938E85'>写死高度比例乱</div>",
+   "vd_good": "<div style='width:120px;height:50px;border:1px solid #BFE0CE;border-radius:5px'><div style='height:60%;background:#BFE0CE'></div></div><div style='font-size:8px;color:#938E85'>比例随屏</div>"
+  },
+  {
+   "id": "dpr",
+   "ch": 5,
+   "speak": "高清屏上图片发虚",
+   "cn": "高 DPR / 二倍图",
+   "en": "Device Pixel Ratio",
+   "anti": "只给一张图，2x/3x 屏被拉伸发虚",
+   "fix": "用 srcset 提供多倍图，或矢量 SVG 永不虚",
+   "bad": "<img src='a.png'> /* 单图，高清屏发虚 */",
+   "good": "<img src='a.png' srcset='a.png 1x, a@2x.png 2x, a@3x.png 3x'>",
+   "tip": [
+    "高清屏用 2x/3x 图或 SVG",
+    "SVG 矢量天然清晰",
+    "背景图用 image-set 类似处理"
+   ],
+   "plat": {
+    "web": "srcset / picture 元素",
+    "app": "RN 用不同分辨率资源或矢量",
+    "mini": "小程序用 mode 缩放，优先 SVG/2x"
+   },
+   "vd_bad": "<div style='width:54px;height:40px;background:repeating-linear-gradient(45deg,#C0392B,#C0392B 3px,#E7C9C4 3px,#E7C9C4 6px);border-radius:4px'></div><div style='font-size:8px;color:#8f2b20'>单图发虚</div>",
+   "vd_good": "<div style='width:54px;height:40px;background:#1C7A4E;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff'>矢量清晰</div>"
+  },
+  {
+   "id": "orientation",
+   "ch": 5,
+   "speak": "横屏竖屏布局要不一样",
+   "cn": "横竖屏适配",
+   "en": "Orientation Media",
+   "anti": "横屏时布局没调整，元素被拉变形",
+   "fix": "用 @media (orientation:landscape/portrait) 分横竖屏布局",
+   "bad": "/* 横屏竖屏同一套，横屏被拉长 */",
+   "good": "@media (orientation:landscape){ .layout{ flex-direction:row; } }",
+   "tip": [
+    "平板/游戏类必做横竖屏",
+    "横屏常把竖向布局改横向",
+    "配合断点一起用"
+   ],
+   "plat": {
+    "web": "orientation 媒体查询",
+    "app": "RN 监听维度变化",
+    "mini": "小程序 onResize 判断横竖"
+   },
+   "vd_bad": "<div style='width:120px;height:40px;border:1px solid #E7C9C4;border-radius:5px;font-size:8px;color:#938E85;padding:3px'>横竖同布局被拉变形</div>",
+   "vd_good": "<div style='width:120px;height:40px;border:1px solid #BFE0CE;border-radius:5px;font-size:9px;color:#155e3c;padding:3px'>横竖分别适配</div>"
+  },
+  {
+   "id": "tablet",
+   "ch": 5,
+   "speak": "平板上看手机布局太空",
+   "cn": "平板断点适配",
+   "en": "Tablet Breakpoint",
+   "anti": "只分手机/桌面，平板夹在中间要么挤要么太空",
+   "fix": "加 1024px 左右平板断点，给中间尺寸单独布局",
+   "bad": "@media(max-width:768px){} /* 平板(820px)落到桌面档，显空 */",
+   "good": "@media(min-width:768px) and (max-width:1024px){ .g{ grid-template-columns:repeat(3,1fr);} }",
+   "tip": [
+    "三档：<768 手机 / 768-1024 平板 / >1024 桌面",
+    "平板上可适当放宽列数",
+    "iPad 常见 768/820/1024"
+   ],
+   "plat": {
+    "web": "三断点覆盖主流设备",
+    "app": "RN 按宽度分流",
+    "mini": "小程序平板用 rpx 自适应为主"
+   },
+   "vd_bad": "<div style='width:120px;height:44px;border:1px solid #E7C9C4;border-radius:5px;font-size:8px;color:#938E85;padding:3px'>平板夹中间太空</div>",
+   "vd_good": "<div style='width:120px;height:44px;border:1px solid #BFE0CE;border-radius:5px;font-size:9px;color:#155e3c;padding:3px'>加平板断点填满</div>"
+  },
+  {
+   "id": "reflow",
+   "ch": 6,
+   "speak": "改个样式整页卡一下",
+   "cn": "重排与重绘",
+   "en": "Reflow / Repaint",
+   "anti": "在循环里反复读改布局属性，触发大量重排卡死",
+   "fix": "动画只用 transform/opacity（合成层），批量读写避免强制重排",
+   "bad": "for(...){ el.style.width = i+'px'; } /* 每步强制重排，巨卡 */",
+   "good": "/* 动画用 transform/opacity；读改写分开，用 requestAnimationFrame 批量 */",
+   "tip": [
+    "transform/opacity 不触发重排",
+    "避免循环内读写布局",
+    "用 rAF 批量更新"
+   ],
+   "plat": {
+    "web": "合成层动画最省",
+    "app": "RN 用原生驱动动画",
+    "mini": "小程序动画走 WXS 避免通信卡顿"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>循环读写布局<br>卡顿</div><div style='width:60px;height:6px;background:#C0392B;border-radius:3px;margin-top:4px'></div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>transform 合成<br>流畅</div><div style='width:60px;height:6px;background:#1C7A4E;border-radius:3px;margin-top:4px'></div>"
+  },
+  {
+   "id": "will-change",
+   "ch": 6,
+   "speak": "动画还是有点卡",
+   "cn": "GPU 加速提示",
+   "en": "will-change",
+   "anti": "给所有元素都加 will-change，反而更卡",
+   "fix": "只对即将动画的元素提前声明 will-change，用完移除",
+   "bad": "*{ will-change:transform; } /* 全开合成层，内存爆炸更卡 */",
+   "good": ".anim{ will-change:transform; } /* 仅动画元素，结束后移除 */",
+   "tip": [
+    "will-change 是提示不是开关",
+    "别全局加，按需且用完移除",
+    "滥用反而占内存掉帧"
+   ],
+   "plat": {
+    "web": "will-change 谨慎使用",
+    "app": "RN 动画默认走原生线程",
+    "mini": "小程序用 WXS / transform 优化"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>全局加 will-change<br>内存爆炸</div><div style='display:flex;gap:2px;margin-top:4px'><span style='width:8px;height:8px;background:#C0392B;border-radius:2px'></span><span style='width:8px;height:8px;background:#C0392B;border-radius:2px'></span><span style='width:8px;height:8px;background:#C0392B;border-radius:2px'></span></div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>仅动画元素加</div><div style='display:flex;gap:2px;margin-top:4px'><span style='width:8px;height:8px;background:#1C7A4E;border-radius:2px'></span></div>"
+  },
+  {
+   "id": "lazy",
+   "ch": 6,
+   "speak": "一进页面几十张图一起加载",
+   "cn": "图片懒加载",
+   "en": "Lazy Loading",
+   "anti": "首屏一次性加载所有图，白屏好几秒",
+   "fix": "用 loading='lazy' 或 IntersectionObserver 滚到才加载",
+   "bad": "<img src='big.jpg'> /* 全部立刻加载，首屏巨慢 */",
+   "good": "<img src='big.jpg' loading='lazy' alt='说明'>",
+   "tip": [
+    "图片加 loading='lazy'",
+    "长列表用虚拟滚动更彻底",
+    "记得写 alt 利于 SEO 与无障碍"
+   ],
+   "plat": {
+    "web": "loading=lazy 原生支持",
+    "app": "RN 用懒加载列表/占位",
+    "mini": "小程序用 lazy-load 属性"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>全部立刻加载<br>白屏</div><div style='display:flex;gap:2px;margin-top:4px'><span style='width:9px;height:9px;background:#C0392B;border-radius:2px'></span><span style='width:9px;height:9px;background:#C0392B;border-radius:2px'></span><span style='width:9px;height:9px;background:#C0392B;border-radius:2px'></span></div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>滚动到才加载</div><div style='display:flex;gap:2px;margin-top:4px'><span style='width:9px;height:9px;background:#BFE0CE;border-radius:2px'></span><span style='width:9px;height:9px;background:#1C7A4E;border-radius:2px'></span></div>"
+  },
+  {
+   "id": "semantic",
+   "ch": 6,
+   "speak": "标签全用 div 堆出来",
+   "cn": "语义化标签",
+   "en": "Semantic HTML",
+   "anti": "满屏 div 套 div，结构和含义全丢失",
+   "fix": "用 header/nav/main/section/article/footer 表达结构",
+   "bad": "<div class='header'></div><div class='main'></div> /* 无语义 */",
+   "good": "<header></header><nav></nav><main><section><article></article></section></main>",
+   "tip": [
+    "结构用对标签利于 SEO 与读屏",
+    "div 只当最后的万能容器",
+    "标题层级 h1-h6 别跳级"
+   ],
+   "plat": {
+    "web": "语义标签 SEO 友好",
+    "app": "RN 无标签概念，靠组件名",
+    "mini": "小程序结构靠 view，语义靠注释"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>&lt;div&gt;堆结构&lt;/div&gt;</div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>&lt;header&gt;&lt;nav&gt;&lt;main&gt;</div>"
+  },
+  {
+   "id": "aria",
+   "ch": 6,
+   "speak": "读屏软件读不懂按钮",
+   "cn": "ARIA 无障碍",
+   "en": "ARIA Attributes",
+   "anti": "图标按钮没文字，视障用户听不出是干嘛的",
+   "fix": "用 aria-label / role 给无文字控件补含义，状态用 aria-* 同步",
+   "bad": "<button class='icon-only'>🔍</button> /* 读屏读出‘按钮’，不知用途 */",
+   "good": "<button aria-label='搜索'><svg/></button>",
+   "tip": [
+    "图标按钮必加 aria-label",
+    "弹窗用 role='dialog' + aria-modal",
+    "动态内容用 aria-live 播报"
+   ],
+   "plat": {
+    "web": "ARIA 提升无障碍评分",
+    "app": "RN 用 accessibilityLabel",
+    "mini": "小程序用 aria-* 属性"
+   },
+   "vd_bad": "<div style='display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;background:#E7C9C4;border-radius:5px;font-size:12px'>🔍</div><div style='font-size:8px;color:#8f2b20'>读屏不知用途</div>",
+   "vd_good": "<div style='display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;background:#BFE0CE;border-radius:5px;font-size:12px' aria-label='搜索'>🔍</div><div style='font-size:8px;color:#155e3c'>有 aria-label</div>"
+  },
+  {
+   "id": "contrast",
+   "ch": 6,
+   "speak": "浅灰字配白底看不清",
+   "cn": "颜色对比度",
+   "en": "Color Contrast (WCAG)",
+   "anti": "用 #ccc 灰字配白底，对比度不达标也看不清",
+   "fix": "正文对比度至少 4.5:1，大字 3:1，用工具校验",
+   "bad": "color:#ccc; background:#fff; /* 对比度 ~1.6，远低于标准 */",
+   "good": "color:#595959; background:#fff; /* 对比度 >4.5，达标清晰 */",
+   "tip": [
+    "正文对比度≥4.5:1",
+    "用对比度校验工具",
+    "别为了好看牺牲可读性"
+   ],
+   "plat": {
+    "web": "WCAG 对比度影响 SEO 评分",
+    "app": "RN 同原则，注意深色模式",
+    "mini": "小程序同 web"
+   },
+   "vd_bad": "<div style='color:#ccc;background:#fff;font-size:11px;padding:4px 8px;border-radius:5px;border:1px solid #eee'>浅灰字看不清</div>",
+   "vd_good": "<div style='color:#595959;background:#fff;font-size:11px;padding:4px 8px;border-radius:5px;border:1px solid #eee'>深灰字清晰</div>"
+  },
+  {
+   "id": "keyboard",
+   "ch": 6,
+   "speak": "只能鼠标点，键盘没法用",
+   "cn": "键盘导航",
+   "en": "Keyboard Navigation",
+   "anti": "自定义控件没处理 Tab/Enter，键盘党用不了",
+   "fix": "可操作元素加 tabindex，用 Enter/Space 触发，焦点可见",
+   "bad": "/* 自定义 div 按钮，Tab 切不过去，回车也没反应 */",
+   "good": "div[role=button] tabindex=0; onkeydown:if(Enter||Space)click();",
+   "tip": [
+    "可点击元素要能 Tab 聚焦",
+    "Enter/Space 触发点击",
+    "配合 focus-visible 显示焦点"
+   ],
+   "plat": {
+    "web": "tabindex + 键盘事件",
+    "app": "RN 用 focusable 属性",
+    "mini": "小程序用 catchtap + 焦点处理"
+   },
+   "vd_bad": "<div style='background:#E7C9C4;color:#8f2b20;font-size:10px;padding:5px 10px;border-radius:5px'>鼠标才能点</div>",
+   "vd_good": "<div style='background:#BFE0CE;color:#155e3c;font-size:10px;padding:5px 10px;border-radius:5px;outline:2px solid #1C7A4E;outline-offset:2px'>Tab 可聚焦</div>"
+  },
+  {
+   "id": "reduce-motion",
+   "ch": 6,
+   "speak": "动画晃得人头晕",
+   "cn": "减弱动效偏好",
+   "en": "prefers-reduced-motion",
+   "anti": "满屏动画，晕动症用户看了不适",
+   "fix": "用 @media (prefers-reduced-motion:reduce) 关闭或减弱动画",
+   "bad": "/* 所有动画强制播放，无视用户系统设置 */",
+   "good": "@media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }",
+   "tip": [
+    "尊重系统‘减少动态效果’设置",
+    "无障碍合规项",
+    "关动画而非直接删功能"
+   ],
+   "plat": {
+    "web": "prefers-reduced-motion 标准",
+    "app": "RN 读系统设置或提供开关",
+    "mini": "小程序同 web"
+   },
+   "vd_bad": "<div style='font-size:9px;color:#8f2b20'>动效常开 易晕</div><div style='width:54px;height:8px;background:#E7C9C4;border-radius:4px;transform:rotate(-3deg)'></div>",
+   "vd_good": "<div style='font-size:9px;color:#155e3c'>尊重减少动效</div><div style='width:54px;height:8px;background:#BFE0CE;border-radius:4px'></div>"
+  },
+  {
+   "id": "darkmode",
+   "ch": 6,
+   "speak": "系统切深色模式页面全白刺眼",
+   "cn": "深色模式适配",
+   "en": "Dark Mode / prefers-color-scheme",
+   "anti": "写死白底黑字，深色模式下要么刺眼要么看不清",
+   "fix": "用 CSS 变量定义颜色，配合 prefers-color-scheme 切深色",
+   "bad": "body{ background:#fff; color:#000; } /* 系统深色也不变，刺眼 */",
+   "good": ":root{--bg:#fff;--tx:#1a1a1a} @media(prefers-color-scheme:dark){:root{--bg:#1a1a1a;--tx:#eee}}",
+   "tip": [
+    "颜色用 CSS 变量便于切换",
+    "深色不是简单反色，注意对比度",
+    "图片/图标也要准备深色版"
+   ],
+   "plat": {
+    "web": "prefers-color-scheme 标准",
+    "app": "RN 用 Appearance / 主题状态",
+    "mini": "小程序用 media 或手动主题切换"
+   },
+   "vd_bad": "<div style='background:#fff;color:#000;font-size:10px;padding:5px 9px;border-radius:5px;border:1px solid #eee'>系统深色也不变</div>",
+   "vd_good": "<div style='background:#1a1a1a;color:#eee;font-size:10px;padding:5px 9px;border-radius:5px'>跟随深色模式</div>"
+  },
+  {
+   "id": "form-input",
+   "ch": 7,
+   "speak": "输入框点进去边框要亮起来，让人知道现在在输入",
+   "cn": "输入框聚焦高亮",
+   "en": "Input Focus State",
+   "anti": "输入框没有任何焦点反馈，用户点进去也看不出当前在哪一格，以为没反应",
+   "fix": "输入框获得焦点时用 :focus 加边框变色+柔和阴影（focus ring），明确指示当前输入位置",
+   "bad": "<input style='border:1px solid #ccc'> /* 点了没任何变化 */",
+   "good": "input:focus{ outline:none; border-color:#C8442E; box-shadow:0 0 0 3px rgba(200,68,46,.15); }",
+   "tip": [
+    "聚焦态用 border + box-shadow 双提示",
+    "focus ring 用半透明同色，别用生硬 outline",
+    "移动端输入框字号≥16px 防自动放大"
+   ],
+   "plat": {
+    "app": "RN 用 onFocus 改样式",
+    "mini": "wxss 同样支持 :focus",
+    "web": "CSS :focus / :focus-visible 即可"
+   },
+   "vd_bad": "<div class='demo-stage' style='align-items:center'><div style='width:200px'><label style='font-size:11px;font-weight:700;color:var(--ink-3)'>手机号</label><div style='margin-top:5px;height:38px;border:1px dashed var(--line);border-radius:8px;display:flex;align-items:center;padding:0 11px;color:var(--ink-3);font-size:13px'>点这里输入</div></div><div style='font-size:11px;color:var(--bad);margin-top:6px'>点进去边框不变 · 没反馈</div></div>",
+   "vd_good": "<div class='demo-stage' style='align-items:center'><div class='f-field' style='max-width:200px'><label>手机号</label><input class='f-input demo-in' placeholder='点这里输入' type='text'></div></div>"
+  },
+  {
+   "id": "form-select",
+   "ch": 7,
+   "speak": "一个框，点开能选一个选项，像省市区选择那样",
+   "cn": "下拉选择器",
+   "en": "Select / Dropdown Selector",
+   "anti": "用原生 select 样式丑且难统一，或自己平铺选项占地方",
+   "fix": "做一个自定义下拉：输入框样式的触发器，点击展开浮层选项列表，选中后回填并收起",
+   "bad": "<select><option>北京</option>...</select> /* 原生样式难控，各端长得不一样 */",
+   "good": ".sel{ position:relative } .sel .panel{ position:absolute; top:100%; } /* 触发器+浮层，选中回填 */",
+   "tip": [
+    "浮层绝对定位，注意被父级 overflow 裁剪",
+    "选中后回填文字并收起面板",
+    "移动端选项行高够大好点按"
+   ],
+   "plat": {
+    "app": "RN Picker / ActionSheet",
+    "mini": "picker 组件或自定义弹层",
+    "web": "绝对定位浮层+点击外部关闭"
+   },
+   "vd_bad": "<div class='demo-stage' style='align-items:center'><div style='width:200px;height:38px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 11px;color:var(--ink-3);font-size:13px;pointer-events:none'>请选择城市<span>&#9662;</span></div><div style='font-size:11px;color:var(--bad);margin-top:6px'>只能看不能选</div></div>",
+   "vd_good": "<div class='demo-stage' style='align-items:center'><div class='f-sel' data-grp><div class='f-sel-btn'><span class='lbl'>请选择城市</span><span class='ar'>▾</span></div><div class='f-opt'><span data-pick data-txt='北京'>北京</span><span data-pick data-txt='上海'>上海</span><span data-pick data-txt='广州'>广州</span><span data-pick data-txt='深圳'>深圳</span></div></div></div>"
+  },
+  {
+   "id": "form-switch",
+   "ch": 7,
+   "speak": "一个能滑动的小开关，开是绿关是灰",
+   "cn": "开关切换",
+   "en": "Switch / Toggle",
+   "anti": "用两个按钮「开/关」或复选框表示，占地方又不直观",
+   "fix": "用一段式 Switch：圆点滑块在轨道上左右移动，开态变绿，关态变灰",
+   "bad": "<button>开</button><button>关</button> /* 两个按钮，像设置里一堆 */",
+   "good": ".sw{ width:48px;height:28px;border-radius:15px;background:#ccc } .sw.on{ background:#1C7A4E } .sw .dot{ transform:translateX(22px) }",
+   "tip": [
+    "开态用绿、关态用灰，符合直觉",
+    "用 transform 移动圆点（性能优于 left）",
+    "加 transition 让滑动顺滑"
+   ],
+   "plat": {
+    "app": "RN 直接用 Switch 组件，受控 value/onValueChange",
+    "mini": "小程序 switch 组件，bindchange 拿勾选状态",
+    "web": "input[type=checkbox] 自定义成开关样式"
+   },
+   "vd_bad": "<div class='demo-row' style='gap:12px'><span style='font-size:13px;color:var(--ink-2)'>接收推送通知</span><button style='height:30px;padding:0 14px;border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--ink-2);font-size:13px'>开</button><button style='height:30px;padding:0 14px;border:1px solid var(--line);background:#fff;border-radius:8px;color:var(--ink-2);font-size:13px'>关</button></div>",
+   "vd_good": "<div class='demo-row'><div class='f-sw' data-toggle='f-sw'></div><span style='font-size:13px;color:var(--ink-2)'>接收推送通知</span></div>"
+  },
+  {
+   "id": "form-checkbox",
+   "ch": 7,
+   "speak": "几个小方框，能同时勾选多个",
+   "cn": "复选框",
+   "en": "Checkbox",
+   "anti": "用文字「是/否」或图片当勾选，点击区域小、状态不清",
+   "fix": "用方形复选框：未选空心、选中填充主色并打勾，整行可点，多选独立",
+   "bad": "□ 选项A  □ 选项B /* 用文字方块，点不准也看不出选中 */",
+   "good": ".ck{ width:20px;height:20px;border:2px solid #ccc;border-radius:6px } .ck.on{ background:#C8442E;border-color:#C8442E }",
+   "tip": [
+    "整行可点，不只小方框",
+    "选中态用填充+对勾明确",
+    "多个独立，互不影响"
+   ],
+   "plat": {
+    "app": "RN 用 Checkbox 或第三方，受控 checked/onChange",
+    "mini": "小程序 checkbox 组件，bindchange 拿选中值数组",
+    "web": "input[type=checkbox]+label，CSS 自定义勾选样式"
+   },
+   "vd_bad": "<div class='demo-row' style='gap:16px'><span style='font-size:13px;color:var(--ink-2)'>&#9744; 阅读条款</span><span style='font-size:13px;color:var(--ink-2)'>&#9744; 订阅周刊</span><span style='font-size:11px;color:var(--bad)'>用文字是/否不直观</span></div>",
+   "vd_good": "<div class='demo-row' style='gap:14px'><span class='f-ck' data-check><i>✓</i>阅读条款</span><span class='f-ck' data-check><i>✓</i>订阅周刊</span><span class='f-ck' data-check><i>✓</i>同意推广</span></div>"
+  },
+  {
+   "id": "form-radio",
+   "ch": 7,
+   "speak": "几个圆圈，只能选其中一个",
+   "cn": "单选框",
+   "en": "Radio",
+   "anti": "用下拉选性别等多一步，或用复选框导致能多选出错",
+   "fix": "用圆形单选：同组互斥，选中一个自动取消其他，圆圈内点实心",
+   "bad": "<select>性别</select> /* 单选却用下拉，多一步 */",
+   "good": "input[type=radio]{ } /* 同 name 互斥，选中内点实心圆 */",
+   "tip": [
+    "同组 name 一致实现互斥",
+    "选中态圆内实心点",
+    "选项文案整行可点"
+   ],
+   "plat": {
+    "app": "RN Radio 组件或自定义，单选靠状态管理",
+    "mini": "小程序 radio 组件，同 name 自动互斥",
+    "web": "input[type=radio] name 分组，CSS 自定义圆点"
+   },
+   "vd_bad": "<div class='demo-row' style='gap:12px'><span style='font-size:13px;color:var(--ink-2)'>性别</span><div style='width:120px;height:34px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;color:var(--ink-3);font-size:13px;pointer-events:none'>男<span>&#9662;</span></div><span style='font-size:11px;color:var(--bad)'>下拉多一步</span></div>",
+   "vd_good": "<div class='demo-row' style='gap:14px'><span class='f-rd' data-pick><i></i>男</span><span class='f-rd' data-pick><i></i>女</span><span class='f-rd' data-pick><i></i>保密</span></div>"
+  },
+  {
+   "id": "btn-primary",
+   "ch": 8,
+   "speak": "页面上最显眼那个能点的按钮，一般是主操作",
+   "cn": "主按钮",
+   "en": "Primary Button",
+   "anti": "所有按钮长得一样，用户分不清哪个是主要操作",
+   "fix": "主按钮用实心主色填充、字白，视觉权重最高；次要操作用描边次级按钮区分层级",
+   "bad": "<button>保存</button><button>取消</button> /* 两个一样，主操作不突出 */",
+   "good": ".btn-primary{ background:#C8442E;color:#fff;font-weight:600 } .btn-secondary{ border:1px solid #ccc }",
+   "tip": [
+    "一个区域只一个主按钮，避免抢焦点",
+    "按下态 scale(.96) 给反馈",
+    "禁用态降透明度+not-allowed"
+   ],
+   "plat": {
+    "app": "Button 组件 variant",
+    "mini": "button 组件 type=primary",
+    "web": "CSS 即可，按下态用 :active"
+   },
+   "vd_bad": "<div class='demo-row'><button style='height:38px;padding:0 18px;border-radius:9px;background:#efece6;color:#b8b2a8;border:1px solid #e2ded7;font-size:14px'>保存更改</button><span style='font-size:11px;color:var(--bad)'>和背景同色</span></div>",
+   "vd_good": "<div class='demo-row'><button class='b-pri' data-press>保存更改</button><button class='b-sec' data-press>取消</button></div>"
+  },
+  {
+   "id": "btn-loading",
+   "ch": 8,
+   "speak": "点按钮之后转个圈，表示正在处理，别让用户以为卡了",
+   "cn": "加载按钮",
+   "en": "Loading Button",
+   "anti": "点了按钮毫无反应，用户不知道在提交还是卡了，容易重复点",
+   "fix": "点击后按钮进入 loading：禁用+转圈图标，1~2 秒处理完恢复，防止重复提交",
+   "bad": "<button onclick='submit()'>提交</button> /* 点了没反馈，狂点十次 */",
+   "good": ".btn.loading{ pointer-events:none;opacity:.8 } .btn .spin{ animation:spin .7s linear infinite }",
+   "tip": [
+    "loading 时禁用防重复提交",
+    "用 CSS 旋转圈而非 GIF",
+    "处理完及时恢复并给结果提示"
+   ],
+   "plat": {
+    "app": "ActivityIndicator",
+    "mini": "loading 组件 / wx.showLoading",
+    "web": "CSS 动画 + disabled"
+   },
+   "vd_bad": "<div class='demo-row'><button style='height:38px;padding:0 18px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-size:14px;opacity:.55'>提交中&#8230;</button><span style='font-size:11px;color:var(--bad)'>点了没反应</span></div>",
+   "vd_good": "<div class='demo-row'><button class='b-load' data-load>提交<span class='sp'></span></button></div>"
+  },
+  {
+   "id": "btn-disabled",
+   "ch": 8,
+   "speak": "不能点的按钮要变灰，让人知道现在不能操作",
+   "cn": "禁用按钮",
+   "en": "Disabled State",
+   "anti": "禁用和正常按钮长得一样，用户还去点，困惑",
+   "fix": "禁用态降低透明度+灰化+not-allowed 光标，与正常态明显区分",
+   "bad": ".btn{ background:#C8442E } /* 禁用时还是红色实心，看不出不能点 */",
+   "good": ".btn:disabled{ opacity:.45;cursor:not-allowed;background:#C8442E }",
+   "tip": [
+    "禁用态别只改颜色，加 not-allowed",
+    "不可用也要保证可读性",
+    "满足即用条件后再启用"
+   ],
+   "plat": {
+    "app": "RN disabled 属性+样式区分，禁止点击逻辑",
+    "mini": "小程序 button disabled 属性，禁用态样式单独写",
+    "web": "button[disabled] 禁用交互，CSS 调灰减透明度"
+   },
+   "vd_bad": "<div class='demo-row'><button style='height:38px;padding:0 18px;border-radius:9px;background:var(--accent);color:#fff;border:none;font-size:14px'>不可点击</button><span style='font-size:11px;color:var(--bad)'>禁用态没区分</span></div>",
+   "vd_good": "<div class='demo-row'><button class='b-dis' data-shake>不可点击</button><span style='font-size:12px;color:var(--ink-3)'>（禁用态变灰）</span></div>"
+  },
+  {
+   "id": "btn-group",
+   "ch": 8,
+   "speak": "一排按钮，选其中一个高亮，像日/周/月切换",
+   "cn": "按钮组 / 分段控件",
+   "en": "Button Group / Segmented",
+   "anti": "三个独立按钮排一起，看不出是单选互斥，容易多选",
+   "fix": "用分段控件：一组紧挨的按钮，选中项深色填充，其余浅色，互斥单选",
+   "bad": "<button>日</button><button>周</button><button>月</button> /* 分开的三个按钮 */",
+   "good": ".seg{ border:1px solid #ccc;border-radius:9px;overflow:hidden } .seg span.on{ background:#1A1A1A;color:#fff }",
+   "tip": [
+    "选中项实心深色，其余描边",
+    "分段间用分隔线或留白",
+    "互斥单选，点击切换"
+   ],
+   "plat": {
+    "app": "Segmented 控件",
+    "mini": "可通过 button 组合实现",
+    "web": "flex + .on 切换"
+   },
+   "vd_bad": "<div class='demo-row' style='gap:8px'><button style='height:36px;padding:0 15px;border:1px solid var(--line);background:#fff;border-radius:9px;color:var(--ink-2);font-size:13px'>日</button><button style='height:36px;padding:0 15px;border:1px solid var(--line);background:#fff;border-radius:9px;color:var(--ink-2);font-size:13px'>周</button><button style='height:36px;padding:0 15px;border:1px solid var(--line);background:#fff;border-radius:9px;color:var(--ink-2);font-size:13px'>月</button></div>",
+   "vd_good": "<div class='demo-row'><div class='b-grp' data-grp><span class='on'>日</span><span>周</span><span>月</span></div></div>"
+  },
+  {
+   "id": "btn-icon",
+   "ch": 8,
+   "speak": "只有图标没有字的圆按钮，比如收藏爱心",
+   "cn": "图标按钮",
+   "en": "Icon Button",
+   "anti": "图标按钮点了没任何状态变化，用户不知是否生效",
+   "fix": "图标按钮用圆形描边容器，点击后填充主色+图标变白表示已激活（如收藏成功）",
+   "bad": "<button>♥</button> /* 点了和没点一样 */",
+   "good": ".icon-btn{ width:40px;height:40px;border-radius:50%;border:1px solid #ccc } .icon-btn.on{ background:#C8442E;color:#fff }",
+   "tip": [
+    "图标按钮也要有激活态",
+    "圆形容器点击区域≥44px",
+    "加 title/aria-label 说明用途"
+   ],
+   "plat": {
+    "app": "RN 用 TouchableOpacity 包 Icon 做成 IconButton",
+    "mini": "小程序用 icon 组件或 image，bindtap 触发",
+    "web": "button 内嵌 svg/图标，给 aria-label 说明用途"
+   },
+   "vd_bad": "<div class='demo-row'><button style='width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-3);font-size:16px'>&#9829;</button><span style='font-size:11px;color:var(--bad)'>点了没状态</span></div>",
+   "vd_good": "<div class='demo-row'><button class='b-ic' data-check>♥</button><span style='font-size:12px;color:var(--ink-3)'>点一下收藏</span></div>"
+  },
+  {
+   "id": "modal-dialog",
+   "ch": 9,
+   "speak": "弹出一个框，让用户确认或填点东西再继续",
+   "cn": "模态对话框",
+   "en": "Modal / Dialog",
+   "anti": "直接执行危险操作（删除等），没有确认，一错难挽回",
+   "fix": "危险操作前弹模态框：半透明遮罩+居中卡片，明确「取消/确认」，点遮罩或取消可关",
+   "bad": "直接 deleteItem() /* 没有确认，误删没后悔药 */",
+   "good": ".modal{ position:fixed;inset:0;background:rgba(0,0,0,.45) } .modal .card{ position:absolute;center }",
+   "tip": [
+    "危险操作必加确认弹窗",
+    "遮罩点击 / ESC 可关闭",
+    "按钮主次分明，确认用主色"
+   ],
+   "plat": {
+    "app": "Alert/Dialog 组件",
+    "mini": "modal 组件 / wx.showModal",
+    "web": "fixed 遮罩 + center 卡片"
+   },
+   "vd_bad": "<div class='demo-row' style='gap:8px'><button style='height:34px;padding:0 14px;border-radius:8px;border:1px solid var(--bad);color:var(--bad);background:#fff;font-size:12.5px'>删除</button><span style='font-size:12px;color:var(--bad);text-decoration:line-through'>订单 #123</span></div>",
+   "vd_good": "<div class='mo'><button class='xbtn p' style='position:relative;z-index:1'>点击弹出对话框</button><div class='mo-mask' data-close='mo'><div class='mo-card'><h4>删除确认</h4><p>确定要删除这条记录吗？</p><div class='mo-foot'><button class='xbtn' data-close='mo'>取消</button><button class='xbtn p' data-close='mo'>删除</button></div></div></div></div>"
+  },
+  {
+   "id": "modal-drawer",
+   "ch": 9,
+   "speak": "从屏幕一侧滑出一个面板，放筛选或菜单",
+   "cn": "抽屉面板",
+   "en": "Drawer / Side Panel",
+   "anti": "筛选项全铺在页面上，内容多就又长又乱",
+   "fix": "用侧边抽屉：点按钮从右/左滑出面板，遮罩点击关闭，内容多也不占主区",
+   "bad": "<div>筛选：全部 / 已购 / 收藏 ...</div> /* 平铺占一整屏 */",
+   "good": ".drawer{ position:fixed;top:0;right:0;height:100%;transform:translateX(100%) } .drawer.on{ transform:none }",
+   "tip": [
+    "用 transform 滑入，性能优于 left",
+    "打开锁背景滚动，关闭恢复",
+    "遮罩点击或✕关闭"
+   ],
+   "plat": {
+    "app": "RN Drawer/Modal 组件，自带手势与蒙层",
+    "mini": "小程序用 drawer 或自定义 view+transform 滑出",
+    "web": "transform+transition 从侧边滑出，蒙层点击关闭"
+   },
+   "vd_bad": "<div style='display:flex;flex-direction:column;gap:6px;width:100%'><div style='padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>全部</div><div style='padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>已购</div><div style='padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>收藏</div><div style='padding:7px 9px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>价格区间</div></div>",
+   "vd_good": "<div class='dr'><button class='xbtn p' style='position:relative;z-index:1'>☰ 打开抽屉</button><div class='dr-mask' data-close='dr'></div><div class='dr-panel'><div class='dh'>筛选</div><div class='dr-item' data-close='dr'>全部</div><div class='dr-item' data-close='dr'>已购</div><div class='dr-item' data-close='dr'>收藏</div></div></div>"
+  },
+  {
+   "id": "toast-msg",
+   "ch": 9,
+   "speak": "操作完在顶部或底部飘一条小提示，几秒自己消失",
+   "cn": "轻提示 Toast",
+   "en": "Toast / Snackbar",
+   "anti": "操作完没有任何提示，用户不知道成功还是失败",
+   "fix": "轻量提示：固定在屏幕底部/顶部，出现 2~3 秒自动消失，不打断操作",
+   "bad": "/* 保存成功后页面静默无任何提示，用户怀疑没保存 */\nfunction save(){api.save(data)} /* 没弹 toast，也没 loading */",
+   "good": "function toast(msg){ /* 创建固定定位元素，2s 后移除 */ }",
+   "tip": [
+    "Toast 自动消失，不打断",
+    "位置固定、层级最高",
+    "成功/失败用不同色，可加图标"
+   ],
+   "plat": {
+    "app": "RN 用 Toast 库（如 react-native-toast-message）",
+    "mini": "小程序 wx.showToast，注意 icon 与 duration",
+    "web": "fixed 居中提示，2-3s 自动消失"
+   },
+   "vd_bad": "<div class='demo-row'><button style='height:34px;padding:0 14px;border-radius:8px;background:var(--accent);color:#fff;border:none;font-size:12.5px'>保存</button><span style='font-size:11px;color:var(--bad)'>操作完没提示</span></div>",
+   "vd_good": "<div class='demo-row'><button class='b-pri' data-toast='已保存到本地 ✓'>点一下看提示</button></div>"
+  },
+  {
+   "id": "popconfirm",
+   "ch": 9,
+   "speak": "点删除先弹个小气泡问确定吗，再执行",
+   "cn": "气泡确认",
+   "en": "Popconfirm",
+   "anti": "一点就执行删除，没有二次确认，误触成本高",
+   "fix": "在触发按钮旁弹一个小气泡确认框，点「取消/删除」才执行，减少误操作",
+   "bad": "<button onclick='del()'>删除</button> /* 一点即删 */",
+   "good": ".pop{ position:absolute; } /* 按钮旁浮出小确认卡，确认才执行 */",
+   "tip": [
+    "比全屏弹窗轻，适合列表内操作",
+    "气泡指向触发元素",
+    "确认/取消两个明确按钮"
+   ],
+   "plat": {
+    "app": "RN 用 Alert/dialog 或自定义气泡确认",
+    "mini": "小程序无原生 popconfirm，用弹窗或自定义气泡替代",
+    "web": "用 Popover/气泡组件，点确认才执行危险操作"
+   },
+   "vd_bad": "<div class='demo-row' style='gap:8px'><button style='height:34px;padding:0 14px;border-radius:8px;border:1px solid var(--bad);color:var(--bad);background:#fff;font-size:12.5px'>删除</button><span style='font-size:12px;color:var(--bad)'>已删除 &#10003;</span></div>",
+   "vd_good": "<div class='demo-row'><div class='pc'><button class='b-sec'>删除</button><div class='pc-box'>确定删除吗？<div class='pc-bt'><button class='pb c' data-close='pc'>删除</button><button class='pb x' data-close='pc'>取消</button></div></div></div></div>"
+  },
+  {
+   "id": "skeleton",
+   "ch": 9,
+   "speak": "加载时先显示灰条占位，加载完再替换成真实内容",
+   "cn": "骨架屏",
+   "en": "Skeleton Screen",
+   "anti": "加载时一片空白或一直转圈，用户以为坏了",
+   "fix": "加载占位用骨架屏：灰条模拟内容形状，数据与布局先就位，加载完平滑替换",
+   "bad": "/* 加载时整块空白，或无限 spinner */",
+   "good": ".skeleton{ background:linear-gradient(90deg,#eee,#f5f5f5,#eee);animation:shimmer }",
+   "tip": [
+    "骨架形状贴近真实布局",
+    "用微光动画暗示加载中",
+    "数据到后淡入替换，别闪"
+   ],
+   "plat": {
+    "app": "RN 用 Skeleton 组件或 view+动画占位",
+    "mini": "小程序用 view 灰条+动画模拟骨架屏",
+    "web": "CSS 渐变+shimmer 动画模拟灰条占位"
+   },
+   "vd_bad": "<div style='width:100%;height:92px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:12px'>加载中&#8230;（空白/一直转）</div>",
+   "vd_good": "<div class='demo-row'><div class='sk' data-toggle='sk'><div class='sk-line w1'></div><div class='sk-line w2'></div><div class='sk-line w3'></div><div class='sk-line w4'></div><div class='sk-real'><b>文章标题</b><span>加载完成后显示的真实内容，骨架屏结束。</span></div></div></div>"
+  },
+  {
+   "id": "anim-fade",
+   "ch": 10,
+   "speak": "元素出现或消失时用淡入淡出，别硬跳",
+   "cn": "淡入淡出",
+   "en": "Fade Transition",
+   "anti": "元素瞬间出现/消失，生硬突兀",
+   "fix": "进入/离开用 opacity 过渡（0→1 或 1→0）配合轻微位移，平滑自然",
+   "bad": "el.style.display='block' /* 硬出现 */",
+   "good": ".fade{ opacity:0;transition:opacity .3s } .fade.on{ opacity:1 }",
+   "tip": [
+    "用 opacity + transition 而非 display 直切",
+    "配合 4~8px 位移更生动",
+    "尊重「减少动效」偏好"
+   ],
+   "plat": {
+    "app": "RN 用 Animated/Reanimated 做 opacity 动画",
+    "mini": "wxss transition opacity 或 WXS 做淡入淡出",
+    "web": "opacity 过渡实现淡入淡出，transition 控制时长"
+   },
+   "vd_bad": "<div class='demo-row'><div style='padding:10px 16px;border-radius:8px;background:var(--accent);color:#fff;font-size:13px'>提示信息</div><span style='font-size:11px;color:var(--bad)'>无过渡 · 生硬</span></div>",
+   "vd_good": "<div class='an-wrap'><div class='an-fade'>提示信息</div></div>"
+  },
+  {
+   "id": "anim-flip",
+   "ch": 10,
+   "speak": "卡片翻个面看背面，像翻牌",
+   "cn": "卡片翻转",
+   "en": "Card Flip / 3D Flip",
+   "anti": "正反面用两个页面跳转切换，割裂",
+   "fix": "用 3D 翻转：容器 preserve-3d，rotateY(180deg) 翻面，正反面都在同一卡",
+   "bad": "/* 点正面直接跳转到另一个页面看背面，割裂感强 */\n.front{onclick:go('/back')} /* 离开当前卡片上下文 */",
+   "good": ".flip{ transform-style:preserve-3d;transition:transform .5s } .flip.on{ transform:rotateY(180deg) }",
+   "tip": [
+    "父容器 preserve-3d，面 backface-visibility:hidden",
+    "用 rotateY 翻转",
+    "过渡 .4~.6s 自然"
+   ],
+   "plat": {
+    "app": "RN 用 rotateY 动画或 react-native-flip-card",
+    "mini": "小程序用 transform:rotateY+preserve-3d 翻牌",
+    "web": "transform:rotateY(180deg)+transform-style:preserve-3d"
+   },
+   "vd_bad": "<div style='display:flex;gap:8px'><div style='flex:1;height:54px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink-2)'>正面</div><div style='flex:1;height:54px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ink-2)'>背面</div></div>",
+   "vd_good": "<div class='an-flip'><div class='inner'><div class='face f'>正面 · 点翻转</div><div class='face b'>背面 · 详情</div></div></div>"
+  },
+  {
+   "id": "anim-list",
+   "ch": 10,
+   "speak": "列表新增项时一个一个淡入进来，好看",
+   "cn": "列表入场过渡",
+   "en": "List Stagger Animation",
+   "anti": "列表整块刷新，没有过渡，显得卡",
+   "fix": "新项进入时逐条淡入+轻微位移，用 transition-delay 做错落感",
+   "bad": "list.push(item); render() /* 整块重绘，无过渡 */",
+   "good": ".li{ opacity:0;transform:translateX(-8px);transition:.3s } .li.on{ opacity:1;transform:none }",
+   "tip": [
+    "用 transition-delay 做错落感",
+    "位移幅度小（6~10px）",
+    "离场也可做淡出"
+   ],
+   "plat": {
+    "app": "LayoutAnimation",
+    "mini": "wx.createAnimation 逐条",
+    "web": "CSS transition + 错落 delay"
+   },
+   "vd_bad": "<div style='display:flex;flex-direction:column;gap:5px'><div style='padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;color:var(--ink-2)'>项目一</div><div style='padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;color:var(--ink-2)'>项目二</div><div style='padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12.5px;color:var(--ink-2)'>项目三</div></div>",
+   "vd_good": "<div class='an-li'><div class='li'>✓ 项目一</div><div class='li'>✓ 项目二</div><div class='li'>✓ 项目三</div></div>"
+  },
+  {
+   "id": "anim-progress",
+   "ch": 10,
+   "speak": "加载或上传时有个进度条跑动，告诉还要多久",
+   "cn": "进度条",
+   "en": "Progress Bar",
+   "anti": "没有进度反馈，用户不知还要等多久，容易退出",
+   "fix": "用进度条：背景槽 + 填充条，width 从 0 过渡到目标，明确进度百分比",
+   "bad": "/* 一直转圈 spinner，没有真实进度，用户不知还要等多久 */\n.loading{animation:spin 1s infinite} /* 永远 100% 不明 */",
+   "good": ".bar{ background:#eee } .bar .fill{ width:0;transition:width 1.4s } .bar.run .fill{ width:100% }",
+   "tip": [
+    "进度条比无限圈更有确定感",
+    "用 width/transform 过渡",
+    "完成态给成功色"
+   ],
+   "plat": {
+    "app": "RN 用 ProgressView/自定义 view width 动画",
+    "mini": "小程序 progress 组件，percent 控制进度",
+    "web": "用 width 百分比或 progress 元素做进度条"
+   },
+   "vd_bad": "<div style='width:100%'><div style='height:8px;border-radius:4px;background:var(--line)'></div><div style='font-size:11px;color:var(--bad);margin-top:6px'>不知还要多久</div></div>",
+   "vd_good": "<div class='demo-row'><div class='an-bar'><div class='fill'></div></div></div>"
+  },
+  {
+   "id": "anim-tab",
+   "ch": 10,
+   "speak": "多个内容块用标签页切换，点哪个显示哪个",
+   "cn": "标签页切换",
+   "en": "Tabs Transition",
+   "anti": "多个内容堆在一起全显示，或每次跳转新页",
+   "fix": "用 Tab 切换：标题栏选中项高亮，对应面板淡入，内容互斥显示",
+   "bad": "/* 多块内容全堆在一屏，或点一下跳一个页面 */\n<div class=\"all\">区块A 区块B 区块C...（全平铺无切换）</div>",
+   "good": ".tab.on{ background:#1A1A1A;color:#fff } .panel{ display:none } .panel.on{ display:block }",
+   "tip": [
+    "选中 Tab 高亮，面板互斥显示",
+    "切换可加淡入增强反馈",
+    "移动端 Tab 可横滑"
+   ],
+   "plat": {
+    "app": "TabView / Segmented",
+    "mini": "swiper / tab 组件",
+    "web": "display 切换 + 淡入"
+   },
+   "vd_bad": "<div style='display:flex;flex-direction:column;gap:6px'><div style='padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>简介：这里是简介内容。</div><div style='padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>评价：这里是用户评价。</div><div style='padding:8px 10px;border:1px solid var(--line);border-radius:7px;font-size:12px;color:var(--ink-2)'>详情：这里是详细参数。</div></div>",
+   "vd_good": "<div class='an-tab'><div class='tabs2' data-grp><button class='on' data-pick>简介</button><button data-pick>评价</button><button data-pick>详情</button></div><div class='panels'><div class='p on'>这里是简介内容。</div><div class='p'>这里是用户评价。</div><div class='p'>这里是详细参数。</div></div></div>"
+  },
+  {
+   "id": "card",
+   "ch": 1,
+   "speak": "把一段内容（标题、图、说明、操作）装进一个有边界、有留白的容器里，让它像一张卡片",
+   "cn": "内容卡片",
+   "en": "Card",
+   "anti": "卡片没有留白、边框太重、内部元素挤在一起，或阴影过重像浮窗",
+   "fix": "卡片用圆角 + 浅边框 + 适度内边距，内容分区清晰；阴影只在悬浮时加深",
+   "bad": "/* 所有内容平铺一屏无分组，信息密度高到看不懂 */\n<div class=\"wall\">标题 图 文字 按钮 标题 图 文字...（无卡片边界）</div>",
+   "good": ".card{ border:1px solid #ECE8E1;border-radius:14px;padding:16px;background:#fff } .card:hover{ box-shadow:0 6px 18px rgba(0,0,0,.08) }",
+   "tip": [
+    "留白比内容更重要，内边距给足",
+    "阴影克制，别像浮窗",
+    "圆角 10~16px 更亲和"
+   ],
+   "plat": {
+    "app": "Card / UIView 圆角阴影",
+    "mini": "view + CSS 圆角阴影",
+    "web": "border + border-radius + 克制阴影"
+   },
+   "vd_bad": "<div style='background:#f3f1ed;border-radius:0;padding:6px;font-size:12px;line-height:1.6;color:var(--ink-3)'>内容标题<br>这是直接摊开的文字内容，没有边界、没有留白，一眼看不出哪里是卡片。</div>",
+   "vd_good": "<div style='border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;box-shadow:0 2px 8px rgba(60,50,40,.06)'><div style='height:52px;border-radius:6px;background:linear-gradient(135deg,#bfe0ce,#a9d3c4)'></div><div style='font-size:13px;font-weight:700;color:var(--ink);margin-top:8px'>内容卡片</div><div style='font-size:12px;color:var(--ink-2);margin-top:3px;line-height:1.5'>有边界、有留白、有阴影，一眼就是一张卡片</div><div style='margin-top:8px;font-size:12px;color:var(--accent);font-weight:700'>查看详情 →</div></div>"
+  },
+  {
+   "id": "hover-lift",
+   "ch": 10,
+   "speak": "让卡片在鼠标悬停（放上鼠标）时轻轻向上浮起一点，并加一点阴影，给出『可以点、有反馈』的感觉",
+   "cn": "悬停动效",
+   "en": "Hover / hover-lift",
+   "anti": "hover 时只改颜色不加位移，反馈太弱；或位移过大、没有 transition 导致生硬闪烁",
+   "fix": "用 :hover 触发 transform: translateY(-4px) 配合 box-shadow 增强，并加 transition 让变化平滑；移动端无 hover 用 :active 兜底",
+   "bad": "a:hover{ background:#eee } /* 只变色，反馈弱 */",
+   "good": ".card{ transition:transform .2s,box-shadow .2s } .card:hover{ transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.12) }",
+   "tip": [
+    "位移幅度小（4~6px）才高级",
+    "必须加 transition 才平滑",
+    "移动端用 :active 替代 hover"
+   ],
+   "plat": {
+    "app": "RN 用 Pressable pressed 态模拟悬停高亮",
+    "mini": "小程序 hover-class 加 translateY+阴影",
+    "web": "hover 时 translateY(-4px)+阴影，给出浮起感"
+   },
+   "vd_bad": "<div style='border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;width:100%'><div style='height:48px;border-radius:6px;background:linear-gradient(135deg,#f3d9b0,#e7c9a0)'></div><div style='font-size:13px;font-weight:700;color:var(--ink);margin-top:8px'>静态卡片</div><div style='font-size:11px;color:var(--bad);margin-top:2px'>放上去没反应</div></div>",
+   "vd_good": "<div class='hl-card' data-toggle='hl-card'><div style='height:48px;border-radius:6px;background:linear-gradient(135deg,#f3d9b0,#e7c9a0)'></div><div style='font-size:13px;font-weight:700;color:var(--ink);margin-top:8px'>悬停我试试</div><div style='font-size:12px;color:var(--ink-2);margin-top:2px'>放上鼠标 / 点一下，会轻轻浮起</div></div>"
+  },
+  {
+   "id": "carousel",
+   "ch": 10,
+   "speak": "多张图片或内容可以横向滑动、或自动轮播切换",
+   "cn": "轮播图",
+   "en": "Carousel / Swiper",
+   "anti": "轮播无限循环没停顿、自动播放太花哨、没有指示点、滑动和点击冲突",
+   "fix": "提供指示点 + 左右切换，自动播放留足停留时间，移动端支持手势滑动",
+   "bad": "/* 多张图直接堆在一起重叠，只能手动一张张翻 */\n<div><img src=\"a.jpg\"><img src=\"b.jpg\"><img src=\"c.jpg\">（全叠一起）</div>",
+   "good": ".swiper{ overflow:hidden } .swiper .track{ display:flex;transition:transform .3s } .dot.on{ background:#C8442E }",
+   "tip": [
+    "指示点告诉用户有几张",
+    "自动播放停留 3~5s 别太急",
+    "移动端手势滑动优先"
+   ],
+   "plat": {
+    "app": "RN 用横向 ScrollView/第三方 Swiper",
+    "mini": "小程序 swiper 组件，autoplay+指示点开箱即用",
+    "web": "flex 轨道+transform 位移，手势+指示点"
+   },
+   "vd_bad": "<div style='display:flex;flex-direction:column;gap:6px;width:100%'><div style='height:44px;border-radius:6px;background:linear-gradient(135deg,#bfe0ce,#a9d3c4);display:flex;align-items:center;justify-content:center;font-size:12px;color:#2c5a40'>图 1</div><div style='height:44px;border-radius:6px;background:linear-gradient(135deg,#f3d9b0,#e7c9a0);display:flex;align-items:center;justify-content:center;font-size:12px;color:#6b5326'>图 2</div><div style='height:44px;border-radius:6px;background:linear-gradient(135deg,#c9d4f3,#a9b8e7);display:flex;align-items:center;justify-content:center;font-size:12px;color:#3a4170'>图 3</div></div>",
+   "vd_good": "<div class='cr'><div class='cr-track'><div class='cr-slide' style='background:linear-gradient(135deg,#bfe0ce,#a9d3c4)'>图 1</div><div class='cr-slide' style='background:linear-gradient(135deg,#f3d9b0,#e7c9a0)'>图 2</div><div class='cr-slide' style='background:linear-gradient(135deg,#c9d4f3,#a9b8e7)'>图 3</div></div><div class='cr-nav'><button data-cr-prev type='button'>‹</button><button data-cr-next type='button'>›</button></div></div>"
+  }
+ ]
+}

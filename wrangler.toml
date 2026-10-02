@@ -1,0 +1,18 @@
+name = "mayi-vibecode"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# 公开（非机密）变量，会暴露在前端构建环境
+[vars]
+ADMIN_USER = "admin"              # 后台登录用户名（密码请用 secret 设置，见下）
+GH_REPO = "xkobe/mayi-VibeCode"   # 后台写回的 GitHub 仓库
+GH_BRANCH = "main"
+
+# 机密变量（绝不能写进公开仓库！用 wrangler secret put 设置）：
+#   npx wrangler pages secret put GH_TOKEN      # 拥有 repo 权限的 GitHub PAT（后台写回用）
+#   npx wrangler pages secret put AUTH_SECRET   # 会话签名密钥，建议 32+ 位随机串
+#   npx wrangler pages secret put ADMIN_PASS    # 后台登录密码
+#
+# 构建环境变量（CF Pages 控制台 → Settings → Environment variables，作用域勾 Production 与 Builds）：
+#   VB_SITE_BASE = https://mayi-vibecode.pages.dev

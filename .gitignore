@@ -1,0 +1,24 @@
+# 构建产物（由 CF 构建时生成，不进仓库）
+/dist/
+__pycache__/
+*.pyc
+
+# 依赖
+node_modules/
+
+# 本地开发临时文件（下划线前缀）
+_*
+!.gitignore
+!.python-version
+
+# 保留引擎快照（构建必需，必须在 _* 之后取反）
+!_engine_snapshot.pyc
+
+# 工作台 / 素材草稿目录（非站点必需）
+/assets/
+/vendor_src/
+/mcp_server/
+
+# 系统
+.DS_Store
+Thumbs.db
