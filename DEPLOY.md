@@ -180,3 +180,14 @@ node test_admin.mjs
 - **内容回滚**：GitHub 仓库有完整 `data/terms.json` 历史，直接 revert 某次 commit 即触发旧内容重建。
 - **整站回滚**：`dist/` 若已提交，可 checkout 到旧 commit 后重新 Deploy。
 - **密钥泄露**：立即在 GitHub 撤销 PAT，并在 CF 轮换 `GH_TOKEN` / `AUTH_SECRET` / `ADMIN_PASS`。
+
+---
+
+## 12. 常见坑（实测踩过）
+
+- **必须建「Pages」项目，不是「Worker」**：连 GitHub 时若在 CF 控制台走了 Worker 路径（项目 URL 形如 `dash.cloudflare.com/<acct>/workers/services/view/...`），部署命令会被当成 Worker 的 `npx wrangler deploy`，要求 `main` 或 `[assets]`，而我们 toml 用的是 Pages 专属的 `pages_build_output_dir`，会报 `✘ [ERROR] Missing entry-point to Worker script or to assets directory`。`/admin` 后台（Pages Functions）在 Worker 里也不会被识别。
+  - ✅ 正确做法：Workers & Pages → Create → **选 Pages** → Connect to Git → 设 Build command=`python gen_vibecode.py`、Output=`dist`、**Deploy command 留空**。`functions/` 会自动作为 Pages Functions 上线。
+- **Deploy command 别填 `npx wrangler deploy`**：那是 Worker 命令。Pages 项目留空即可自动部署；若一定要指定，用 `npx wrangler pages deploy`。
+- **API Token 权限要含「Account Resources」**：自定义 token 即使勾了 `Cloudflare Pages: Edit`，若没在 Account Resources 里 Include 账户，调 Pages API 会返回 `code: 10000 Authentication error`。
+- **`wrangler.toml` 里绝不能写明文机密**：`AUTH_SECRET` / `ADMIN_PASS` / `GH_TOKEN` 一律走 `wrangler pages secret put` 或控制台 Encrypt 变量；公开仓库一旦提交明文即泄露。
+- **Python 版本**：`.python-version=3.13` 锁定，匹配 CF Pages v3 构建镜像默认 Python 3.13.x，确保 `_engine_snapshot.pyc`（3.13 编译）能正常加载，构建不炸。
