@@ -1,0 +1,301 @@
+{
+  "source_name": "MDN Web Docs",
+  "source_license": "CC-BY-SA 2.5 (https://creativecommons.org/licenses/by-sa/2.5/)",
+  "source_base": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/",
+  "site_label": "码译 · VibeCode",
+  "note": "本栏目内容每日从 MDN Web Docs 自动同步并补充中文「大白话」讲解，版权归 MDN 贡献者所有，依 CC-BY-SA 署名发布。",
+  "imported": [
+    {
+      "tag": "div",
+      "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/div",
+      "imported_date": "2026-10-03",
+      "purpose_en": "The generic container for flow content.",
+      "purpose_zh": "就是一个「啥语义都不代表」的万能盒子，专门把页面内容一块块包起来，方便用 CSS 给它排版、上样式。纯装饰、纯分组用，本身没有含义。",
+      "example_html": "<div class=\"card\">我是被包起来的一段内容</div>\n<style>.card{border:1px solid #ddd;border-radius:8px;padding:16px;max-width:240px;font-family:sans-serif}</style>",
+      "attributes": [
+        {
+          "name": "class",
+          "desc_zh": "给这盒子起个类名，是后续用 CSS 分组、上样式的主要钩子"
+        },
+        {
+          "name": "id",
+          "desc_zh": "页面内唯一的身份证，锚点跳转、JS 定位都用它"
+        },
+        {
+          "name": "lang",
+          "desc_zh": "标记这段内容是什么语言，利于读屏和搜索引擎"
+        },
+        {
+          "name": "title",
+          "desc_zh": "鼠标悬停时弹出的小提示文字"
+        },
+        {
+          "name": "style",
+          "desc_zh": "临时内联样式；能写 class 就别写它，太散"
+        }
+      ],
+      "pitfalls_zh": "1）一上来就满屏 div 套 div，语义全丢，搜索引擎和读屏软件都看不懂——能用语义标签（section/article/nav）就别用 div。2）旧属性 align 已废弃，居中/布局请用 CSS（Flexbox / Grid），别再写 align=\"center\"。"
+    },
+    {
+      "tag": "span",
+      "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/span",
+      "imported_date": "2026-10-03",
+      "purpose_en": "The generic inline container for phrasing content.",
+      "purpose_zh": "和 div 是亲兄弟，但它是「行内」盒子——不换行，专门给一句话里的某几个字单独上色、加粗或挂事件，不影响整体排版换行。",
+      "example_html": "<p>总价 <span class=\"hl\">￥199</span>，限时优惠</p>\n<style>.hl{color:#C8442E;font-weight:800}</style>",
+      "attributes": [
+        {
+          "name": "class",
+          "desc_zh": "类名钩子，用来给这几个字单独上样式"
+        },
+        {
+          "name": "id",
+          "desc_zh": "行内唯一身份证"
+        },
+        {
+          "name": "lang",
+          "desc_zh": "标记这几个字是什么语言"
+        },
+        {
+          "name": "title",
+          "desc_zh": "悬停提示"
+        }
+      ],
+      "pitfalls_zh": "1）span 是行内的，直接给它设 width/height 或上下 margin 不生效（除非改成 inline-block / block）。2）别拿 span 当布局盒子用，要换行排版的块用 div。"
+    },
+    {
+      "tag": "section",
+      "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/section",
+      "imported_date": "2026-10-03",
+      "purpose_en": "The generic section element.",
+      "purpose_zh": "代表文档里一个「成块的主题段落」，比如一章、一节。比 div 多一层语义——明确告诉浏览器「这是文档结构里的一节」。每块 section 最好配一个标题（h1~h6）。",
+      "example_html": "<section>\n  <h2>关于我们</h2>\n  <p>这里写公司介绍……</p>\n</section>",
+      "attributes": [
+        {
+          "name": "class",
+          "desc_zh": "类名，用来给这一节上样式"
+        },
+        {
+          "name": "id",
+          "desc_zh": "这一节的页面内锚点 id"
+        },
+        {
+          "name": "aria-label",
+          "desc_zh": "当 section 没有可见标题时，用它在读屏里补一个名字"
+        }
+      ],
+      "pitfalls_zh": "1）别和 div 混用：单纯为了排版上样式就用 div，要表达「这是一节内容」才用 section。2）每个 section 尽量配一个标题，否则读屏软件和 SEO 都不友好；如果是能独立成篇的内容（一篇博客 / 一条评论）改用 article。"
+    },
+    {
+      "tag": "a",
+      "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a",
+      "imported_date": "2026-10-03",
+      "purpose_en": "Creates a hyperlink to web pages, files, email addresses, or any URL.",
+      "purpose_zh": "超链接本链——靠 href 指向一个地址（网页 / 文件 / 邮件 / 电话都行）。链接文字要让人一看就知道去哪，别只写「点击这里」。",
+      "example_html": "<a href=\"https://mayi-vibecode.pages.dev\">去看码译 VibeCode</a>",
+      "attributes": [
+        {
+          "name": "href",
+          "desc_zh": "链接指向的地址；没有它，a 就不是链接而是普通文本"
+        },
+        {
+          "name": "target",
+          "desc_zh": "在哪打开：_blank = 新标签页，_self = 当前页（默认）"
+        },
+        {
+          "name": "rel",
+          "desc_zh": "和目标的关系；外链常用 noreferrer noopener 防安全漏洞"
+        },
+        {
+          "name": "download",
+          "desc_zh": "点了不直接跳转而是下载文件（仅同域或 blob 有效）"
+        },
+        {
+          "name": "title",
+          "desc_zh": "悬停提示，说明这个链接去干嘛"
+        }
+      ],
+      "pitfalls_zh": "1）别把 href 写成 \"#\" 或 javascript:void(0) 来假装按钮——这是滥用，应该用 <button>。2）外链开新标签页（target=\"_blank\"）时记得加 rel=\"noopener\"，否则有 window.opener 安全漏洞（新版浏览器已默认补，但写上更稳）。"
+    },
+    {
+      "tag": "img",
+      "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img",
+      "imported_date": "2026-10-03",
+      "purpose_en": "Embeds an image into the document.",
+      "purpose_zh": "把一张图片塞进页面。它是「空元素」没有结束标签。最少要写 src（图在哪）和 alt（图挂了 / 读屏时显示啥）。",
+      "example_html": "<img src=\"https://mayi-vibecode.pages.dev/assets/logo.svg\" alt=\"码译 VibeCode 的 logo\" width=\"120\" height=\"120\">",
+      "attributes": [
+        {
+          "name": "src",
+          "desc_zh": "图片文件的地址，告诉浏览器去哪拿图"
+        },
+        {
+          "name": "alt",
+          "desc_zh": "替代文字：图加载失败或读屏时显示，无障碍必填"
+        },
+        {
+          "name": "width",
+          "desc_zh": "宽度（像素整数），提前占位防布局跳动"
+        },
+        {
+          "name": "height",
+          "desc_zh": "高度（像素整数），和 width 配合预留空间"
+        },
+        {
+          "name": "loading",
+          "desc_zh": "加载策略：eager 立即加载 / lazy 滚动到附近才加载"
+        }
+      ],
+      "pitfalls_zh": "1）alt 千万别省也别乱写——省了读屏会念文件名；写成「这是一张图片」也没用，要写图片真正表达的信息。2）用 loading=\"lazy\" 懒加载时务必同时写 width / height，否则图加载前尺寸是 0，会严重布局跳动甚至永不加载。"
+    },
+    {
+      "tag": "ul",
+      "mdn_url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/ul",
+      "imported_date": "2026-10-03",
+      "purpose_en": "The unordered list element.",
+      "purpose_zh": "无序列表——用来装一组「没有先后顺序」的事项，浏览器默认渲染成前面带小圆点的列表。项与项互换位置不改变含义就用它；如果顺序有意义（比如步骤 1/2/3）就该用 <ol>。",
+      "example_html": "<ul>\n  <li>下载安装包</li>\n  <li>双击运行</li>\n  <li>按提示完成</li>\n</ul>",
+      "attributes": [
+        {
+          "name": "class",
+          "desc_zh": "类名，给这列表或整体上样式用"
+        },
+        {
+          "name": "id",
+          "desc_zh": "列表的页面内唯一 id"
+        },
+        {
+          "name": "lang",
+          "desc_zh": "标记列表文字的语言"
+        },
+        {
+          "name": "title",
+          "desc_zh": "悬停提示"
+        }
+      ],
+      "pitfalls_zh": "1）type 属性（circle/disc/square）和 compact 都已废弃，想改圆点样式或紧凑排版请用 CSS 的 list-style-type / line-height。2）别拿 <ul> 来「凑缩进」或纯排版——列表就该装真正的列表项（<li>）；要换行排版的块用 <div>。"
+    }
+  ],
+  "backlog": [
+    "abbr",
+    "acronym",
+    "address",
+    "area",
+    "article",
+    "aside",
+    "audio",
+    "b",
+    "base",
+    "bdi",
+    "bdo",
+    "big",
+    "blockquote",
+    "body",
+    "br",
+    "button",
+    "canvas",
+    "caption",
+    "center",
+    "cite",
+    "code",
+    "col",
+    "colgroup",
+    "data",
+    "datalist",
+    "dd",
+    "del",
+    "details",
+    "dfn",
+    "dialog",
+    "dir",
+    "dl",
+    "dt",
+    "em",
+    "embed",
+    "fencedframe",
+    "fieldset",
+    "figcaption",
+    "figure",
+    "font",
+    "footer",
+    "form",
+    "frame",
+    "frameset",
+    "head",
+    "header",
+    "hgroup",
+    "hr",
+    "html",
+    "i",
+    "iframe",
+    "input",
+    "ins",
+    "kbd",
+    "label",
+    "legend",
+    "li",
+    "link",
+    "main",
+    "map",
+    "mark",
+    "marquee",
+    "menu",
+    "meta",
+    "meter",
+    "nav",
+    "nobr",
+    "noembed",
+    "noframes",
+    "noscript",
+    "object",
+    "ol",
+    "optgroup",
+    "option",
+    "output",
+    "p",
+    "param",
+    "picture",
+    "plaintext",
+    "pre",
+    "progress",
+    "q",
+    "rb",
+    "rp",
+    "rt",
+    "rtc",
+    "ruby",
+    "s",
+    "samp",
+    "script",
+    "search",
+    "select",
+    "selectedcontent",
+    "slot",
+    "small",
+    "source",
+    "strike",
+    "strong",
+    "style",
+    "sub",
+    "summary",
+    "sup",
+    "table",
+    "tbody",
+    "td",
+    "template",
+    "textarea",
+    "tfoot",
+    "th",
+    "thead",
+    "time",
+    "title",
+    "tr",
+    "track",
+    "tt",
+    "u",
+    "var",
+    "video",
+    "wbr",
+    "xmp"
+  ]
+}
