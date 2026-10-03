@@ -2061,12 +2061,12 @@ __JSONLD__
 <header class="top">
   <div class="top-in">
     <a class="logo" href="#top">
-      <span class="logo-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-5 6 5 6"/><path d="M16 6l5 6-5 6"/></svg></span>
+      <span class="logo-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5 L4 12 L9 19"/><path d="M15 5 L20 12 L15 19"/><path d="M8 21 H16"/><path d="M8 21 L10.6 18.4 M8 21 L10.6 23.6"/><path d="M16 21 L13.4 18.4 M16 21 L13.4 23.6"/></svg></span>
       <span><span class="logo-tx">码译 · VibeCode</span><br><span class="logo-sub">选个动作，直接拿提示词</span></span>
     </a>
     <div class="top-act">
-      <button class="tbtn" id="btnExport"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>导出收藏</button>
-      <button class="tbtn" id="btnImport"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 8l5-5 5 5"/><path d="M12 3v12"/></svg>导入</button>
+      <button class="tbtn" id="btnExport"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10"/><path d="M7.5 9.5 12 14l4.5-4.5"/><path d="M5 19h14"/></svg>导出收藏</button>
+      <button class="tbtn" id="btnImport"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V5"/><path d="M7.5 8.5 12 4l4.5 4.5"/><path d="M5 19h14"/></svg>导入</button>
       <input type="file" id="fileIn" accept=".json,application/json" class="hide">
     </div>
   </div>
@@ -2106,7 +2106,7 @@ __JSONLD__
         <div class="card" style="margin-top:0">
           <div class="card-bd">
             <div class="search" style="position:relative">
-              <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#938E85" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+              <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#938E85" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5L15.8 15.8"/></svg>
               <input type="text" id="q" placeholder="搜大白话或术语：垂直居中 / 吸顶 / 安全区 / z-index …" autocomplete="off" style="width:100%;height:46px;padding:0 12px 0 36px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px">
             </div>
             <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
@@ -2136,7 +2136,7 @@ __JSONLD__
           <div class="tr-input-wrap">
             <textarea id="trInput" class="tr-input" rows="3" placeholder="比如：卡片鼠标放上去的时候微微抬起一点，加个阴影"></textarea>
             <button class="tr-mic" id="trMic" type="button" title="语音输入（Chrome 可用，无需联网）" aria-label="语音输入">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M6 11a6 6 0 0 0 12 0"/><path d="M12 17v4"/><path d="M9 21h6"/></svg>
             </button>
           </div>
           <div class="tr-examples" id="trExamples">
@@ -2406,7 +2406,7 @@ function renderCards(){
   // 空态
   var emptyEl = document.getElementById("libEmpty");
   if(!list.length){
-    if(!emptyEl){ emptyEl=document.createElement("div"); emptyEl.id="libEmpty"; emptyEl.className="empty"; emptyEl.innerHTML='<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>没有匹配的术语，换个说法试试～'; document.querySelector(".lib-main").appendChild(emptyEl); }
+    if(!emptyEl){ emptyEl=document.createElement("div"); emptyEl.id="libEmpty"; emptyEl.className="empty"; emptyEl.innerHTML='<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M20.5 20.5L15.8 15.8"/></svg>没有匹配的术语，换个说法试试～'; document.querySelector(".lib-main").appendChild(emptyEl); }
     emptyEl.classList.remove("hide");
   } else if(emptyEl){ emptyEl.classList.add("hide"); }
   // 收藏星标状态
@@ -3442,15 +3442,22 @@ def _colors_body():
     )
 
 LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="码译 VibeCode">
-  <rect width="64" height="64" rx="14" fill="#C8442E"/>
-  <g fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M25 19 L13 32 L25 45"/>
-    <path d="M39 19 L51 32 L39 45"/>
+  <defs>
+    <linearGradient id="vbLogoGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E25738"/>
+      <stop offset="1" stop-color="#C8442E"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#vbLogoGrad)"/>
+  <rect x="3.4" y="3.4" width="57.2" height="57.2" rx="12" fill="none" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="1.6"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M27 16 L13 32 L27 48"/>
+    <path d="M37 16 L51 32 L37 48"/>
   </g>
   <g fill="none" stroke="#FFFFFF" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M27 51 H37"/>
-    <path d="M30.6 47.6 L27 51 L30.6 54.4"/>
-    <path d="M33.4 47.6 L37 51 L33.4 54.4"/>
+    <path d="M20 54 H44"/>
+    <path d="M20 54 L24.4 50.4 M20 54 L24.4 57.6"/>
+    <path d="M44 54 L39.6 50.4 M44 54 L39.6 57.6"/>
   </g>
 </svg>"""
 
