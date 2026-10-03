@@ -25,3 +25,8 @@ Thumbs.db
 
 # wrangler 本地缓存
 .wrangler/
+
+# 构建产物：每次 gen_vibecode.py 重新生成，体积大且易变
+vibecode-term-studio.html
+# 临时部署副本（daily_term_update.py 生成）
+.deploy*

@@ -3461,6 +3461,45 @@ LOGO_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width=
   </g>
 </svg>"""
 
+def _write_404(out):
+    # 真 404 页：由 functions/[[path]].js 兜底以 HTTP 404 返回（非 200 首页）
+    body = (
+        '<section class="nf">'
+        '<style>'
+        '.nf{max-width:680px;margin:56px auto;text-align:center}'
+        '.nf-code{font-size:88px;font-weight:900;color:#C8442E;letter-spacing:3px;line-height:1}'
+        '.nf h1{font-size:24px;margin:14px 0 8px}'
+        '.nf p{color:#6b7280;margin:0 0 26px}'
+        '.nf-links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}'
+        '.btn{display:inline-block;padding:10px 18px;border-radius:10px;background:#C8442E;color:#fff;font-weight:700;text-decoration:none}'
+        '.btn.ghost{background:#fff;color:#C8442E;border:1px solid #C8442E}'
+        '</style>'
+        '<div class="nf-code">404</div>'
+        '<h1>这个页面走丢了</h1>'
+        '<p>你访问的地址不存在，可能已被移动或从未存在。下面是几个常用入口：</p>'
+        '<div class="nf-links">'
+        '<a class="btn" href="/">回到首页 · 全部术语</a>'
+        '<a class="btn ghost" href="/colors/index.html">AI 配色方案库</a>'
+        '<a class="btn ghost" href="/icons/index.html">AI 图标库</a>'
+        '</div>'
+        '</section>'
+    )
+    ld = {"@context": "https://schema.org", "@type": "WebPage",
+          "name": "404 - 页面不存在", "isPartOf": {"@type": "WebSite", "name": "码译 · VibeCode"}}
+    html = PAGE_TMPL % {
+        "title": "页面走丢了 · 码译 · VibeCode",
+        "desc": "你访问的页面不存在，返回码译 · VibeCode 首页继续浏览前端组件术语。",
+        "canon": SITE_BASE + "/404.html",
+        "kw": "404,页面不存在,码译 VibeCode",
+        "ogimg": "",
+        "body": body,
+        "ld": json.dumps(ld, ensure_ascii=False),
+        "year": "2026",
+    }
+    with io.open(os.path.join(out, "404.html"), "w", encoding="utf-8") as f:
+        f.write(html)
+
+
 def export_static_dist(html):
     out = "dist"
     os.makedirs(os.path.join(out, "assets"), exist_ok=True)
@@ -3587,7 +3626,9 @@ def export_static_dist(html):
     )
     with io.open(os.path.join(out, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
-    print("DIST: %d pages + sitemap.xml + robots.txt + assets -> %s/" % (written, out))
+    # 真 404 页面：未知路径由 functions/[[path]].js 兜底返回此页（HTTP 404）
+    _write_404(out)
+    print("DIST: %d pages + sitemap.xml + robots.txt + 404.html + assets -> %s/" % (written, out))
 
 def _build_and_export():
     global html

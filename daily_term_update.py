@@ -62,11 +62,14 @@ def deploy_site(added_ids):
     env["CLOUDFLARE_API_TOKEN"] = token
     env["CLOUDFLARE_ACCOUNT_ID"] = ACCOUNT_ID
     env["MSYS_NO_PATHCONV"] = "1"
-    print("[deploy] wrangler pages deploy -> %s" % deploy_dir)
+    # 关键：必须从 ROOT 运行部署，wrangler 才会把 ROOT/functions（含 [[path]].js 兜底路由）一并上传。
+    # 此前 cwd=deploy_dir 只传了静态资源，导致函数（含后台、兜底路由）一直没被更新，
+    # 旧部署里残留的 catch-all 才会对所有未知路径返回 200 首页。
+    print("[deploy] wrangler pages deploy %s (functions from ROOT)" % deploy_dir)
     try:
         r = subprocess.run(
-            [NODE, WRANGLER, "pages", "deploy", ".", "--project-name", PROJECT, "--branch", "main"],
-            cwd=deploy_dir, env=env, capture_output=True, text=True, timeout=300,
+            [NODE, WRANGLER, "pages", "deploy", deploy_dir, "--project-name", PROJECT, "--branch", "main"],
+            cwd=ROOT, env=env, capture_output=True, text=True, timeout=300,
         )
     except subprocess.TimeoutExpired:
         print("[ERROR] 部署超时（300s）。dist 已生成，网络恢复后可重跑本脚本或手动部署。")
