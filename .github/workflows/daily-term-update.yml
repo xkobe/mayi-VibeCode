@@ -1,0 +1,61 @@
+name: 术语大全日更
+
+# 每日自动把一个候选术语并入「术语大全」主库，并重新构建 + 部署到 Cloudflare Pages。
+# 术语内容遵循仓库根目录 RULES.md 的入库规则（选术语组件 / 大白话及效果 / 专业提示词效果可点击）。
+on:
+  schedule:
+    # 每天 UTC 18:00（北京次日 02:00）跑一次；按需改这条 cron 即可。
+    - cron: "0 18 * * *"
+  workflow_dispatch: {}   # 允许在 Actions 页面手动点「Run workflow」立即触发
+
+permissions:
+  contents: write   # 用于把更新后的 data/*.json 提交回仓库（留作记录/备份）
+
+concurrency:
+  group: term-daily
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install wrangler
+        run: npm install -g wrangler@latest
+
+      # 取候补词库中下一条「符合入库规则」的术语，追加进主库、构建站点、部署上线。
+      # CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID 在仓库 Settings → Secrets 中配置。
+      - name: Append next term, build & deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: python daily_term_update.py --count 1
+
+      # 把更新后的 data 文件提交回仓库，作为版本记录（部署本身由上面的 wrangler 完成）。
+      - name: Commit data (backup)
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/terms.json data/term_backlog.json
+          if git diff --cached --quiet; then
+            echo "无数据变动，跳过提交"
+          else
+            git commit -m "chore: 每日术语入库（自动）"
+            git push
+          fi
