@@ -116,7 +116,12 @@ def deploy_site(added_ids):
         token = open(TOKEN_PATH, encoding="utf-8").read().strip()
     env = os.environ.copy()
     env["CLOUDFLARE_API_TOKEN"] = token
-    env["CLOUDFLARE_ACCOUNT_ID"] = ACCOUNT_ID
+    account_id = os.environ.get("CLOUDFLARE_ACCOUNT_ID") or ACCOUNT_ID
+    env["CLOUDFLARE_ACCOUNT_ID"] = account_id
+    print("[deploy] 使用 Cloudflare 账号 ID: %s%s" % (
+        account_id,
+        "（来自 secret CLOUDFLARE_ACCOUNT_ID）" if os.environ.get("CLOUDFLARE_ACCOUNT_ID") else "（脚本常量兜底）",
+    ))
     env["MSYS_NO_PATHCONV"] = "1"
     # 关键：必须从 ROOT 运行部署，wrangler 才会把 ROOT/functions（含 [[path]].js 兜底路由）一并上传。
     # 此前 cwd=deploy_dir 只传了静态资源，导致函数（含后台、兜底路由）一直没被更新，
