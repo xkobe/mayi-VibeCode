@@ -3,30 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "responsive-breakpoint",
-      "ch": 5,
-      "speak": "同一套布局在手机和电脑上都挤成一团，或在大屏上空一大片",
-      "cn": "响应式断点",
-      "en": "Responsive Breakpoint",
-      "anti": "不做断点适配，手机上表格挤爆、电脑上内容窄成一条很浪费",
-      "fix": "用媒体查询在不同宽度套用不同布局，移动端单列、桌面多列",
-      "bad": ".g{ grid-template-columns:repeat(4,1fr); } /* 手机也挤 4 列 */",
-      "good": "@media(min-width:768px){ .g{ grid-template-columns:repeat(4,1fr); } }",
-      "tip": [
-        "常用断点 640 / 768 / 1024 / 1280",
-        "优先移动优先（min-width）写法，向后兼容",
-        "用 auto-fit + minmax 减少断点数量",
-        "别只盯着某款设备宽度，按内容断点"
-      ],
-      "plat": {
-        "web": "媒体查询 + 移动优先，断点覆盖主流视口",
-        "app": "Flex/约束布局天然响应式，少断点",
-        "mini": "rpx 自适应单位 + 条件样式"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:3px'><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span></div><div style='font-size:9px;color:#bbb;margin-top:6px'>手机挤 4 列</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'><div style='display:grid;grid-template-columns:1fr;gap:4px'><span style='height:14px;background:#BFE0CE;border-radius:3px'></span><span style='height:14px;background:#BFE0CE;border-radius:3px'></span></div><div style='font-size:9px;color:#2E8B72;margin-top:6px'>手机单列</div></div></div>"
-    },
-    {
       "id": "floating-label",
       "ch": 7,
       "speak": "输入框没有固定标签，placeholder 一输入就消失，填完回头看不知道这格填的是什么",
