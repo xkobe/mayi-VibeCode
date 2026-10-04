@@ -109,6 +109,11 @@ def deploy_site(added_ids):
     # 令牌优先取环境变量（GitHub Actions 通过 secret 注入 CLOUDFLARE_API_TOKEN），本地回退到文件
     token = os.environ.get("CLOUDFLARE_API_TOKEN")
     if not token:
+        # 区分「secret 没设」和「secret 设了但值为空」，便于远端定位
+        if "CLOUDFLARE_API_TOKEN" in os.environ:
+            print("[ERROR] 检测到环境变量 CLOUDFLARE_API_TOKEN 已存在，但值为空（secret 值为空）。"
+                  "请在仓库 Secrets 重新填入有效的 Cloudflare Token。")
+            sys.exit(1)
         if not os.path.exists(TOKEN_PATH):
             print("[ERROR] 未找到 Cloudflare 令牌：请在 CI 设 secret CLOUDFLARE_API_TOKEN，"
                   "或在本机放置 %s" % TOKEN_PATH)
