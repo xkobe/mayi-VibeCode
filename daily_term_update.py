@@ -25,7 +25,14 @@ TERMS_JSON = os.path.join(DATA, "terms.json")
 BACKLOG_JSON = os.path.join(DATA, "term_backlog.json")
 DIST = os.path.join(ROOT, "dist")
 
-PY = "C:/Users/小可爱/.workbuddy/binaries/python/versions/3.13.12/python.exe"
+def _python():
+    # 本地 Windows 用受管运行时；CI / 其他平台用当前解释器(sys.executable)。
+    # 注意：GitHub Actions 跑在 Ubuntu 上，原写死的 Windows 路径不存在会直接 FileNotFoundError。
+    managed = "C:/Users/小可爱/.workbuddy/binaries/python/versions/3.13.12/python.exe"
+    if sys.platform.startswith("win") and os.path.exists(managed):
+        return managed
+    return sys.executable
+
 NODE = "C:/Users/小可爱/.workbuddy/binaries/node/versions/22.22.2/node.exe"
 WRANGLER = "C:/Users/小可爱/.workbuddy/binaries/node/workspace/node_modules/wrangler/bin/wrangler.js"
 ACCOUNT_ID = "7e0a10c7639644ba5634ad7c11b895e9"
@@ -87,7 +94,7 @@ def _wrangler_cmd():
 
 def build_site():
     print("[build] 运行 gen_vibecode.py ...")
-    r = subprocess.run([PY, "gen_vibecode.py"], cwd=ROOT, capture_output=True, text=True)
+    r = subprocess.run([_python(), "gen_vibecode.py"], cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         print("[ERROR] 生成失败：\n", r.stdout, r.stderr)
         sys.exit(1)
@@ -102,6 +109,10 @@ def deploy_site(added_ids):
     # 令牌优先取环境变量（GitHub Actions 通过 secret 注入 CLOUDFLARE_API_TOKEN），本地回退到文件
     token = os.environ.get("CLOUDFLARE_API_TOKEN")
     if not token:
+        if not os.path.exists(TOKEN_PATH):
+            print("[ERROR] 未找到 Cloudflare 令牌：请在 CI 设 secret CLOUDFLARE_API_TOKEN，"
+                  "或在本机放置 %s" % TOKEN_PATH)
+            sys.exit(1)
         token = open(TOKEN_PATH, encoding="utf-8").read().strip()
     env = os.environ.copy()
     env["CLOUDFLARE_API_TOKEN"] = token
