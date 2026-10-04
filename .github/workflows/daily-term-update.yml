@@ -1,7 +1,13 @@
 name: 术语大全日更
 
-# 每日自动把一个候选术语并入「术语大全」主库，并重新构建 + 部署到 Cloudflare Pages。
-# 术语内容遵循仓库根目录 RULES.md 的入库规则（选术语组件 / 大白话及效果 / 专业提示词效果可点击）。
+# 每日自动把一个候选术语并入「术语大全」主库，并重新构建站点。
+# 站点遵循仓库根目录 RULES.md 的入库规则（选术语组件 / 大白话及效果 / 专业提示词效果可点击）。
+#
+# 部署机制（无令牌）：本项目已把 Cloudflare Pages 项目「连接 Git 仓库」，
+# 监听 main 分支的 push 自动执行 `python gen_vibecode.py` 构建并上线。
+# 因此本 workflow 只负责：追加术语 + 本地构建校验 + 把 data 提交回仓库，
+# 不再调用任何 Cloudflare API，无需 CLOUDFLARE_API_TOKEN。
+
 on:
   schedule:
     # 每天 UTC 18:00（北京次日 02:00）跑一次；按需改这条 cron 即可。
@@ -30,23 +36,13 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Setup Node 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
+      # 取候补词库中下一条「符合入库规则」的术语，追加进主库并本地构建 dist（仅校验，不部署）。
+      # 真正的部署由 Cloudflare Pages 连接 Git 后的自动构建完成，无需任何令牌。
+      - name: Append next term & build
+        run: python daily_term_update.py --count 1 --no-deploy
 
-      - name: Install wrangler
-        run: npm install -g wrangler@latest
-
-      # 取候补词库中下一条「符合入库规则」的术语，追加进主库、构建站点、部署上线。
-      # CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID 在仓库 Settings → Secrets 中配置。
-      - name: Append next term, build & deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: python daily_term_update.py --count 1
-
-      # 把更新后的 data 文件提交回仓库，作为版本记录（部署本身由上面的 wrangler 完成）。
+      # 把更新后的 data 文件提交回仓库，作为版本记录；
+      # Cloudflare 监测到 main 分支的这次 push 后会自动重新构建并上线。
       - name: Commit data (backup)
         if: success()
         run: |
