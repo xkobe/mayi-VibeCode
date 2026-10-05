@@ -2048,6 +2048,30 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:3px'><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span><span style='height:14px;background:#E7C9C4;border-radius:3px'></span></div><div style='font-size:9px;color:#bbb;margin-top:6px'>手机挤 4 列</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-body'><div style='display:grid;grid-template-columns:1fr;gap:4px'><span style='height:14px;background:#BFE0CE;border-radius:3px'></span><span style='height:14px;background:#BFE0CE;border-radius:3px'></span></div><div style='font-size:9px;color:#2E8B72;margin-top:6px'>手机单列</div></div></div>"
+    },
+    {
+      "id": "floating-label",
+      "ch": 7,
+      "speak": "输入框没有固定标签，placeholder 一输入就消失，填完回头看不知道这格填的是什么",
+      "cn": "浮动标签输入框",
+      "en": "Floating Label Input",
+      "anti": "只用 placeholder 当标签，输入后文字消失，长表单填到一半忘了每格该填啥",
+      "fix": "label 默认当占位提示，获得焦点或已有内容时上浮缩小成小标签，始终可见",
+      "bad": "<input placeholder='手机号'>",
+      "good": "input:focus + label, input:not(:placeholder-shown) + label{ transform:translateY(-18px) scale(.8); }",
+      "tip": [
+        "浮动靠 :placeholder-shown 判断是否有值",
+        "输入框需保留 placeholder=' ' 空格占位触发判断",
+        "上浮标签颜色用 accent 与主输入区分",
+        "移动端上浮后字号别太小，保证可读"
+      ],
+      "plat": {
+        "web": "纯 CSS 用 :placeholder-shown + 相邻兄弟选择器，无需 JS",
+        "app": "RN 用 react-native-paper 的 TextInput mode='outlined' 自带",
+        "mini": "用 cover-view + 聚焦事件切换 class 模拟"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-bar'>注册</div><div class='m-body'><div style='border:1px solid #ddd;border-radius:8px;padding:9px 10px;color:#bbb;font-size:11px'>手机号</div><div style='margin-top:12px;color:#bbb;font-size:10px'>填完上面，回头看不知道这格填的啥</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-bar'>注册</div><div class='m-body'><div style='position:relative;border:1px solid #C8442E;border-radius:8px;padding:12px 10px 6px'><div style='position:absolute;top:2px;left:10px;font-size:8px;color:#C8442E'>手机号</div><div style='font-size:12px;color:#333'>138****8888</div></div><div style='margin-top:8px;font-size:10px;color:#2E8B72'>标签一直浮在上面</div></div></div>"
     }
   ]
 }
