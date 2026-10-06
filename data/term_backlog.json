@@ -3,30 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "input-validate",
-      "ch": 7,
-      "speak": "表单提交后才告诉用户哪填错了，白白浪费一次提交还得重填",
-      "cn": "实时输入校验",
-      "en": "Inline Input Validation",
-      "anti": "点提交才校验，错误一堆弹出来，用户得回过头重填，体验很差",
-      "fix": "输入失焦或实时校验，错的项立刻标红给提示，对了给绿色对勾",
-      "bad": "/* 只有点提交才校验，错误一坨 */",
-      "good": "onblur=validate(); if(!ok) showError('手机号格式不对');",
-      "tip": [
-        "失焦时校验比每次按键更友好，不打扰输入",
-        "错误信息贴着字段下方，别用中断式弹窗",
-        "校验通过给绿色对勾增强信心",
-        "提交前再整体校验一遍兜底"
-      ],
-      "plat": {
-        "web": "onblur/oninput 校验 + aria-invalid 标记错误项",
-        "app": "用 react-hook-form 等库做实时校验",
-        "mini": "bindblur 事件触发字段校验"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-bar s'>提交后</div><div class='m-body'><div style='font-size:10px;color:#C8442E'>手机号格式不对</div><div style='font-size:10px;color:#C8442E'>密码至少8位</div><div style='font-size:10px;color:#C8442E'>邮箱格式不对</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-bar'>实时校验</div><div class='m-body'><div style='border:1px solid #C8442E;border-radius:8px;padding:8px 10px;font-size:11px;color:#333'>138****8888</div><div style='font-size:10px;color:#C8442E;margin-top:3px'>手机号格式不对</div></div></div>"
-    },
-    {
       "id": "password-toggle",
       "ch": 7,
       "speak": "输密码时完全看不见，容易输错还得重来，也没法核对",
