@@ -2096,6 +2096,30 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-bar s'>提交后</div><div class='m-body'><div style='font-size:10px;color:#C8442E'>手机号格式不对</div><div style='font-size:10px;color:#C8442E'>密码至少8位</div><div style='font-size:10px;color:#C8442E'>邮箱格式不对</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-bar'>实时校验</div><div class='m-body'><div style='border:1px solid #C8442E;border-radius:8px;padding:8px 10px;font-size:11px;color:#333'>138****8888</div><div style='font-size:10px;color:#C8442E;margin-top:3px'>手机号格式不对</div></div></div>"
+    },
+    {
+      "id": "password-toggle",
+      "ch": 7,
+      "speak": "输密码时完全看不见，容易输错还得重来，也没法核对",
+      "cn": "密码可见切换",
+      "en": "Password Visibility Toggle",
+      "anti": "密码框只能盲打，输错一位全重输，没有核对机会",
+      "fix": "输入框后加个小眼睛图标，点击在明文/圆点之间切换",
+      "bad": "<input type='password'> /* 全程盲打 */",
+      "good": "<input :type=\"show?'text':'password'\"><button @click='show=!show'>眼睛</button>",
+      "tip": [
+        "切换按钮用眼睛开/合图标区分状态",
+        "默认隐藏，切换时给短暂明文即可",
+        "切换后保持输入框焦点不丢",
+        "别只用 emoji 当图标，配文字说明"
+      ],
+      "plat": {
+        "web": "按钮用 type=button 防止误提交，aria-label 标状态",
+        "app": "TextInput secureTextEntry 配合图标按钮",
+        "mini": "password 属性 + 图标切换"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-bar'>登录</div><div class='m-body'><div style='border:1px solid #ddd;border-radius:8px;padding:9px 10px;letter-spacing:2px;font-size:12px;color:#333'>••••••••</div><div style='margin-top:10px;font-size:10px;color:#bbb'>盲打，输错全重输</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-bar'>登录</div><div class='m-body'><div style='position:relative;border:1px solid #C8442E;border-radius:8px;padding:9px 28px 9px 10px;font-size:12px;color:#333'>abc12345<div style='position:absolute;right:8px;top:9px;font-size:11px;color:#C8442E'>👁</div></div><div style='margin-top:8px;font-size:10px;color:#2E8B72'>点眼睛可核对</div></div></div>"
     }
   ]
 }
