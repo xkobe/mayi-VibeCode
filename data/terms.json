@@ -2120,6 +2120,30 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-bar'>登录</div><div class='m-body'><div style='border:1px solid #ddd;border-radius:8px;padding:9px 10px;letter-spacing:2px;font-size:12px;color:#333'>••••••••</div><div style='margin-top:10px;font-size:10px;color:#bbb'>盲打，输错全重输</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-bar'>登录</div><div class='m-body'><div style='position:relative;border:1px solid #C8442E;border-radius:8px;padding:9px 28px 9px 10px;font-size:12px;color:#333'>abc12345<div style='position:absolute;right:8px;top:9px;font-size:11px;color:#C8442E'>👁</div></div><div style='margin-top:8px;font-size:10px;color:#2E8B72'>点眼睛可核对</div></div></div>"
+    },
+    {
+      "id": "search-filter",
+      "ch": 7,
+      "speak": "列表很长，用户想找一项得自己肉眼翻，或者等搜索结果页才出",
+      "cn": "搜索框即时筛选",
+      "en": "Live Search Filter",
+      "anti": "搜完才出结果页，或列表不支持过滤，长列表全靠用户手翻",
+      "fix": "输入即过滤，边打边出匹配项，无需点搜索按钮",
+      "bad": "/* 必须点搜索才出结果，长列表手翻 */",
+      "good": "oninput=render(list.filter(x=>x.includes(q)))",
+      "tip": [
+        "输入即过滤，别等回车",
+        "无结果给空状态而不是空白",
+        "大数据量做防抖 200ms 防抖动",
+        "高亮匹配关键字更易读"
+      ],
+      "plat": {
+        "web": "oninput + 防抖过滤，无需发请求",
+        "app": "FlatList 的 filter 实时更新数据源",
+        "mini": "bindinput 过滤本地列表"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>长列表</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div style='font-size:10px;color:#bbb'>肉眼翻找…</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>搜索</div><div style='margin:6px 0;padding:6px 8px;background:#f4f1ea;border-radius:6px;font-size:10px;color:#333'>🔍 输入关键字</div><div style='font-size:10px;color:#2E8B72'>匹配项 3 条</div><div class='m-line'></div><div class='m-line'></div></div>"
     }
   ]
 }
