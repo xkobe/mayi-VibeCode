@@ -14,6 +14,10 @@ _*
 # 保留引擎快照（构建必需，必须在 _* 之后取反）
 !_engine_snapshot.pyc
 
+# 但 Cloudflare Pages Functions 必需的共享模块以下划线前缀，必须进仓库
+!functions/_lib/
+!functions/admin/_ui.js
+
 # 工作台 / 素材草稿目录（非站点必需）
 /assets/
 /vendor_src/
