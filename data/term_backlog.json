@@ -3,30 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "multi-step",
-      "ch": 7,
-      "speak": "一大张表单几十个字段怼脸上，用户一看填写压力就放弃",
-      "cn": "多步表单向导",
-      "en": "Multi-step Form Wizard",
-      "anti": "几十个字段一屏铺开，填写压力大、容易中途放弃",
-      "fix": "拆成 2~4 步，每步少量字段 + 进度条 + 上一步/下一步",
-      "bad": "/* 20 个字段一屏，填写压力大 */",
-      "good": "step=1; next(){ if(validate(step)) step++; }",
-      "tip": [
-        "用进度条/步骤条降低焦虑感",
-        "每步独立校验通过才放行下一步",
-        "允许「上一步」回改且不丢已填数据",
-        "最后一步才真正提交"
-      ],
-      "plat": {
-        "web": "前端状态保存每步数据，刷新可续填",
-        "app": "Stepper 组件天然支持分步填写",
-        "mini": "分步页 + 全局表单缓存"
-      },
-      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar s'>放弃</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-bar'>第 2 / 3 步</div><div class='m-body'><div style='height:5px;background:#C8442E;border-radius:3px;width:66%'></div><div style='margin-top:10px;font-size:11px;color:#333'>本步只需填 3 项</div><div style='flex:1'></div><div style='font-size:10px;color:#938E85'>上一步 · 下一步</div></div></div>"
-    },
-    {
       "id": "btn-debounce",
       "ch": 8,
       "speak": "点按钮没反应（网络慢），用户连点好几次，结果重复提交、重复下单",
