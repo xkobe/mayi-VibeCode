@@ -107,62 +107,62 @@ function switchTab(t){document.querySelectorAll('.side button').forEach(b=>b.cla
 
 /* ---------- 术语 ---------- */
 let TERMS=[];
-async function loadTerms(){const {data}=await api('/terms');TERMS=data.terms||[];const el=document.getElementById('tab-terms');el.innerHTML=`<div class="card"><div class="row" style="align-items:flex-end"><div><label>搜索</label><input id="q" oninput="renderTerms()" placeholder="id / 中文名 / 英文"></div><div style="flex:0"><button class="btn" onclick="openTerm(0)">+ 新增术语</button></div></div></div><div class="card"><table><thead><tr><th>id</th><th>章</th><th>中文</th><th>英文</th><th>说法</th><th></th></tr></thead><tbody id="tlist"></tbody></table></div>`;renderTerms();}
-function renderTerms(){const q=(document.getElementById('q')||{}).value||'';const f=TERMS.filter(t=>(t.id+' '+(t.cn||'')+' '+(t.en||'')).toLowerCase().includes(q.toLowerCase()));document.getElementById('tlist').innerHTML=f.map(t=>`<tr><td><code>${t.id}</code></td><td>${t.ch||''}</td><td>${esc(t.cn||'')}</td><td>${esc(t.en||'')}</td><td class="muted">${esc((t.speak||'').slice(0,24))}</td><td style="text-align:right;white-space:nowrap"><button class="btn ghost sm" onclick="openTerm('${t.id}')">编辑</button> <button class="btn danger sm" onclick="delTerm('${t.id}')">删</button></td></tr>`).join('')||'<tr><td colspan="6" class="muted">无</td></tr>';}
-function fieldsHTML(t){t=t||{};return `
-<label>ID（唯一，英文短横线）</label><input id="f_id" value="${t.id||''}" ${t.id?'disabled':''}>
-<label>章节 ch</label><input id="f_ch" type="number" value="${t.ch||0}">
-<label>中文名 cn</label><input id="f_cn" value="${esc(t.cn||'')}">
-<label>英文名 en</label><input id="f_en" value="${esc(t.en||'')}">
-<label>大白话说法 speak</label><input id="f_speak" value="${esc(t.speak||'')}">
-<label>反模式描述 anti</label><textarea id="f_anti">${esc(t.anti||'')}</textarea>
-<label>正解说明 fix</label><textarea id="f_fix">${esc(t.fix||'')}</textarea>
-<label>代码·反例 bad</label><textarea id="f_bad">${esc(t.bad||'')}</textarea>
-<label>代码·正例 good</label><textarea id="f_good">${esc(t.good||'')}</textarea>
-<label>提示 tip（每行一条）</label><textarea id="f_tip">${(t.tip||[]).join('\\n')}</textarea>
+async function loadTerms(){const {data}=await api('/terms');TERMS=data.terms||[];const el=document.getElementById('tab-terms');el.innerHTML=\`<div class="card"><div class="row" style="align-items:flex-end"><div><label>搜索</label><input id="q" oninput="renderTerms()" placeholder="id / 中文名 / 英文"></div><div style="flex:0"><button class="btn" onclick="openTerm(0)">+ 新增术语</button></div></div></div><div class="card"><table><thead><tr><th>id</th><th>章</th><th>中文</th><th>英文</th><th>说法</th><th></th></tr></thead><tbody id="tlist"></tbody></table></div>\`;renderTerms();}
+function renderTerms(){const q=(document.getElementById('q')||{}).value||'';const f=TERMS.filter(t=>(t.id+' '+(t.cn||'')+' '+(t.en||'')).toLowerCase().includes(q.toLowerCase()));document.getElementById('tlist').innerHTML=f.map(t=>\`<tr><td><code>\${t.id}</code></td><td>\${t.ch||''}</td><td>\${esc(t.cn||'')}</td><td>\${esc(t.en||'')}</td><td class="muted">\${esc((t.speak||'').slice(0,24))}</td><td style="text-align:right;white-space:nowrap"><button class="btn ghost sm" onclick="openTerm('\${t.id}')">编辑</button> <button class="btn danger sm" onclick="delTerm('\${t.id}')">删</button></td></tr>\`).join('')||'<tr><td colspan="6" class="muted">无</td></tr>';}
+function fieldsHTML(t){t=t||{};return \`
+<label>ID（唯一，英文短横线）</label><input id="f_id" value="\${t.id||''}" \${t.id?'disabled':''}>
+<label>章节 ch</label><input id="f_ch" type="number" value="\${t.ch||0}">
+<label>中文名 cn</label><input id="f_cn" value="\${esc(t.cn||'')}">
+<label>英文名 en</label><input id="f_en" value="\${esc(t.en||'')}">
+<label>大白话说法 speak</label><input id="f_speak" value="\${esc(t.speak||'')}">
+<label>反模式描述 anti</label><textarea id="f_anti">\${esc(t.anti||'')}</textarea>
+<label>正解说明 fix</label><textarea id="f_fix">\${esc(t.fix||'')}</textarea>
+<label>代码·反例 bad</label><textarea id="f_bad">\${esc(t.bad||'')}</textarea>
+<label>代码·正例 good</label><textarea id="f_good">\${esc(t.good||'')}</textarea>
+<label>提示 tip（每行一条）</label><textarea id="f_tip">\${(t.tip||[]).join('\\n')}</textarea>
 <label>平台提示 plat（web / app / mini）</label>
 <div class="row">
-<input id="f_pweb" placeholder="web" value="${esc((t.plat&&t.plat.web)||'')}">
-<input id="f_papp" placeholder="app" value="${esc((t.plat&&t.plat.app)||'')}">
-<input id="f_pmini" placeholder="mini" value="${esc((t.plat&&t.plat.mini)||'')}">
+<input id="f_pweb" placeholder="web" value="\${esc((t.plat&&t.plat.web)||'')}">
+<input id="f_papp" placeholder="app" value="\${esc((t.plat&&t.plat.app)||'')}">
+<input id="f_pmini" placeholder="mini" value="\${esc((t.plat&&t.plat.mini)||'')}">
 </div>
-<label>前后对照·错误态 HTML（vd_bad）</label><textarea id="f_vdbad">${esc(t.vd_bad||'')}</textarea>
-<label>前后对照·正确态 HTML（vd_good）</label><textarea id="f_vdgood">${esc(t.vd_good||'')}</textarea>
-`;
+<label>前后对照·错误态 HTML（vd_bad）</label><textarea id="f_vdbad">\${esc(t.vd_bad||'')}</textarea>
+<label>前后对照·正确态 HTML（vd_good）</label><textarea id="f_vdgood">\${esc(t.vd_good||'')}</textarea>
+\`;
 }
-async function openTerm(id){const t=id?TERMS.find(x=>x.id===id):null;document.getElementById('modal').innerHTML=`<h3>${id?'编辑术语':'新增术语'}</h3><div class="grid">${fieldsHTML(t)}</div><div class="acts"><button class="btn ghost" onclick="closeModal()">取消</button><button class="btn" onclick="saveTerm('${id||''}')">保存</button></div>`;showModal();}
+async function openTerm(id){const t=id?TERMS.find(x=>x.id===id):null;document.getElementById('modal').innerHTML=\`<h3>\${id?'编辑术语':'新增术语'}</h3><div class="grid">\${fieldsHTML(t)}</div><div class="acts"><button class="btn ghost" onclick="closeModal()">取消</button><button class="btn" onclick="saveTerm('\${id||''}')">保存</button></div>\`;showModal();}
 async function saveTerm(id){const plat={web:val('f_pweb'),app:val('f_papp'),mini:val('f_pmini')};const body={id:val('f_id')||id,ch:Number(val('f_ch')||0),speak:val('f_speak'),cn:val('f_cn'),en:val('f_en'),anti:val('f_anti'),fix:val('f_fix'),bad:val('f_bad'),good:val('f_good'),tip:val('f_tip').split('\\n').map(s=>s.trim()).filter(Boolean),plat, vd_bad:val('f_vdbad'),vd_good:val('f_vdgood')};if(!body.id){toast('ID 必填');return;}const {status,data}=id?await api('/term/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify(body)}):await api('/terms',{method:'POST',body:JSON.stringify(body)});if(status===200){toast('已保存，GitHub 将自动重建');closeModal();loadTerms();}else toast(data.error||'保存失败');}
 async function delTerm(id){if(!confirm('确认删除 '+id+'？'))return;const {status}=await api('/term/'+encodeURIComponent(id),{method:'DELETE'});if(status===200){toast('已删除');loadTerms();}}
 
 /* ---------- 设置 ---------- */
-async function loadSettings(){const {data}=await api('/settings');const s=data.settings||{};const el=document.getElementById('tab-settings');el.innerHTML=`<div class="card"><h2>站点设置</h2><div class="grid">
-<label>站点标题 title</label><input id="s_title" value="${esc(s.title||'')}">
-<label>描述 description</label><textarea id="s_desc">${esc(s.description||'')}</textarea>
-<label>导航栏文案 nav</label><input id="s_nav" value="${esc(s.nav||'')}">
-<label>主色 brand（hex）</label><input id="s_brand" value="${esc(s.brand||'#C8442E')}">
-<label>页脚 footer</label><input id="s_footer" value="${esc(s.footer||'')}">
-<label>百度统计/腾讯分析 ID（可选）</label><input id="s_analytics" value="${esc(s.analytics||'')}"><div class="hint">填入后会注入统计脚本（仅在配置了值时）</div>
-</div><div class="acts" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="saveSettings()">保存设置</button></div></div>`;}
+async function loadSettings(){const {data}=await api('/settings');const s=data.settings||{};const el=document.getElementById('tab-settings');el.innerHTML=\`<div class="card"><h2>站点设置</h2><div class="grid">
+<label>站点标题 title</label><input id="s_title" value="\${esc(s.title||'')}">
+<label>描述 description</label><textarea id="s_desc">\${esc(s.description||'')}</textarea>
+<label>导航栏文案 nav</label><input id="s_nav" value="\${esc(s.nav||'')}">
+<label>主色 brand（hex）</label><input id="s_brand" value="\${esc(s.brand||'#C8442E')}">
+<label>页脚 footer</label><input id="s_footer" value="\${esc(s.footer||'')}">
+<label>百度统计/腾讯分析 ID（可选）</label><input id="s_analytics" value="\${esc(s.analytics||'')}"><div class="hint">填入后会注入统计脚本（仅在配置了值时）</div>
+</div><div class="acts" style="justify-content:flex-end;margin-top:14px"><button class="btn" onclick="saveSettings()">保存设置</button></div></div>\`;}
 async function saveSettings(){const body={title:val('s_title'),description:val('s_desc'),nav:val('s_nav'),brand:val('s_brand'),footer:val('s_footer'),analytics:val('s_analytics')};const {status,data}=await api('/settings',{method:'PUT',body:JSON.stringify(body)});toast(status===200?'已保存':'保存失败');}
 
 /* ---------- 素材 ---------- */
-async function loadAssets(){const {data}=await api('/assets');const a=data.assets||[];const el=document.getElementById('tab-assets');el.innerHTML=`<div class="card"><h2>图片 / 素材管理</h2><div class="row" style="align-items:flex-end"><div><label>选择文件（图片/SVG）</label><input type="file" id="af"></div><div style="flex:0"><button class="btn" onclick="uploadAsset()">上传</button></div></div><div class="hint" style="margin:8px 0">上传后写入仓库 assets/ 目录，术语对照里可用 /assets/文件名 引用。</div></div><div class="card"><div class="grid" id="alist" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">${a.map(x=>`<div style="border:1px solid var(--line);border-radius:10px;padding:8px"><div style="height:90px;background:#f3f1ed;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="/assets/${x.name}" style="max-width:100%;max-height:100%"></div><div class="muted" style="margin-top:6px;font-size:11px;word-break:break-all">${esc(x.name)}</div><button class="btn danger sm" style="margin-top:6px;width:100%" onclick="delAsset('${x.name}')">删除</button></div>`).join('')||'<div class="muted">暂无素材</div>'}</div></div>`;}
+async function loadAssets(){const {data}=await api('/assets');const a=data.assets||[];const el=document.getElementById('tab-assets');el.innerHTML=\`<div class="card"><h2>图片 / 素材管理</h2><div class="row" style="align-items:flex-end"><div><label>选择文件（图片/SVG）</label><input type="file" id="af"></div><div style="flex:0"><button class="btn" onclick="uploadAsset()">上传</button></div></div><div class="hint" style="margin:8px 0">上传后写入仓库 assets/ 目录，术语对照里可用 /assets/文件名 引用。</div></div><div class="card"><div class="grid" id="alist" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">\${a.map(x=>\`<div style="border:1px solid var(--line);border-radius:10px;padding:8px"><div style="height:90px;background:#f3f1ed;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden"><img src="/assets/\${x.name}" style="max-width:100%;max-height:100%"></div><div class="muted" style="margin-top:6px;font-size:11px;word-break:break-all">\${esc(x.name)}</div><button class="btn danger sm" style="margin-top:6px;width:100%" onclick="delAsset('\${x.name}')">删除</button></div>\`).join('')||'<div class="muted">暂无素材</div>'}</div></div>\`;}
 async function uploadAsset(){const f=document.getElementById('af').files[0];if(!f)return toast('请选择文件');const b64=await fileToB64(f);const {status,data}=await api('/assets',{method:'POST',body:JSON.stringify({name:f.name,base64:b64,type:f.type})});toast(status===200?'上传成功':'上传失败');if(status===200)loadAssets();}
 async function delAsset(n){if(!confirm('删除 '+n+'?'))return;const {status}=await api('/assets/'+encodeURIComponent(n),{method:'DELETE'});if(status===200)loadAssets();}
 
 /* ---------- 用户 ---------- */
-async function loadUsers(){const {data}=await api('/users');const u=data.users||[];const el=document.getElementById('tab-users');el.innerHTML=`<div class="card"><h2>用户中心（后台账号）</h2><div class="row" style="align-items:flex-end"><div><label>用户名</label><input id="u_name"></div><div><label>密码</label><input id="u_pw" type="password"></div><div><label>角色</label><select id="u_role"><option value="admin">admin</option><option value="editor">editor</option></select></div><div style="flex:0"><button class="btn" onclick="addUser()">添加</button></div></div></div><div class="card"><table><thead><tr><th>用户名</th><th>角色</th><th></th></tr></thead><tbody>${u.map(x=>`<tr><td>${esc(x.username)}</td><td><span class="tag">${esc(x.role)}</span></td><td style="text-align:right"><button class="btn danger sm" onclick="delUser('${x.username}')">删除</button></td></tr>`).join('')}</tbody></table><div class="hint" style="margin-top:8px">至少保留一个 admin 账号。密码以 PBKDF2 哈希存储，不存明文。</div></div>`;}
+async function loadUsers(){const {data}=await api('/users');const u=data.users||[];const el=document.getElementById('tab-users');el.innerHTML=\`<div class="card"><h2>用户中心（后台账号）</h2><div class="row" style="align-items:flex-end"><div><label>用户名</label><input id="u_name"></div><div><label>密码</label><input id="u_pw" type="password"></div><div><label>角色</label><select id="u_role"><option value="admin">admin</option><option value="editor">editor</option></select></div><div style="flex:0"><button class="btn" onclick="addUser()">添加</button></div></div></div><div class="card"><table><thead><tr><th>用户名</th><th>角色</th><th></th></tr></thead><tbody>\${u.map(x=>\`<tr><td>\${esc(x.username)}</td><td><span class="tag">\${esc(x.role)}</span></td><td style="text-align:right"><button class="btn danger sm" onclick="delUser('\${x.username}')">删除</button></td></tr>\`).join('')}</tbody></table><div class="hint" style="margin-top:8px">至少保留一个 admin 账号。密码以 PBKDF2 哈希存储，不存明文。</div></div>\`;}
 async function addUser(){const body={username:val('u_name'),password:val('u_pw'),role:val('u_role')};if(!body.username||!body.password)return toast('用户名密码必填');const {status,data}=await api('/users',{method:'POST',body:JSON.stringify(body)});toast(status===200?'已添加':(data.error||'失败'));if(status===200)loadUsers();}
 async function delUser(n){if(!confirm('删除 '+n+'?'))return;const {status,data}=await api('/users/'+encodeURIComponent(n),{method:'DELETE'});toast(status===200?'已删除':(data.error||'失败'));if(status===200)loadUsers();}
 
 /* ---------- 看板 ---------- */
-async function loadDashboard(){const {data}=await api('/dashboard');const s=data.stats||{};const el=document.getElementById('tab-dashboard');el.innerHTML=`<div class="card"><h2>数据看板</h2><div class="row">
-<div class="stat"><div class="n">${s.terms||0}</div><div class="l">术语总数</div></div>
-<div class="stat"><div class="n">${s.assets||0}</div><div class="l">素材数</div></div>
-<div class="stat"><div class="n">${s.users||0}</div><div class="l">后台账号</div></div>
-</div><div class="card"><h2>部署状态</h2><div class="muted">${s.deploy||'本地模式（未配置 GitHub）'}</div><div class="hint" style="margin-top:6px">配置 GH_TOKEN / GH_REPO 后，保存即写回 GitHub 并触发 Cloudflare Pages 自动重建。</div></div>
+async function loadDashboard(){const {data}=await api('/dashboard');const s=data.stats||{};const el=document.getElementById('tab-dashboard');el.innerHTML=\`<div class="card"><h2>数据看板</h2><div class="row">
+<div class="stat"><div class="n">\${s.terms||0}</div><div class="l">术语总数</div></div>
+<div class="stat"><div class="n">\${s.assets||0}</div><div class="l">素材数</div></div>
+<div class="stat"><div class="n">\${s.users||0}</div><div class="l">后台账号</div></div>
+</div><div class="card"><h2>部署状态</h2><div class="muted">\${s.deploy||'本地模式（未配置 GitHub）'}</div><div class="hint" style="margin-top:6px">配置 GH_TOKEN / GH_REPO 后，保存即写回 GitHub 并触发 Cloudflare Pages 自动重建。</div></div>
 <div class="card"><h2>访问统计</h2><div class="muted">接入百度统计 / Cloudflare Analytics 后此处展示流量。可在「站点设置」填入统计 ID。</div></div>
-</div>`;}
+</div>\`;}
 
 /* ---------- 工具 ---------- */
 function val(id){const e=document.getElementById(id);return e?e.value:'';}
