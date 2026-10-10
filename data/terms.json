@@ -2168,6 +2168,30 @@
       },
       "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar s'>放弃</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-bar'>第 2 / 3 步</div><div class='m-body'><div style='height:5px;background:#C8442E;border-radius:3px;width:66%'></div><div style='margin-top:10px;font-size:11px;color:#333'>本步只需填 3 项</div><div style='flex:1'></div><div style='font-size:10px;color:#938E85'>上一步 · 下一步</div></div></div>"
+    },
+    {
+      "id": "btn-debounce",
+      "ch": 8,
+      "speak": "点按钮没反应（网络慢），用户连点好几次，结果重复提交、重复下单",
+      "cn": "防重复点击",
+      "en": "Debounce Button Click",
+      "anti": "请求没返回时按钮还能点，用户连点导致重复提交或重复下单",
+      "fix": "点击后立即禁用或加锁，请求完成/失败才恢复，或做节流",
+      "bad": "<button onclick='submit()'>提交</button> /* 可连点 */",
+      "good": "async function submit(){ if(loading)return; loading=true; await api(); loading=false; }",
+      "tip": [
+        "点击即置 disabled 或加锁，防并发重复",
+        "失败也要恢复可点，别卡死",
+        "网络慢时显示 loading 态",
+        "支付等场景必须幂等兜底"
+      ],
+      "plat": {
+        "web": "点击即 disabled + 请求锁，防重复提交",
+        "app": "按钮 disabled 态 + 请求锁变量",
+        "mini": "bindtap 里加锁变量防重复触发"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-bar s'>重复提交</div><div class='m-body'><div style='font-size:10px;color:#C8442E'>提交中…</div><div style='font-size:10px;color:#C8442E'>提交中…</div><div style='font-size:10px;color:#C8442E'>提交中…</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-bar'>防重复</div><div class='m-body'><div style='background:#C8442E;color:#fff;border-radius:8px;padding:9px;text-align:center;font-size:11px;opacity:.6'>提交中…（已禁用）</div></div></div>"
     }
   ]
 }
