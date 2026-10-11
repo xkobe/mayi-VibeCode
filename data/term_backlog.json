@@ -121,6 +121,366 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-bar'>工具栏</div><div class='m-body'><div style='font-size:18px;color:#bbb'>ⓘ ? ★</div><div style='font-size:10px;color:#bbb;margin-top:8px'>啥意思？只能猜</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-bar'>工具栏</div><div class='m-body'><div style='font-size:18px;color:#C8442E'>ⓘ</div><div style='position:absolute;top:46px;left:18px;background:#1F6FB2;color:#fff;font-size:9px;padding:5px 8px;border-radius:6px'>查看使用说明</div></div></div>"
+    },
+    {
+      "id": "segmented-control",
+      "ch": 8,
+      "speak": "一排选项里只能选一个，但用一堆单选按钮太丑，想要那种 iOS 上面平滑切换的样式",
+      "cn": "分段控制器",
+      "en": "Segmented Control",
+      "anti": "用一堆 radio 各自画边框，选中态不清晰，切换没有滑动反馈",
+      "fix": "一组等宽按钮 + 一个会滑动的高亮背景表示当前选中项，选项 2~5 个最合适",
+      "bad": "<input type=radio>×3 各自描边 /* 看不出选中哪个 */",
+      "good": ".seg{display:flex} .seg .on{background:选中色} /* 加滑动高亮 */",
+      "tip": [
+        "选项 2~5 个最合适，过多改用手势/下拉",
+        "选中项用底色或滑块明确标示",
+        "可加滑动过渡动画提升手感",
+        "移动端点击区域 ≥44px"
+      ],
+      "plat": {
+        "web": "flex 横排 + 滑动高亮；ARIA 用 role=radiogroup",
+        "app": "iOS UISegmentedControl / RN SegmentedControl",
+        "mini": "自定义组件 + scroll-view 底部指示器"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:flex;gap:4px'><span style='padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:10px'>日</span><span style='padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:10px'>周</span><span style='padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:10px'>月</span></div><div style='font-size:9px;color:#bbb;margin-top:6px'>哪个选中了？</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='display:flex;background:#f1efe9;border-radius:8px;padding:3px'><span style='padding:4px 12px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>日</span><span style='padding:4px 12px;color:#666;font-size:10px'>周</span><span style='padding:4px 12px;color:#666;font-size:10px'>月</span></div></div></div>"
+    },
+    {
+      "id": "icon-toggle",
+      "ch": 8,
+      "speak": "一个图标按钮要点一下在『开/关』两种状态之间切换，比如收藏、静音",
+      "cn": "图标开关按钮",
+      "en": "Icon Toggle Button",
+      "anti": "用两个不同图标堆在一起，状态切换时闪一下还容易点错",
+      "fix": "同一个图标按钮在 on/off 间切换，用填充/描边或颜色区分两态，加过渡",
+      "bad": "<button>☆</button><button>★</button> /* 两个按钮易混淆 */",
+      "good": "<button aria-pressed=false>☆</button> /* 切到 aria-pressed=true 变 ★ */",
+      "tip": [
+        "用 aria-pressed 表达两态，利于读屏",
+        "on 态用填充/主色，off 态用描边/灰",
+        "切换加轻量过渡动画",
+        "别只靠颜色，加形状差异"
+      ],
+      "plat": {
+        "web": "button + aria-pressed + CSS 切换样式",
+        "app": "ToggleButton / IconButton 两态",
+        "mini": "bindtap 切 data 状态换图标"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-bar'>歌单</div><div class='m-body'><div style='font-size:18px;color:#bbb'>☆ ☆</div><div style='font-size:9px;color:#bbb;margin-top:6px'>点哪个收藏？</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-bar'>歌单</div><div class='m-body'><div style='font-size:18px;color:#C8442E'>★</div><div style='font-size:9px;color:#999;margin-top:6px'>已收藏</div></div></div>"
+    },
+    {
+      "id": "speed-dial",
+      "ch": 8,
+      "speak": "一个加号按钮点开后要冒出好几个子操作（发图文、发视频、发直播）",
+      "cn": "悬浮扩展按钮",
+      "en": "Speed Dial / Expanding FAB",
+      "anti": "把五六个主按钮平铺在页面，挤占空间还抢视觉重心",
+      "fix": "一个 FAB 点击后径向/纵向展开多个子操作，再点收起",
+      "bad": "/* 五个加号按钮并排，谁也不突出 */",
+      "good": ".fab-menu.open .item{ transform:scale(1); } /* 展开子项 */",
+      "tip": [
+        "FAB 收起态只露一个主按钮",
+        "展开子项用缩放/位移动画",
+        "点遮罩或主按钮收起",
+        "子项数量别超过 6 个"
+      ],
+      "plat": {
+        "web": "fixed FAB + 子项 absolute 展开 + 遮罩",
+        "app": "FloatingActionButton 展开子 FAB",
+        "mini": "fixed 浮层 + 子项列表动画"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:flex;gap:4px'><span style='width:26px;height:26px;border-radius:50%;background:#eee;font-size:14px;color:#999;display:flex;align-items:center;justify-content:center'>+</span><span style='width:26px;height:26px;border-radius:50%;background:#eee;font-size:14px;color:#999;display:flex;align-items:center;justify-content:center'>+</span><span style='width:26px;height:26px;border-radius:50%;background:#eee;font-size:14px;color:#999;display:flex;align-items:center;justify-content:center'>+</span></div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='position:absolute;right:12px;bottom:48px;display:flex;flex-direction:column;gap:6px;align-items:flex-end'><span style='width:26px;height:26px;border-radius:50%;background:#C8442E;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center'>📷</span><span style='width:26px;height:26px;border-radius:50%;background:#C8442E;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center'>🎬</span></div><div style='position:absolute;right:12px;bottom:14px;width:34px;height:34px;border-radius:50%;background:#C8442E;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center'>+</div></div></div>"
+    },
+    {
+      "id": "split-button",
+      "ch": 8,
+      "speak": "一个主操作按钮旁边要带个小箭头，点箭头展开『另存为/导出』等次要操作",
+      "cn": "拆分按钮",
+      "en": "Split Button",
+      "anti": "主操作和次要操作各做一个按钮并排，主次不分、占地大",
+      "fix": "左侧是主操作，右侧小箭头展开次要操作菜单，主操作一眼可见",
+      "bad": "<button>保存</button><button>▾</button> /* 两个平级按钮 */",
+      "good": ".split>.main{...} .split>.caret{popover 次要项}",
+      "tip": [
+        "主操作点左半边直接执行",
+        "右半边箭头展开次要项",
+        "次要项用菜单而非再开页",
+        "键盘可聚焦两个分区"
+      ],
+      "plat": {
+        "web": "主按钮 + caret 触发 menu 浮层",
+        "app": "SplitButton 组件",
+        "mini": "主按钮 + 展开 action-sheet"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:flex;gap:6px'><span style='padding:6px 14px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>保存</span><span style='padding:6px 10px;background:#eee;color:#666;border-radius:6px;font-size:10px'>导出</span></div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='display:inline-flex;align-items:stretch;border-radius:6px;overflow:hidden'><span style='padding:6px 14px;background:#C8442E;color:#fff;font-size:10px'>保存</span><span style='padding:6px 8px;background:#a8361f;color:#fff;font-size:10px'>▾</span></div><div style='position:absolute;right:14px;top:40px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:9px;color:#333;padding:4px 10px'>另存为…</div></div></div>"
+    },
+    {
+      "id": "ripple",
+      "ch": 8,
+      "speak": "点按钮的时候想要那种水波纹从手指位置扩散开的效果，像 Material Design",
+      "cn": "点击水波纹",
+      "en": "Ripple Effect",
+      "anti": "只有 hover 变色，点击没有位置相关的反馈，显得『死』",
+      "fix": "点击处生成一个从圆心扩散并淡出的圆形波纹，位置跟随点击点",
+      "bad": "button:hover{ background:#ddd; } /* 无点击反馈 */",
+      "good": ".ripple{position:relative;overflow:hidden} .ripple::after{animation:ripple .6s}",
+      "tip": [
+        "波纹起点用 event.offset 定位",
+        "动画结束自动移除 DOM 节点",
+        "别在禁用按钮上触发",
+        "尊重 reduce-motion 关掉动画"
+      ],
+      "plat": {
+        "web": "伪元素 + transform scale 动画",
+        "app": "RippleDrawable / 组件内置",
+        "mini": "bindtouchstart 生成扩散圆"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='padding:8px 18px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>点我</div><div style='font-size:9px;color:#bbb;margin-top:8px'>点了没反应…</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='position:relative;overflow:hidden;padding:8px 18px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>点我<span style='position:absolute;left:14px;top:6px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6)'></span></div></div></div>"
+    },
+    {
+      "id": "prompt-dialog",
+      "ch": 9,
+      "speak": "点一个按钮要弹个框让用户填点东西再确定，比如改名字、输密码",
+      "cn": "输入对话框",
+      "en": "Prompt / Input Dialog",
+      "anti": "用原生 prompt() 太丑且不能校验，或用空白弹窗忘了放输入框",
+      "fix": "对话框内嵌一个输入框 + 取消/确定，确定前做必填与格式校验",
+      "bad": "prompt('输入名字') /* 原生丑、无法校验 */",
+      "good": "<dialog><input><menu>取消 确定</menu></dialog>",
+      "tip": [
+        "弹窗内嵌输入框并自动聚焦",
+        "确定前做必填/格式校验",
+        "Esc 或点遮罩取消",
+        "移动端弹窗输入框避免被键盘遮挡"
+      ],
+      "plat": {
+        "web": "自绘 modal + 输入框 + 焦点陷阱",
+        "app": "AlertDialog 带 EditText",
+        "mini": "showModal + input 组件"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-overlay'><span>确定？</span><span style='display:flex;gap:8px'><b style='background:#C8442E;padding:4px 12px;border-radius:6px'>确定</b></span></span></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-overlay'><span style='font-size:10px'>修改昵称</span><input style='width:80%;padding:5px;border:1px solid #ccc;border-radius:6px;font-size:10px;margin-top:4px' placeholder='输入新昵称'><span style='display:flex;gap:8px;margin-top:6px'><b style='background:#fff;color:#333;padding:4px 12px;border-radius:6px'>取消</b><b style='background:#C8442E;padding:4px 12px;border-radius:6px'>保存</b></span></span></div></div>"
+    },
+    {
+      "id": "loading-overlay",
+      "ch": 9,
+      "speak": "提交表单或加载大页面时，想盖一层半透明遮罩加转圈，防止用户乱点",
+      "cn": "全屏加载遮罩",
+      "en": "Loading Overlay / Spinner Mask",
+      "anti": "只在角落放个小转圈，用户仍点得到下面的按钮导致重复提交",
+      "fix": "半透明遮罩盖住整屏 + 居中转圈，拦截点击直到完成",
+      "bad": "/* 右下角小 spinner，底下按钮还能点 */",
+      "good": ".mask{position:fixed;inset:0;background:rgba(0,0,0,.35)}",
+      "tip": [
+        "遮罩拦截点击，防重复提交",
+        "转圈居中并加文字说明",
+        "完成后淡出而非瞬间消失",
+        "可设最短展示时长避免闪烁"
+      ],
+      "plat": {
+        "web": "fixed 全屏遮罩 + spinner",
+        "app": "ProgressDialog / 加载态组件",
+        "mini": "wx.showLoading 全屏遮罩"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:10px;color:#333'>提交中…</div><div style='position:absolute;right:14px;bottom:14px;width:18px;height:18px;border:2px solid #ccc;border-top-color:#C8442E;border-radius:50%'></div><div style='font-size:9px;color:#bbb;margin-top:6px'>下面的按钮还能点</div></div></div>",
+      "vd_good": "<div class='m-phone'><div style='position:absolute;inset:0;background:rgba(26,26,26,.4);display:flex;flex-direction:column;align-items:center;justify-content:center'><div style='width:22px;height:22px;border:2px solid #fff;border-top-color:transparent;border-radius:50%'></div><div style='font-size:9px;color:#fff;margin-top:6px'>提交中…</div></div></div>"
+    },
+    {
+      "id": "popover",
+      "ch": 9,
+      "speak": "点一个信息图标想弹一个小卡片，里面能放文字也能放按钮，不是纯提示",
+      "cn": "气泡卡片",
+      "en": "Popover",
+      "anti": "用 tooltip 只能放一行文字，想放操作按钮放不下",
+      "fix": "点触发元素弹一个小卡片浮层，可含文字、链接、按钮，带小箭头指向来源",
+      "bad": "title='说明' /* 只能纯文字，无交互 */",
+      "good": ".pop{position:absolute;小卡片;带箭头;点击外部关闭}",
+      "tip": [
+        "Popover 可含交互，Tooltip 只解释",
+        "带小箭头指向触发元素",
+        "点外部/ Esc 关闭",
+        "移动端可降级为底部弹层"
+      ],
+      "plat": {
+        "web": "absolute 小卡片 + 箭头 + 外部点击关闭",
+        "app": "Popover 组件",
+        "mini": "popup 气泡 + 箭头"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#bbb'>ⓘ</div><div style='font-size:9px;color:#bbb;margin-top:6px'>只能看一行字</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#C8442E'>ⓘ</div><div style='position:absolute;left:30px;top:52px;background:#fff;border:1px solid #eee;border-radius:8px;padding:8px;width:120px;font-size:9px;color:#333'>可在此更换主题与语言<span style='color:#C8442E;display:block;margin-top:4px'>去设置 ›</span></div></div></div>"
+    },
+    {
+      "id": "scroll-reveal",
+      "ch": 10,
+      "speak": "页面往下滚的时候，内容一块块淡入或上滑出现，像很多官网那样",
+      "cn": "滚动入场动画",
+      "en": "Scroll Reveal / On-Scroll Animation",
+      "anti": "所有内容一上来全显示，页面平淡；或动画卡顿掉帧",
+      "fix": "元素进入视口时才触发淡入/上移动画，用 IntersectionObserver 监听",
+      "bad": "/* 全部静态，无层次感 */",
+      "good": "io=new IntersectionObserver(...); io.observe(el)",
+      "tip": [
+        "用 IntersectionObserver 而非 scroll 监听",
+        "只播一次，播过就停监听",
+        "尊重 reduce-motion 关闭动画",
+        "别让关键内容依赖动画才出现"
+      ],
+      "plat": {
+        "web": "IntersectionObserver + CSS transition",
+        "app": "FlatList onViewableItemsChanged",
+        "mini": "intersection-observer 或滚动计算"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>产品介绍</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div style='font-size:9px;color:#bbb;margin-left:6px'>一上来全躺着，没节奏</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>产品介绍</div><div class='m-line' style='opacity:.4;transform:translateY(6px)'></div><div class='m-line' style='opacity:.7;transform:translateY(3px)'></div><div class='m-line'></div><div style='font-size:9px;color:#C8442E;margin-left:6px'>滚到才浮现 ✦</div></div>"
+    },
+    {
+      "id": "parallax",
+      "ch": 10,
+      "speak": "背景图滚得慢、前景内容滚得快，做出层次感，比如头条 banner",
+      "cn": "视差滚动",
+      "en": "Parallax Scrolling",
+      "anti": "背景和前景用同一速度滚，毫无纵深，banner 很平",
+      "fix": "滚动时给背景层不同的位移速度，制造前后景深度差",
+      "bad": "bg 和 fg 都 translateY(scrollY) /* 一样快 */",
+      "good": "bg.style.transform='translateY('+scrollY*0.5+'px)'",
+      "tip": [
+        "背景位移速度慢于前景即可出层次",
+        "别用大图导致卡顿，注意性能",
+        "移动端谨慎使用，避免掉帧",
+        "尊重 reduce-motion 关闭"
+      ],
+      "plat": {
+        "web": "滚动监听 + 分层 transform",
+        "app": "奇偶层不同 scroll 速度",
+        "mini": "scroll-view 分层位移"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar' style='background:#bbb'>Banner</div><div class='m-line'></div><div class='m-line'></div><div style='font-size:9px;color:#bbb;margin-left:6px'>背景前景一起滚，很平</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar' style='background:#C8442E'>Banner</div><div class='m-line' style='background:#f3d9d2'></div><div class='m-line'></div><div style='font-size:9px;color:#C8442E;margin-left:6px'>背景慢滚·前景快 ✦</div></div>"
+    },
+    {
+      "id": "vertical-rhythm",
+      "ch": 2,
+      "speak": "正文段落之间的间距乱七八糟，有的挤有的松，想让它有统一节奏",
+      "cn": "垂直韵律",
+      "en": "Vertical Rhythm",
+      "anti": "每段 margin 随手写不同值，行距与段距没有倍数关系，看着乱",
+      "fix": "以行高为基准单位，段距/标题距都取它的整数倍，形成统一节奏",
+      "bad": "p{margin:13px} h2{margin:22px} /* 无规律 */",
+      "good": "p{margin-bottom:1.5rem} /* 行高倍数 */",
+      "tip": [
+        "先定基准行高（如 1.5）",
+        "段距/标题距取行高整数倍",
+        "用 rem 统一缩放",
+        "标题与正文留白拉开层级"
+      ],
+      "plat": {
+        "web": "CSS 变量定基线 + rem 倍数",
+        "app": "主题定 spacing 倍数",
+        "mini": "rpx 倍数统一间距"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>文章</div><div style='font-size:10px;color:#333;margin:4px 6px;line-height:1.2'>一段文字</div><div style='font-size:10px;color:#333;margin:18px 6px;line-height:1.2'>下一段忽近忽远</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>文章</div><div style='font-size:10px;color:#333;margin:6px 6px;line-height:1.6'>一段文字</div><div style='font-size:10px;color:#333;margin:18px 6px;line-height:1.6'>间距统一成倍数</div></div>"
+    },
+    {
+      "id": "text-balance",
+      "ch": 2,
+      "speak": "大标题最后一行只剩一个字孤零零挂着，想让它左右更匀称",
+      "cn": "标题均衡断行",
+      "en": "Text Balance / Balanced Wrapping",
+      "anti": "标题最后一行只剩一个字，视觉失衡，像没排完",
+      "fix": "用 text-wrap:balance 让多行标题自动均衡断行，避免孤字",
+      "bad": "h1{ /* 末行孤字 */ }",
+      "good": "h1{ text-wrap:balance; }",
+      "tip": [
+        "标题用 text-wrap:balance 均衡断行",
+        "长段落用 text-wrap:pretty 防孤字",
+        "不支持的浏览器优雅降级",
+        "配合 max-width 控制行宽"
+      ],
+      "plat": {
+        "web": "CSS text-wrap:balance（较新浏览器）",
+        "app": "手动控制文案行数",
+        "mini": "按字数手动换行"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:15px;font-weight:700;line-height:1.2'>如何三天搞定<br>上线</div><div style='font-size:9px;color:#bbb;margin-top:6px'>末行孤字『线』</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='font-size:15px;font-weight:700;line-height:1.25'>如何三天<br>搞定上线</div><div style='font-size:9px;color:#C8442E;margin-top:6px'>均衡断行 ✦</div></div></div>"
+    },
+    {
+      "id": "focus-trap",
+      "ch": 6,
+      "speak": "弹窗打开后，用 Tab 键焦点却跑到了后面页面去了，关不掉也点不到",
+      "cn": "焦点陷阱",
+      "en": "Focus Trap",
+      "anti": "弹窗打开后 Tab 焦点能跑到遮罩后的页面元素，键盘用户被困住",
+      "fix": "弹窗内循环 Tab 焦点，只在该层内移动，关闭后焦点回到触发元素",
+      "bad": "/* 弹窗无焦点管理，Tab 跑出去 */",
+      "good": "捕获 Tab，首尾环绕；关闭时 focus 回触发按钮",
+      "tip": [
+        "弹窗内首个可聚焦元素自动聚焦",
+        "Tab/Shift+Tab 在层内循环",
+        "Esc 关闭并归还焦点",
+        "关闭后焦点回到原触发元素"
+      ],
+      "plat": {
+        "web": "监听 keydown Tab 控制焦点范围",
+        "app": "模态自动接管焦点",
+        "mini": "弹层内 focus 管理"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-overlay'><span>弹窗</span></div><div style='font-size:9px;color:#bbb;margin:6px'>Tab 焦点跑到遮罩外了</div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-overlay'><span>弹窗</span><span style='font-size:9px;color:#C8442E;display:block;margin-top:6px'>Tab 只在层内循环 ✦</span></span></div>"
+    },
+    {
+      "id": "sticky-sidebar",
+      "ch": 3,
+      "speak": "右边栏（目录/广告）想跟着滚，但只在该栏比内容短时吸住，别留一大块空白",
+      "cn": "粘性侧栏",
+      "en": "Sticky Sidebar",
+      "anti": "用 fixed 钉死侧栏，内容短时下方留大片空白，或长时提前滚走",
+      "fix": "侧栏用 sticky，top 设为吸顶偏移，仅在自身高度小于视口时生效",
+      "bad": ".side{position:fixed;top:0} /* 内容短留白 */",
+      "good": ".side{position:sticky;top:16px} /* 不足则随滚 */",
+      "tip": [
+        "sticky 比 fixed 更不易留白",
+        "top 设吸顶安全偏移",
+        "侧栏高于视口时自然滚动",
+        "父容器不可 overflow:hidden"
+      ],
+      "plat": {
+        "web": "position:sticky + top",
+        "app": "滚动时切换吸顶态",
+        "mini": "scroll-view 计算吸顶"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-row'><div class='m-side' style='position:fixed'>目录</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div><div style='font-size:9px;color:#bbb;margin:6px'>短内容留大片空白</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-row'><div class='m-side' style='position:sticky;top:8px;align-self:flex-start'>目录</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div><div style='font-size:9px;color:#C8442E;margin:6px'>随滚吸顶不空白 ✦</div></div>"
+    },
+    {
+      "id": "container-query",
+      "ch": 5,
+      "speak": "一个卡片在宽屏放三列、窄屏放一列，但想按『卡片自身宽度』而不是屏幕宽度来变",
+      "cn": "容器查询",
+      "en": "Container Query",
+      "anti": "只用媒体查询按屏幕宽度改样式，组件放到不同容器里就错位",
+      "fix": "用 container-type 让组件按自身容器宽度响应，组件到处复用都正确",
+      "bad": "@media(max-width:600px){ .card{...} } /* 只看屏幕 */",
+      "good": ".card{container-type:inline-size} @container(max-width:300px){...}",
+      "tip": [
+        "组件级响应式优先用容器查询",
+        "container-type:inline-size 才生效",
+        "老浏览器用媒体查询兜底",
+        "组件更易跨处复用"
+      ],
+      "plat": {
+        "web": "CSS container queries（新浏览器）",
+        "app": "按父宽传样式",
+        "mini": "按容器宽度条件渲染"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:9px;color:#bbb'>同样的卡片塞进侧栏就挤爆</div><div style='border:1px solid #ddd;border-radius:6px;padding:4px;font-size:9px'>三列布局在窄容器溢出</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='font-size:9px;color:#C8442E'>按自身宽度自适应 ✦</div><div style='border:1px solid #C8442E;border-radius:6px;padding:4px;font-size:9px'>窄容器自动变单列</div></div></div>"
     }
   ]
 }
