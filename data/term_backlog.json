@@ -3,54 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "fab",
-      "ch": 8,
-      "speak": "核心操作（如发帖、加号）藏在三层级菜单里，用户根本找不到",
-      "cn": "悬浮操作按钮",
-      "en": "Floating Action Button (FAB)",
-      "anti": "核心操作埋在二级「更多」菜单，入口深，使用率极低",
-      "fix": "右下角悬浮一个主操作按钮，一眼可见、随时可点",
-      "bad": "/* 核心操作藏在「更多」二级菜单 */",
-      "good": ".fab{ position:fixed; right:16px; bottom:16px; border-radius:50%; }",
-      "tip": [
-        "FAB 只放一个最高频的核心操作",
-        "避开底部安全区（见安全区适配）",
-        "移动端尺寸 ≥56px 易点",
-        "可点击展开成多个子操作"
-      ],
-      "plat": {
-        "web": "fixed 定位右下角，注意不被内容遮挡",
-        "app": "RN 用 FAB 组件，自动处理安全区",
-        "mini": "fixed 浮层 + 安全区偏移"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:10px;color:#bbb'>核心操作藏在</div><div style='display:inline-block;margin-top:6px;padding:4px 10px;background:#f4f1ea;border-radius:6px;font-size:10px;color:#999'>更多 ▾</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'></div><div style='position:absolute;right:12px;bottom:14px;width:34px;height:34px;border-radius:50%;background:#C8442E;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center'>+</div></div>"
-    },
-    {
-      "id": "confirm-dialog",
-      "ch": 9,
-      "speak": "危险操作（删除、提交）一点就生效，没给反悔机会",
-      "cn": "确认对话框",
-      "en": "Confirm Dialog",
-      "anti": "删除等危险操作直接执行，误触没法挽回",
-      "fix": "危险操作前弹确认框，明确后果 + 取消/确认两个出口",
-      "bad": "onclick='delete()' /* 误触直接没 */",
-      "good": "if(confirm('确定删除？不可恢复')) delete();",
-      "tip": [
-        "危险操作必须二次确认",
-        "确认框写清「后果」而非只问确定吗",
-        "取消是默认高亮项，防误确认",
-        "别用原生 confirm 太丑，可自绘"
-      ],
-      "plat": {
-        "web": "自绘 modal + 焦点陷阱，Esc 取消",
-        "app": "AlertDialog 组件",
-        "mini": "showModal 确认框"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:10px;color:#C8442E'>已删除</div><div style='font-size:10px;color:#bbb;margin-top:6px'>误触，没了</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-overlay'><span>确定删除？</span><span style='font-size:9px;color:#ccc'>不可恢复</span><span style='display:flex;gap:8px'><b style='background:#fff;color:#333;padding:4px 12px;border-radius:6px'>取消</b><b style='background:#C8442E;padding:4px 12px;border-radius:6px'>删除</b></span></span></div></div>"
-    },
-    {
       "id": "action-sheet",
       "ch": 9,
       "speak": "一个触发点要展开好几个选项，用居中对话框显得很重",
@@ -313,30 +265,6 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#bbb'>ⓘ</div><div style='font-size:9px;color:#bbb;margin-top:6px'>只能看一行字</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#C8442E'>ⓘ</div><div style='position:absolute;left:30px;top:52px;background:#fff;border:1px solid #eee;border-radius:8px;padding:8px;width:120px;font-size:9px;color:#333'>可在此更换主题与语言<span style='color:#C8442E;display:block;margin-top:4px'>去设置 ›</span></div></div></div>"
-    },
-    {
-      "id": "scroll-reveal",
-      "ch": 10,
-      "speak": "页面往下滚的时候，内容一块块淡入或上滑出现，像很多官网那样",
-      "cn": "滚动入场动画",
-      "en": "Scroll Reveal / On-Scroll Animation",
-      "anti": "所有内容一上来全显示，页面平淡；或动画卡顿掉帧",
-      "fix": "元素进入视口时才触发淡入/上移动画，用 IntersectionObserver 监听",
-      "bad": "/* 全部静态，无层次感 */",
-      "good": "io=new IntersectionObserver(...); io.observe(el)",
-      "tip": [
-        "用 IntersectionObserver 而非 scroll 监听",
-        "只播一次，播过就停监听",
-        "尊重 reduce-motion 关闭动画",
-        "别让关键内容依赖动画才出现"
-      ],
-      "plat": {
-        "web": "IntersectionObserver + CSS transition",
-        "app": "FlatList onViewableItemsChanged",
-        "mini": "intersection-observer 或滚动计算"
-      },
-      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>产品介绍</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div style='font-size:9px;color:#bbb;margin-left:6px'>一上来全躺着，没节奏</div></div>",
-      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>产品介绍</div><div class='m-line' style='opacity:.4;transform:translateY(6px)'></div><div class='m-line' style='opacity:.7;transform:translateY(3px)'></div><div class='m-line'></div><div style='font-size:9px;color:#C8442E;margin-left:6px'>滚到才浮现 ✦</div></div>"
     },
     {
       "id": "parallax",
