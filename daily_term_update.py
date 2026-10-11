@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 """术语大全日更脚本（每日自动化调用）。
 流程：
-  1. 从 data/term_backlog.json 取前 N 条
+  1. 从 data/term_backlog.json 取前 N 条（档一：按章节轮转均衡覆盖）
   2. 追加进 data/terms.json 的 terms 数组（主术语库 = 术语大全）
   3. 重新生成静态站（python gen_vibecode.py -> dist/）
-  4. 复制到干净的部署目录，wrangler pages deploy 直传上线
+  4. 复制到干净的部署目录，wrangler pages deploy 直传上线（仅本地/手动部署用）
   5. 回写剩余 backlog
 用法：
-  python daily_term_update.py            # 默认取 2 条并部署
+  python daily_term_update.py                  # 默认取 3 条并部署
   python daily_term_update.py --count 3 --no-deploy   # 取 3 条只生成不部署
   python daily_term_update.py --dry            # 只打印将取哪些，不改文件
+档一升级：每天多条(--count) + 章节轮转均衡覆盖 + backlog 见底预警。
 """
 import argparse
 import json
@@ -129,8 +130,6 @@ def deploy_site(added_ids):
     ))
     env["MSYS_NO_PATHCONV"] = "1"
     # 关键：必须从 ROOT 运行部署，wrangler 才会把 ROOT/functions（含 [[path]].js 兜底路由）一并上传。
-    # 此前 cwd=deploy_dir 只传了静态资源，导致函数（含后台、兜底路由）一直没被更新，
-    # 旧部署里残留的 catch-all 才会对所有未知路径返回 200 首页。
     wcmd = _wrangler_cmd()
     print("[deploy] %s pages deploy %s (functions from ROOT)" % (" ".join(wcmd), deploy_dir))
     try:
@@ -150,9 +149,36 @@ def deploy_site(added_ids):
     print("[done] 已上线。新增术语：", ", ".join(added_ids) if added_ids else "(当前内容重新部署)")
 
 
+def _take_batch(cands, n, ch_counts):
+    """章节轮转选材：优先补覆盖最少的章节，保证 11 章均衡长大。"""
+    picked, used = [], set()
+    rest = list(cands)
+    while len(picked) < n:
+        by_ch = {}
+        for t in rest:
+            if t["id"] in used:
+                continue
+            by_ch.setdefault(t["ch"], []).append(t)
+        if not by_ch:
+            break
+        order = sorted(by_ch.keys(), key=lambda c: (ch_counts.get(c, 0), c))
+        took = False
+        for c in order:
+            if len(picked) >= n:
+                break
+            if by_ch[c]:
+                t = by_ch[c].pop(0)
+                picked.append(t)
+                used.add(t["id"])
+                took = True
+        if not took:
+            break
+    return picked
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--count", type=int, default=2)
+    ap.add_argument("--count", type=int, default=3)
     ap.add_argument("--no-deploy", action="store_true")
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--deploy-current", action="store_true",
@@ -173,19 +199,34 @@ def main():
     existing = set(t["id"] for t in terms["terms"])
     existing_cn = {t["cn"] for t in terms["terms"]}
 
-    batch = []
-    rest = list(bk["terms"])
-    for t in rest:
-        if len(batch) >= args.count:
-            break
-        if t["id"] in existing or t["cn"] in existing_cn:
-            continue  # 跳过已存在的（id 或 中文名），防重复
-        # 入库规则校验：不符合「选术语组件 / 大白话及效果 / 专业提示词效果可点击」的候选直接跳过
+    # 章节覆盖计数（用于均衡选材）
+    ch_counts = {}
+    for t in terms["terms"]:
+        ch = t.get("ch")
+        if isinstance(ch, int):
+            ch_counts[ch] = ch_counts.get(ch, 0) + 1
+
+    # 档一：backlog 见底预警
+    LOW_THRESHOLD = 7
+    backlog_n = len(bk.get("terms", []))
+    if backlog_n < LOW_THRESHOLD:
+        print("[warn] backlog 仅剩 %d 条（阈值 %d），建议尽快补料："
+              "配置 LLM_API_KEY 开启自动补料(refill_backlog.py)，或手动扩充 data/term_backlog.json。"
+              % (backlog_n, LOW_THRESHOLD))
+
+    # 预筛：去重 + 入库规则校验
+    candidates = []
+    for t in bk.get("terms", []):
+        if t.get("id") in existing or t.get("cn") in existing_cn:
+            continue
         ok, errs = validate_term(t)
         if not ok:
             print("  [跳过] %s 不符合入库规则：%s" % (t.get("id"), "；".join(errs)))
             continue
-        batch.append(t)
+        candidates.append(t)
+
+    # 章节轮转均衡选材
+    batch = _take_batch(candidates, args.count, ch_counts)
 
     if args.dry:
         print("[dry] 将新增 %d 条：" % len(batch))
@@ -194,7 +235,7 @@ def main():
         return
 
     if not batch:
-        print("[skip] backlog 为空或无可用新术语，今日无需更新。")
+        print("[skip] backlog 为空或无可用新术语（已符合规则且未重复），今日无需更新。")
         return
 
     # 追加进主术语库
@@ -203,9 +244,9 @@ def main():
         existing.add(t["id"])
     save(TERMS_JSON, terms)
 
-    # 回写剩余 backlog（去掉已用的）
+    # 回写剩余 backlog（去掉已用的；不合规/重复项保留以便后续处理）
     used = set(t["id"] for t in batch)
-    bk["terms"] = [t for t in rest if t["id"] not in used]
+    bk["terms"] = [t for t in bk.get("terms", []) if t["id"] not in used]
     save(BACKLOG_JSON, bk)
 
     print("[ok] 已追加 %d 条术语，主库现有 %d 条。" % (len(batch), len(terms["terms"])))
