@@ -3049,7 +3049,7 @@ PAGE_TMPL = """<!DOCTYPE html>
 <script type="application/ld+json">%(ld)s</script>
 </head>
 <body>
-<header class="site-hd"><div class="wrap"><a class="brand" href="/">码译 · VibeCode</a><nav class="topnav"><a href="/">全部术语</a><a href="/colors/index.html">AI 配色</a><a href="/icons/index.html">AI 图标库</a></nav></div></header>
+<header class="site-hd"><div class="wrap"><a class="brand" href="/">码译 · VibeCode</a><nav class="topnav"><a href="/">全部术语</a><a href="/colors/">AI 配色</a><a href="/icons/">AI 图标库</a></nav></div></header>
 <main class="wrap">
 %(body)s
 </main>
@@ -3079,7 +3079,7 @@ def _slug_unique(base, seen):
     seen.add(s); return s
 
 def _write_page(out, path, title, desc, body, ld, kw="", ogimg=""):
-    loc = "/" if path == "" else "/%s/index.html" % path
+    loc = "/" if path == "" else "/%s/" % path
     canon = SITE_BASE + loc
     html = PAGE_TMPL % {"title": esc(title), "desc": esc(desc), "canon": canon, "kw": esc(kw),
                         "ogimg": esc(ogimg),
@@ -3095,7 +3095,7 @@ def _index_body(by_ch, ch_slug, term_slug):
     for ci in CH_DISPLAY:
         terms = by_ch.get(ci, [])
         sample = "、".join(t["cn"] for t in terms[:4])
-        out.append('<a class="cat" href="/%s/index.html"><div class="cat-h">%s <span class="cnt">%d</span></div><div class="cat-sub">%s</div></a>' % (
+        out.append('<a class="cat" href="/%s/"><div class="cat-h">%s <span class="cnt">%d</span></div><div class="cat-sub">%s</div></a>' % (
             ch_slug[ci], esc(CHAPTERS[ci]), len(terms), esc(sample)))
     out.append('</section>')
     return "\n".join(out)
@@ -3114,7 +3114,7 @@ def _chapter_body(ci, terms, ch_slug, term_slug):
         out.append('</div>')
     out.append('<ul class="termlist">')
     for t in terms:
-        out.append('<li><a href="/%s/index.html"><b>%s</b><span class="en">%s</span></a><div class="one">%s</div></li>' % (
+        out.append('<li><a href="/%s/"><b>%s</b><span class="en">%s</span></a><div class="one">%s</div></li>' % (
             term_slug[t["id"]], esc(t["cn"]), esc(t["en"]), esc(t["speak"])))
     out.append('</ul>')
     return "\n".join(out)
@@ -3123,13 +3123,13 @@ def _term_body(t, ci, terms, idx, ch_slug, term_slug):
     out = []
     prev_t = terms[idx-1] if idx > 0 else None
     next_t = terms[idx+1] if idx < len(terms)-1 else None
-    out.append('<nav class="crumb"><a href="/">全部术语</a> / <a href="/%s/index.html">%s</a> / <span>%s</span></nav>' % (
+    out.append('<nav class="crumb"><a href="/">全部术语</a> / <a href="/%s/">%s</a> / <span>%s</span></nav>' % (
         ch_slug[ci], esc(CHAPTERS[ci]), esc(t["cn"])))
     out.append(term_card(t, interactive_footer=False))
     out.append('<nav class="pager">')
-    if prev_t: out.append('<a class="prev" href="/%s/index.html">← %s</a>' % (term_slug[prev_t["id"]], esc(prev_t["cn"])))
+    if prev_t: out.append('<a class="prev" href="/%s/">← %s</a>' % (term_slug[prev_t["id"]], esc(prev_t["cn"])))
     else: out.append('<span></span>')
-    if next_t: out.append('<a class="next" href="/%s/index.html">%s →</a>' % (term_slug[next_t["id"]], esc(next_t["cn"])))
+    if next_t: out.append('<a class="next" href="/%s/">%s →</a>' % (term_slug[next_t["id"]], esc(next_t["cn"])))
     else: out.append('<span></span>')
     out.append('</nav>')
     return "\n".join(out)
@@ -3479,8 +3479,8 @@ def _write_404(out):
         '<p>你访问的地址不存在，可能已被移动或从未存在。下面是几个常用入口：</p>'
         '<div class="nf-links">'
         '<a class="btn" href="/">回到首页 · 全部术语</a>'
-        '<a class="btn ghost" href="/colors/index.html">AI 配色方案库</a>'
-        '<a class="btn ghost" href="/icons/index.html">AI 图标库</a>'
+        '<a class="btn ghost" href="/colors/">AI 配色方案库</a>'
+        '<a class="btn ghost" href="/icons/">AI 图标库</a>'
         '</div>'
         '</section>'
     )
@@ -3543,7 +3543,7 @@ def export_static_dist(html):
     _write_page(out, "", "码译 · VibeCode · 前端组件术语图鉴（%d 条）" % len(T),
                 "用大白话找准前端组件术语，配前后效果对照与可复制提示词。", _index_body(by_ch, ch_slug, term_slug),
                 {"@context":"https://schema.org","@type":"ItemList","name":"码译 · VibeCode · 全部术语",
-                 "itemListElement":[{"@type":"ListItem","position":i+1,"url":"%s/%s/index.html"%(SITE_BASE,term_slug[t["id"]])} for i,t in enumerate(T)]})
+                 "itemListElement":[{"@type":"ListItem","position":i+1,"url":"%s/%s/"%(SITE_BASE,term_slug[t["id"]])} for i,t in enumerate(T)]})
     written += 1
     for ci in CH_DISPLAY:
         terms = by_ch.get(ci, [])
@@ -3551,7 +3551,7 @@ def export_static_dist(html):
                     "%s 分类下的前端术语与组件，共 %d 条。" % (CHAPTERS[ci], len(terms)),
                     _chapter_body(ci, terms, ch_slug, term_slug),
                     {"@context":"https://schema.org","@type":"CollectionPage","name":CHAPTERS[ci],
-                     "hasPart":[{"@type":"WebPage","name":t["cn"],"url":"%s/%s/index.html"%(SITE_BASE,term_slug[t["id"]])} for t in terms]})
+                     "hasPart":[{"@type":"WebPage","name":t["cn"],"url":"%s/%s/"%(SITE_BASE,term_slug[t["id"]])} for t in terms]})
         written += 1
     for ci in CH_DISPLAY:
         terms = by_ch.get(ci, [])
@@ -3601,11 +3601,11 @@ def export_static_dist(html):
         f.write(_og_svg)
     sm_urls = [("/", 1.0)]
     for ci in CH_DISPLAY:
-        sm_urls.append(("/%s/index.html" % ch_slug[ci], 0.6))
+        sm_urls.append(("/%s/" % ch_slug[ci], 0.6))
     for t in T:
-        sm_urls.append(("/%s/index.html" % term_slug[t["id"]], 0.8))
-    sm_urls.append(("/icons/index.html", 0.6))
-    sm_urls.append(("/colors/index.html", 0.6))
+        sm_urls.append(("/%s/" % term_slug[t["id"]], 0.8))
+    sm_urls.append(("/icons/", 0.6))
+    sm_urls.append(("/colors/", 0.6))
     sm = ['<?xml version="1.0" encoding="UTF-8"?>',
           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for u, p in sm_urls:
