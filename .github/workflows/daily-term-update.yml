@@ -5,8 +5,12 @@ name: 术语大全日更
 #
 # 部署机制（无令牌）：本项目已把 Cloudflare Pages 项目「连接 Git 仓库」，
 # 监听 main 分支的 push 自动执行 `python gen_vibecode.py` 构建并上线。
-# 因此本 workflow 只负责：追加术语 + 本地构建校验 + 把 data 提交回仓库，
+# 因此本 workflow 只负责：自动补料 + 追加术语 + 本地构建校验 + 把 data 提交回仓库，
 # 不再调用任何 Cloudflare API，无需 CLOUDFLARE_API_TOKEN。
+#
+# 升级（档一 + 档二）：
+#  - 档一：每天多条(--count 3) + 按章节轮转均衡覆盖 + backlog 见底预警。
+#  - 档二：backlog 低于阈值时，refill_backlog.py 调用 LLM 自动生成符合入库规则的新候选术语（需 Secrets: LLM_API_KEY）。
 
 on:
   schedule:
@@ -36,10 +40,21 @@ jobs:
         with:
           python-version: "3.13"
 
-      # 取候补词库中下一条「符合入库规则」的术语，追加进主库并本地构建 dist（仅校验，不部署）。
+      # 档二：backlog 低于阈值时自动调用 LLM 补料。无 LLM_API_KEY 时安全跳过。
+      # continue-on-error 保证即使补料失败也不影响后续日更主流程。
+      - name: Auto-refill backlog (LLM)
+        continue-on-error: true
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_BASE_URL }}
+          LLM_MODEL: ${{ secrets.LLM_MODEL }}
+          BACKLOG_TARGET: ${{ secrets.BACKLOG_TARGET }}
+        run: python refill_backlog.py
+
+      # 档一：取前 N 条「符合入库规则」的术语，章节轮转均衡覆盖，追加进主库并本地构建 dist（仅校验，不部署）。
       # 真正的部署由 Cloudflare Pages 连接 Git 后的自动构建完成，无需任何令牌。
       - name: Append next term & build
-        run: python daily_term_update.py --count 1 --no-deploy
+        run: python daily_term_update.py --count 3 --no-deploy
 
       # 把更新后的 data 文件提交回仓库，作为版本记录；
       # Cloudflare 监测到 main 分支的这次 push 后会自动重新构建并上线。
