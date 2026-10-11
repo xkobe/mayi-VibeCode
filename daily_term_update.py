@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 """术语大全日更脚本（每日自动化调用）。
 流程：
-  1. 从 data/term_backlog.json 取前 N 条（档一：按章节轮转均衡覆盖）
-  2. 追加进 data/terms.json 的 terms 数组（主术语库 = 术语大全）
-  3. 重新生成静态站（python gen_vibecode.py -> dist/）
-  4. 复制到干净的部署目录，wrangler pages deploy 直传上线（仅本地/手动部署用）
+  1. [档二] backlog 偏低时自动调用 refill_backlog.py 补料（需 LLM_API_KEY；无则安全跳过）
+  2. 从 data/term_backlog.json 取前 N 条（档一：按章节轮转均衡覆盖，N 取自 daily_config.json）
+  3. 追加进 data/terms.json 的 terms 数组（主术语库 = 术语大全）
+  4. 重新生成静态站（python gen_vibecode.py -> dist/）
   5. 回写剩余 backlog
 用法：
-  python daily_term_update.py                  # 默认取 3 条并部署
-  python daily_term_update.py --count 3 --no-deploy   # 取 3 条只生成不部署
+  python daily_term_update.py                  # 默认取 daily_config.json 的 count 条并部署
+  python daily_term_update.py --count 3 --no-deploy   # 显式取 3 条只生成不部署
   python daily_term_update.py --dry            # 只打印将取哪些，不改文件
-档一升级：每天多条(--count) + 章节轮转均衡覆盖 + backlog 见底预警。
+档一升级：每天多条(count 取自 daily_config.json) + 章节轮转均衡覆盖 + backlog 见底预警。
+档二升级：内置调用 refill_backlog.py 自动补料（密钥经 workflow env 注入；未注入则跳过）。
 """
 import argparse
 import json
@@ -24,11 +25,11 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(ROOT, "data")
 TERMS_JSON = os.path.join(DATA, "terms.json")
 BACKLOG_JSON = os.path.join(DATA, "term_backlog.json")
+CONFIG_JSON = os.path.join(ROOT, "daily_config.json")
 DIST = os.path.join(ROOT, "dist")
 
 def _python():
     # 本地 Windows 用受管运行时；CI / 其他平台用当前解释器(sys.executable)。
-    # 注意：GitHub Actions 跑在 Ubuntu 上，原写死的 Windows 路径不存在会直接 FileNotFoundError。
     managed = "C:/Users/小可爱/.workbuddy/binaries/python/versions/3.13.12/python.exe"
     if sys.platform.startswith("win") and os.path.exists(managed):
         return managed
@@ -49,6 +50,18 @@ def load(p):
 def save(p, obj):
     with open(p, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, indent=2)
+
+
+def load_config():
+    """读取 daily_config.json（普通仓库文件，无需改 workflow 即可调整日更参数）。"""
+    try:
+        with open(CONFIG_JSON, encoding="utf-8") as f:
+            cfg = json.load(f)
+        if isinstance(cfg, dict):
+            return cfg
+    except Exception:
+        pass
+    return {}
 
 
 # ===== 术语入库规则（每日自动任务遵循）=====
@@ -185,6 +198,27 @@ def main():
                     help="仅重新生成并部署当前 terms.json，不追加新术语")
     args = ap.parse_args()
 
+    # 档二：backlog 偏低时自动补料（需 LLM_API_KEY 经 workflow env 注入；无则安全跳过，不影响主流程）
+    try:
+        r = subprocess.run([_python(), "refill_backlog.py"], cwd=ROOT,
+                           capture_output=True, text=True, timeout=180)
+        if r.stdout:
+            for line in r.stdout.strip().splitlines():
+                if line.startswith("[refill]"):
+                    print(line)
+        if r.returncode != 0 and r.stderr:
+            print("[refill] 非零退出（不影响主流程）：", r.stderr.strip()[:200])
+    except Exception as e:
+        print("[refill] 调用异常（不影响主流程）：%s" % e)
+
+    # 档一：每天条数优先取 daily_config.json（无需改 workflow 即可调整）
+    cfg = load_config()
+    if cfg.get("count"):
+        try:
+            args.count = int(cfg["count"])
+        except Exception:
+            pass
+
     if args.deploy_current:
         print("[mode] 仅重新生成并部署当前 terms.json（不追加新术语）")
         build_site()
@@ -211,7 +245,7 @@ def main():
     backlog_n = len(bk.get("terms", []))
     if backlog_n < LOW_THRESHOLD:
         print("[warn] backlog 仅剩 %d 条（阈值 %d），建议尽快补料："
-              "配置 LLM_API_KEY 开启自动补料(refill_backlog.py)，或手动扩充 data/term_backlog.json。"
+              "在仓库 Secrets 配置 LLM_API_KEY 开启自动补料(refill_backlog.py)，或手动扩充 data/term_backlog.json。"
               % (backlog_n, LOW_THRESHOLD))
 
     # 预筛：去重 + 入库规则校验
