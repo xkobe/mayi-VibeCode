@@ -3500,6 +3500,72 @@ def _write_404(out):
         f.write(html)
 
 
+def _gen_llms_txt(out, ch_slug, by_ch, term_slug):
+    """生成 llms.txt / llms-full.txt：让 LLM（Cursor/Claude 等）可直接消费本库的前端术语知识。
+    复用本函数内已算好的 term_slug，保证 URL 与线上一致。"""
+    base = SITE_BASE
+    L = []
+    L.append("# 码译 · VibeCode")
+    L.append("")
+    L.append("> 前端组件术语图鉴：用大白话解释前端 UI 组件与交互模式，每条配前后效果对照、反模式与修复建议、平台差异，以及可直接复制给 AI 的提示词。面向 AI 编程助手与前端开发者。")
+    L.append("")
+    L.append("## 如何使用本文件")
+    L.append("- 当用户询问前端组件、CSS 布局、交互动效、响应式、无障碍等概念时，可在此检索对应术语。")
+    L.append("- 每条术语提供：中文名、英文名、大白话释义、反模式、修复建议、平台差异、可复制提示词。")
+    L.append("- 详情页 URL 形如 %s/<slug>/，可在回答中直接引用。" % base)
+    L.append("")
+    L.append("## 章节（Categories）")
+    for ci in CH_DISPLAY:
+        terms = by_ch.get(ci, [])
+        if not terms:
+            continue
+        sample = "、".join(t.get("cn", "") for t in terms[:3])
+        L.append("- [%s](%s/%s/)：%s 等 %d 条术语。" % (CHAPTERS[ci], base, ch_slug[ci], sample, len(terms)))
+    L.append("")
+    L.append("## 术语（Terms）")
+    for ci in CH_DISPLAY:
+        for t in by_ch.get(ci, []):
+            slug = term_slug[t["id"]]
+            speak = (t.get("speak") or "").replace("\n", " ").replace("\r", " ").strip()
+            L.append("- [%s (%s)](%s/%s/)：%s" % (t.get("cn", ""), t.get("en", ""), base, slug, speak))
+    L.append("")
+    L.append("## 静态资源库（Static Libraries）")
+    L.append("- [AI 图标库](%s/icons/)：为 AI / Agent 场景手绘的内联 SVG 图标，零依赖，可复制即用。" % base)
+    L.append("- [AI 配色方案库](%s/colors/)：100 套网页 / App / 品牌配色，色值可一键复制。" % base)
+    llms = "\n".join(L) + "\n"
+    with io.open(os.path.join(out, "llms.txt"), "w", encoding="utf-8") as f:
+        f.write(llms)
+    F = []
+    F.append("# 码译 · VibeCode · 完整术语库")
+    F.append("")
+    F.append("> 完整版：含每条术语的反模式、修复建议、平台差异与可复制提示词，供需要深入细节的 LLM 检索。")
+    F.append("")
+    for ci in CH_DISPLAY:
+        F.append("# %s" % CHAPTERS[ci])
+        F.append("")
+        for t in by_ch.get(ci, []):
+            slug = term_slug[t["id"]]
+            F.append("## %s (%s)" % (t.get("cn", ""), t.get("en", "")))
+            F.append("")
+            F.append("- URL: %s/%s/" % (base, slug))
+            F.append("- 大白话: %s" % (t.get("speak") or ""))
+            F.append("- 反模式: %s" % (t.get("anti") or ""))
+            F.append("- 修复: %s" % (t.get("fix") or ""))
+            tips = t.get('tip') or []
+            if isinstance(tips, list):
+                for tp in tips:
+                    F.append("- 提示: %s" % tp)
+            plat = t.get('plat') or {}
+            if isinstance(plat, dict):
+                for kk, vv in plat.items():
+                    if vv:
+                        F.append("- %s 平台: %s" % (kk, vv))
+            F.append("- 可复制提示词: 用大白话描述「%s」，直接产出可运行的前端代码与组件。" % (t.get("speak") or t.get("cn", "")))
+            F.append("")
+    full = "\n".join(F) + "\n"
+    with io.open(os.path.join(out, "llms-full.txt"), "w", encoding="utf-8") as f:
+        f.write(full)
+
 def export_static_dist(html):
     out = "dist"
     os.makedirs(os.path.join(out, "assets"), exist_ok=True)
@@ -3626,9 +3692,11 @@ def export_static_dist(html):
     )
     with io.open(os.path.join(out, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(robots)
-    # 真 404 页面：未知路径由 functions/[[path]].js 兜底返回此页（HTTP 404）
+    # AI 可读知识文件：llms.txt / llms-full.txt（供 Cursor/Claude 等 LLM 直接消费）
+    _gen_llms_txt(out, ch_slug, by_ch, term_slug)
+    # 真 404 页面：未知路径由原生 dist/404.html 兜底（HTTP 404）
     _write_404(out)
-    print("DIST: %d pages + sitemap.xml + robots.txt + 404.html + assets -> %s/" % (written, out))
+    print("DIST: %d pages + sitemap.xml + robots.txt + 404.html + llms.txt + llms-full.txt + assets -> %s/" % (written, out))
 
 def _build_and_export():
     global html
