@@ -2336,6 +2336,78 @@
       },
       "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>文章</div><div style='font-size:10px;color:#333;margin:4px 6px;line-height:1.2'>一段文字</div><div style='font-size:10px;color:#333;margin:18px 6px;line-height:1.2'>下一段忽近忽远</div></div>",
       "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>文章</div><div style='font-size:10px;color:#333;margin:6px 6px;line-height:1.6'>一段文字</div><div style='font-size:10px;color:#333;margin:18px 6px;line-height:1.6'>间距统一成倍数</div></div>"
+    },
+    {
+      "id": "drawer-panel",
+      "ch": 9,
+      "speak": "导航或筛选条件没地方放，堆在页面里占正文",
+      "cn": "侧边抽屉弹层",
+      "en": "Side Drawer Panel",
+      "anti": "菜单/筛选堆在正文区，挤占内容，层级混乱",
+      "fix": "从左侧/右侧滑出抽屉，平时收起，需要时拉出",
+      "bad": "/* 筛选条件常驻挤占正文 */",
+      "good": ".drawer{ position:fixed; left:0; transform:translateX(-100%); }",
+      "tip": [
+        "抽屉配半透明遮罩，点遮罩关闭",
+        "滑出方向按内容：筛选常右、导航常左",
+        "记得可手势/按钮关闭",
+        "抽屉内滚动独立，不带动页面"
+      ],
+      "plat": {
+        "web": "fixed 侧边 + transform 滑入 + 遮罩",
+        "app": "Drawer 导航组件",
+        "mini": "popup 抽屉方向 left/right"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>列表</div><div style='font-size:9px;color:#999;margin:6px 0'>筛选：价格 品牌 颜色 尺寸 分类</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-drawer'><span>全部</span><span class='on'>价格</span><span>品牌</span><span>颜色</span><span>尺寸</span></div><div style='position:absolute;inset:0;background:rgba(26,26,26,.25)'></div></div>"
+    },
+    {
+      "id": "icon-toggle",
+      "ch": 8,
+      "speak": "一个图标按钮要点一下在『开/关』两种状态之间切换，比如收藏、静音",
+      "cn": "图标开关按钮",
+      "en": "Icon Toggle Button",
+      "anti": "用两个不同图标堆在一起，状态切换时闪一下还容易点错",
+      "fix": "同一个图标按钮在 on/off 间切换，用填充/描边或颜色区分两态，加过渡",
+      "bad": "<button>☆</button><button>★</button> /* 两个按钮易混淆 */",
+      "good": "<button aria-pressed=false>☆</button> /* 切到 aria-pressed=true 变 ★ */",
+      "tip": [
+        "用 aria-pressed 表达两态，利于读屏",
+        "on 态用填充/主色，off 态用描边/灰",
+        "切换加轻量过渡动画",
+        "别只靠颜色，加形状差异"
+      ],
+      "plat": {
+        "web": "button + aria-pressed + CSS 切换样式",
+        "app": "ToggleButton / IconButton 两态",
+        "mini": "bindtap 切 data 状态换图标"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-bar'>歌单</div><div class='m-body'><div style='font-size:18px;color:#bbb'>☆ ☆</div><div style='font-size:9px;color:#bbb;margin-top:6px'>点哪个收藏？</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-bar'>歌单</div><div class='m-body'><div style='font-size:18px;color:#C8442E'>★</div><div style='font-size:9px;color:#999;margin-top:6px'>已收藏</div></div></div>"
+    },
+    {
+      "id": "parallax",
+      "ch": 10,
+      "speak": "背景图滚得慢、前景内容滚得快，做出层次感，比如头条 banner",
+      "cn": "视差滚动",
+      "en": "Parallax Scrolling",
+      "anti": "背景和前景用同一速度滚，毫无纵深，banner 很平",
+      "fix": "滚动时给背景层不同的位移速度，制造前后景深度差",
+      "bad": "bg 和 fg 都 translateY(scrollY) /* 一样快 */",
+      "good": "bg.style.transform='translateY('+scrollY*0.5+'px)'",
+      "tip": [
+        "背景位移速度慢于前景即可出层次",
+        "别用大图导致卡顿，注意性能",
+        "移动端谨慎使用，避免掉帧",
+        "尊重 reduce-motion 关闭"
+      ],
+      "plat": {
+        "web": "滚动监听 + 分层 transform",
+        "app": "奇偶层不同 scroll 速度",
+        "mini": "scroll-view 分层位移"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar' style='background:#bbb'>Banner</div><div class='m-line'></div><div class='m-line'></div><div style='font-size:9px;color:#bbb;margin-left:6px'>背景前景一起滚，很平</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar' style='background:#C8442E'>Banner</div><div class='m-line' style='background:#f3d9d2'></div><div class='m-line'></div><div style='font-size:9px;color:#C8442E;margin-left:6px'>背景慢滚·前景快 ✦</div></div>"
     }
   ]
 }
