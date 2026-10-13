@@ -2264,6 +2264,78 @@
       },
       "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>产品介绍</div><div class='m-line'></div><div class='m-line'></div><div class='m-line'></div><div style='font-size:9px;color:#bbb;margin-left:6px'>一上来全躺着，没节奏</div></div>",
       "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>产品介绍</div><div class='m-line' style='opacity:.4;transform:translateY(6px)'></div><div class='m-line' style='opacity:.7;transform:translateY(3px)'></div><div class='m-line'></div><div style='font-size:9px;color:#C8442E;margin-left:6px'>滚到才浮现 ✦</div></div>"
+    },
+    {
+      "id": "action-sheet",
+      "ch": 9,
+      "speak": "一个触发点要展开好几个选项，用居中对话框显得很重",
+      "cn": "底部弹窗（动作面板）",
+      "en": "Action Sheet / Bottom Sheet",
+      "anti": "多个选项用居中弹窗，移动端显得笨重、遮挡多",
+      "fix": "从底部滑出动作面板，列出选项 + 取消，符合移动端单手习惯",
+      "bad": "/* 居中弹窗塞一堆按钮，移动端笨重 */",
+      "good": ".sheet{ position:fixed; bottom:0; transform:translateY(0); }",
+      "tip": [
+        "移动端从底部滑出更符合单手操作",
+        "顶部留半透明遮罩",
+        "最下面是「取消」独立项",
+        "选项多时面板内可滚动"
+      ],
+      "plat": {
+        "web": "fixed 底部 + 遮罩，滑入动画",
+        "app": "BottomSheet 组件原生支持",
+        "mini": "半屏 popup 从底部弹出"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-overlay'><span style='background:#fff;color:#333;padding:8px 14px;border-radius:8px;margin:3px'>分享</span><span style='background:#fff;color:#333;padding:8px 14px;border-radius:8px;margin:3px'>收藏</span><span style='background:#fff;color:#333;padding:8px 14px;border-radius:8px;margin:3px'>举报</span></div></div>",
+      "vd_good": "<div class='m-phone'><div style='position:absolute;inset:0;background:rgba(26,26,26,.4)'></div><div style='position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:12px 12px 0 0;padding:10px'><div style='font-size:10px;color:#333;text-align:center;padding:6px'>分享</div><div style='font-size:10px;color:#333;text-align:center;padding:6px'>收藏</div><div style='font-size:10px;color:#C8442E;text-align:center;padding:6px;margin-top:4px'>取消</div></div></div>"
+    },
+    {
+      "id": "segmented-control",
+      "ch": 8,
+      "speak": "一排选项里只能选一个，但用一堆单选按钮太丑，想要那种 iOS 上面平滑切换的样式",
+      "cn": "分段控制器",
+      "en": "Segmented Control",
+      "anti": "用一堆 radio 各自画边框，选中态不清晰，切换没有滑动反馈",
+      "fix": "一组等宽按钮 + 一个会滑动的高亮背景表示当前选中项，选项 2~5 个最合适",
+      "bad": "<input type=radio>×3 各自描边 /* 看不出选中哪个 */",
+      "good": ".seg{display:flex} .seg .on{background:选中色} /* 加滑动高亮 */",
+      "tip": [
+        "选项 2~5 个最合适，过多改用手势/下拉",
+        "选中项用底色或滑块明确标示",
+        "可加滑动过渡动画提升手感",
+        "移动端点击区域 ≥44px"
+      ],
+      "plat": {
+        "web": "flex 横排 + 滑动高亮；ARIA 用 role=radiogroup",
+        "app": "iOS UISegmentedControl / RN SegmentedControl",
+        "mini": "自定义组件 + scroll-view 底部指示器"
+      },
+      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:flex;gap:4px'><span style='padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:10px'>日</span><span style='padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:10px'>周</span><span style='padding:4px 8px;border:1px solid #ddd;border-radius:6px;font-size:10px'>月</span></div><div style='font-size:9px;color:#bbb;margin-top:6px'>哪个选中了？</div></div></div>",
+      "vd_good": "<div class='m-phone'><div class='m-body'><div style='display:flex;background:#f1efe9;border-radius:8px;padding:3px'><span style='padding:4px 12px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>日</span><span style='padding:4px 12px;color:#666;font-size:10px'>周</span><span style='padding:4px 12px;color:#666;font-size:10px'>月</span></div></div></div>"
+    },
+    {
+      "id": "vertical-rhythm",
+      "ch": 2,
+      "speak": "正文段落之间的间距乱七八糟，有的挤有的松，想让它有统一节奏",
+      "cn": "垂直韵律",
+      "en": "Vertical Rhythm",
+      "anti": "每段 margin 随手写不同值，行距与段距没有倍数关系，看着乱",
+      "fix": "以行高为基准单位，段距/标题距都取它的整数倍，形成统一节奏",
+      "bad": "p{margin:13px} h2{margin:22px} /* 无规律 */",
+      "good": "p{margin-bottom:1.5rem} /* 行高倍数 */",
+      "tip": [
+        "先定基准行高（如 1.5）",
+        "段距/标题距取行高整数倍",
+        "用 rem 统一缩放",
+        "标题与正文留白拉开层级"
+      ],
+      "plat": {
+        "web": "CSS 变量定基线 + rem 倍数",
+        "app": "主题定 spacing 倍数",
+        "mini": "rpx 倍数统一间距"
+      },
+      "vd_bad": "<div class='m-phone m-scroll'><div class='m-bar'>文章</div><div style='font-size:10px;color:#333;margin:4px 6px;line-height:1.2'>一段文字</div><div style='font-size:10px;color:#333;margin:18px 6px;line-height:1.2'>下一段忽近忽远</div></div>",
+      "vd_good": "<div class='m-phone m-scroll'><div class='m-bar'>文章</div><div style='font-size:10px;color:#333;margin:6px 6px;line-height:1.6'>一段文字</div><div style='font-size:10px;color:#333;margin:18px 6px;line-height:1.6'>间距统一成倍数</div></div>"
     }
   ]
 }
