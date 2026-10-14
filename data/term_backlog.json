@@ -3,30 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "tooltip",
-      "ch": 9,
-      "speak": "图标或缩写不知道啥意思，hover 也没说明，只能猜",
-      "cn": "文字气泡提示",
-      "en": "Tooltip",
-      "anti": "图标/缩写无说明，用户不敢点，靠猜",
-      "fix": "悬停/长按图标给出气泡说明，移开即消失",
-      "bad": "<button>ⓘ</button> /* 不知啥意思 */",
-      "good": "<button aria-label='帮助' title='查看使用说明'>ⓘ</button>",
-      "tip": [
-        "Tooltip 是解释而非替代标签",
-        "移动端用长按/点击触发（无 hover）",
-        "气泡别挡住操作元素",
-        "内容要短，一句说清"
-      ],
-      "plat": {
-        "web": "title 属性最简单，复杂用自绘气泡",
-        "app": "Tooltip 组件 onPress 长按触发",
-        "mini": "长按弹出气泡"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-bar'>工具栏</div><div class='m-body'><div style='font-size:18px;color:#bbb'>ⓘ ? ★</div><div style='font-size:10px;color:#bbb;margin-top:8px'>啥意思？只能猜</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-bar'>工具栏</div><div class='m-body'><div style='font-size:18px;color:#C8442E'>ⓘ</div><div style='position:absolute;top:46px;left:18px;background:#1F6FB2;color:#fff;font-size:9px;padding:5px 8px;border-radius:6px'>查看使用说明</div></div></div>"
-    },
-    {
       "id": "speed-dial",
       "ch": 8,
       "speak": "一个加号按钮点开后要冒出好几个子操作（发图文、发视频、发直播）",
@@ -171,30 +147,6 @@
       "vd_good": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#C8442E'>ⓘ</div><div style='position:absolute;left:30px;top:52px;background:#fff;border:1px solid #eee;border-radius:8px;padding:8px;width:120px;font-size:9px;color:#333'>可在此更换主题与语言<span style='color:#C8442E;display:block;margin-top:4px'>去设置 ›</span></div></div></div>"
     },
     {
-      "id": "text-balance",
-      "ch": 2,
-      "speak": "大标题最后一行只剩一个字孤零零挂着，想让它左右更匀称",
-      "cn": "标题均衡断行",
-      "en": "Text Balance / Balanced Wrapping",
-      "anti": "标题最后一行只剩一个字，视觉失衡，像没排完",
-      "fix": "用 text-wrap:balance 让多行标题自动均衡断行，避免孤字",
-      "bad": "h1{ /* 末行孤字 */ }",
-      "good": "h1{ text-wrap:balance; }",
-      "tip": [
-        "标题用 text-wrap:balance 均衡断行",
-        "长段落用 text-wrap:pretty 防孤字",
-        "不支持的浏览器优雅降级",
-        "配合 max-width 控制行宽"
-      ],
-      "plat": {
-        "web": "CSS text-wrap:balance（较新浏览器）",
-        "app": "手动控制文案行数",
-        "mini": "按字数手动换行"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:15px;font-weight:700;line-height:1.2'>如何三天搞定<br>上线</div><div style='font-size:9px;color:#bbb;margin-top:6px'>末行孤字『线』</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'><div style='font-size:15px;font-weight:700;line-height:1.25'>如何三天<br>搞定上线</div><div style='font-size:9px;color:#C8442E;margin-top:6px'>均衡断行 ✦</div></div></div>"
-    },
-    {
       "id": "focus-trap",
       "ch": 6,
       "speak": "弹窗打开后，用 Tab 键焦点却跑到了后面页面去了，关不掉也点不到",
@@ -217,30 +169,6 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-overlay'><span>弹窗</span></div><div style='font-size:9px;color:#bbb;margin:6px'>Tab 焦点跑到遮罩外了</div></div>",
       "vd_good": "<div class='m-phone'><div class='m-overlay'><span>弹窗</span><span style='font-size:9px;color:#C8442E;display:block;margin-top:6px'>Tab 只在层内循环 ✦</span></span></div>"
-    },
-    {
-      "id": "sticky-sidebar",
-      "ch": 3,
-      "speak": "右边栏（目录/广告）想跟着滚，但只在该栏比内容短时吸住，别留一大块空白",
-      "cn": "粘性侧栏",
-      "en": "Sticky Sidebar",
-      "anti": "用 fixed 钉死侧栏，内容短时下方留大片空白，或长时提前滚走",
-      "fix": "侧栏用 sticky，top 设为吸顶偏移，仅在自身高度小于视口时生效",
-      "bad": ".side{position:fixed;top:0} /* 内容短留白 */",
-      "good": ".side{position:sticky;top:16px} /* 不足则随滚 */",
-      "tip": [
-        "sticky 比 fixed 更不易留白",
-        "top 设吸顶安全偏移",
-        "侧栏高于视口时自然滚动",
-        "父容器不可 overflow:hidden"
-      ],
-      "plat": {
-        "web": "position:sticky + top",
-        "app": "滚动时切换吸顶态",
-        "mini": "scroll-view 计算吸顶"
-      },
-      "vd_bad": "<div class='m-phone m-scroll'><div class='m-row'><div class='m-side' style='position:fixed'>目录</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div><div style='font-size:9px;color:#bbb;margin:6px'>短内容留大片空白</div></div>",
-      "vd_good": "<div class='m-phone m-scroll'><div class='m-row'><div class='m-side' style='position:sticky;top:8px;align-self:flex-start'>目录</div><div class='m-body'><div class='m-line'></div><div class='m-line'></div></div></div><div style='font-size:9px;color:#C8442E;margin:6px'>随滚吸顶不空白 ✦</div></div>"
     },
     {
       "id": "container-query",
