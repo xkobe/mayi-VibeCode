@@ -3,30 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "speed-dial",
-      "ch": 8,
-      "speak": "一个加号按钮点开后要冒出好几个子操作（发图文、发视频、发直播）",
-      "cn": "悬浮扩展按钮",
-      "en": "Speed Dial / Expanding FAB",
-      "anti": "把五六个主按钮平铺在页面，挤占空间还抢视觉重心",
-      "fix": "一个 FAB 点击后径向/纵向展开多个子操作，再点收起",
-      "bad": "/* 五个加号按钮并排，谁也不突出 */",
-      "good": ".fab-menu.open .item{ transform:scale(1); } /* 展开子项 */",
-      "tip": [
-        "FAB 收起态只露一个主按钮",
-        "展开子项用缩放/位移动画",
-        "点遮罩或主按钮收起",
-        "子项数量别超过 6 个"
-      ],
-      "plat": {
-        "web": "fixed FAB + 子项 absolute 展开 + 遮罩",
-        "app": "FloatingActionButton 展开子 FAB",
-        "mini": "fixed 浮层 + 子项列表动画"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:flex;gap:4px'><span style='width:26px;height:26px;border-radius:50%;background:#eee;font-size:14px;color:#999;display:flex;align-items:center;justify-content:center'>+</span><span style='width:26px;height:26px;border-radius:50%;background:#eee;font-size:14px;color:#999;display:flex;align-items:center;justify-content:center'>+</span><span style='width:26px;height:26px;border-radius:50%;background:#eee;font-size:14px;color:#999;display:flex;align-items:center;justify-content:center'>+</span></div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'><div style='position:absolute;right:12px;bottom:48px;display:flex;flex-direction:column;gap:6px;align-items:flex-end'><span style='width:26px;height:26px;border-radius:50%;background:#C8442E;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center'>📷</span><span style='width:26px;height:26px;border-radius:50%;background:#C8442E;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center'>🎬</span></div><div style='position:absolute;right:12px;bottom:14px;width:34px;height:34px;border-radius:50%;background:#C8442E;color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center'>+</div></div></div>"
-    },
-    {
       "id": "split-button",
       "ch": 8,
       "speak": "一个主操作按钮旁边要带个小箭头，点箭头展开『另存为/导出』等次要操作",
@@ -145,54 +121,6 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#bbb'>ⓘ</div><div style='font-size:9px;color:#bbb;margin-top:6px'>只能看一行字</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#C8442E'>ⓘ</div><div style='position:absolute;left:30px;top:52px;background:#fff;border:1px solid #eee;border-radius:8px;padding:8px;width:120px;font-size:9px;color:#333'>可在此更换主题与语言<span style='color:#C8442E;display:block;margin-top:4px'>去设置 ›</span></div></div></div>"
-    },
-    {
-      "id": "focus-trap",
-      "ch": 6,
-      "speak": "弹窗打开后，用 Tab 键焦点却跑到了后面页面去了，关不掉也点不到",
-      "cn": "焦点陷阱",
-      "en": "Focus Trap",
-      "anti": "弹窗打开后 Tab 焦点能跑到遮罩后的页面元素，键盘用户被困住",
-      "fix": "弹窗内循环 Tab 焦点，只在该层内移动，关闭后焦点回到触发元素",
-      "bad": "/* 弹窗无焦点管理，Tab 跑出去 */",
-      "good": "捕获 Tab，首尾环绕；关闭时 focus 回触发按钮",
-      "tip": [
-        "弹窗内首个可聚焦元素自动聚焦",
-        "Tab/Shift+Tab 在层内循环",
-        "Esc 关闭并归还焦点",
-        "关闭后焦点回到原触发元素"
-      ],
-      "plat": {
-        "web": "监听 keydown Tab 控制焦点范围",
-        "app": "模态自动接管焦点",
-        "mini": "弹层内 focus 管理"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-overlay'><span>弹窗</span></div><div style='font-size:9px;color:#bbb;margin:6px'>Tab 焦点跑到遮罩外了</div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-overlay'><span>弹窗</span><span style='font-size:9px;color:#C8442E;display:block;margin-top:6px'>Tab 只在层内循环 ✦</span></span></div>"
-    },
-    {
-      "id": "container-query",
-      "ch": 5,
-      "speak": "一个卡片在宽屏放三列、窄屏放一列，但想按『卡片自身宽度』而不是屏幕宽度来变",
-      "cn": "容器查询",
-      "en": "Container Query",
-      "anti": "只用媒体查询按屏幕宽度改样式，组件放到不同容器里就错位",
-      "fix": "用 container-type 让组件按自身容器宽度响应，组件到处复用都正确",
-      "bad": "@media(max-width:600px){ .card{...} } /* 只看屏幕 */",
-      "good": ".card{container-type:inline-size} @container(max-width:300px){...}",
-      "tip": [
-        "组件级响应式优先用容器查询",
-        "container-type:inline-size 才生效",
-        "老浏览器用媒体查询兜底",
-        "组件更易跨处复用"
-      ],
-      "plat": {
-        "web": "CSS container queries（新浏览器）",
-        "app": "按父宽传样式",
-        "mini": "按容器宽度条件渲染"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:9px;color:#bbb'>同样的卡片塞进侧栏就挤爆</div><div style='border:1px solid #ddd;border-radius:6px;padding:4px;font-size:9px'>三列布局在窄容器溢出</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'><div style='font-size:9px;color:#C8442E'>按自身宽度自适应 ✦</div><div style='border:1px solid #C8442E;border-radius:6px;padding:4px;font-size:9px'>窄容器自动变单列</div></div></div>"
     }
   ]
 }
