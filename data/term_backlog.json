@@ -3,30 +3,6 @@
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
   "terms": [
     {
-      "id": "split-button",
-      "ch": 8,
-      "speak": "一个主操作按钮旁边要带个小箭头，点箭头展开『另存为/导出』等次要操作",
-      "cn": "拆分按钮",
-      "en": "Split Button",
-      "anti": "主操作和次要操作各做一个按钮并排，主次不分、占地大",
-      "fix": "左侧是主操作，右侧小箭头展开次要操作菜单，主操作一眼可见",
-      "bad": "<button>保存</button><button>▾</button> /* 两个平级按钮 */",
-      "good": ".split>.main{...} .split>.caret{popover 次要项}",
-      "tip": [
-        "主操作点左半边直接执行",
-        "右半边箭头展开次要项",
-        "次要项用菜单而非再开页",
-        "键盘可聚焦两个分区"
-      ],
-      "plat": {
-        "web": "主按钮 + caret 触发 menu 浮层",
-        "app": "SplitButton 组件",
-        "mini": "主按钮 + 展开 action-sheet"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='display:flex;gap:6px'><span style='padding:6px 14px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>保存</span><span style='padding:6px 10px;background:#eee;color:#666;border-radius:6px;font-size:10px'>导出</span></div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'><div style='display:inline-flex;align-items:stretch;border-radius:6px;overflow:hidden'><span style='padding:6px 14px;background:#C8442E;color:#fff;font-size:10px'>保存</span><span style='padding:6px 8px;background:#a8361f;color:#fff;font-size:10px'>▾</span></div><div style='position:absolute;right:14px;top:40px;background:#fff;border:1px solid #eee;border-radius:6px;font-size:9px;color:#333;padding:4px 10px'>另存为…</div></div></div>"
-    },
-    {
       "id": "ripple",
       "ch": 8,
       "speak": "点按钮的时候想要那种水波纹从手指位置扩散开的效果，像 Material Design",
@@ -49,54 +25,6 @@
       },
       "vd_bad": "<div class='m-phone'><div class='m-body'><div style='padding:8px 18px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>点我</div><div style='font-size:9px;color:#bbb;margin-top:8px'>点了没反应…</div></div></div>",
       "vd_good": "<div class='m-phone'><div class='m-body'><div style='position:relative;overflow:hidden;padding:8px 18px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>点我<span style='position:absolute;left:14px;top:6px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6)'></span></div></div></div>"
-    },
-    {
-      "id": "prompt-dialog",
-      "ch": 9,
-      "speak": "点一个按钮要弹个框让用户填点东西再确定，比如改名字、输密码",
-      "cn": "输入对话框",
-      "en": "Prompt / Input Dialog",
-      "anti": "用原生 prompt() 太丑且不能校验，或用空白弹窗忘了放输入框",
-      "fix": "对话框内嵌一个输入框 + 取消/确定，确定前做必填与格式校验",
-      "bad": "prompt('输入名字') /* 原生丑、无法校验 */",
-      "good": "<dialog><input><menu>取消 确定</menu></dialog>",
-      "tip": [
-        "弹窗内嵌输入框并自动聚焦",
-        "确定前做必填/格式校验",
-        "Esc 或点遮罩取消",
-        "移动端弹窗输入框避免被键盘遮挡"
-      ],
-      "plat": {
-        "web": "自绘 modal + 输入框 + 焦点陷阱",
-        "app": "AlertDialog 带 EditText",
-        "mini": "showModal + input 组件"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-overlay'><span>确定？</span><span style='display:flex;gap:8px'><b style='background:#C8442E;padding:4px 12px;border-radius:6px'>确定</b></span></span></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-overlay'><span style='font-size:10px'>修改昵称</span><input style='width:80%;padding:5px;border:1px solid #ccc;border-radius:6px;font-size:10px;margin-top:4px' placeholder='输入新昵称'><span style='display:flex;gap:8px;margin-top:6px'><b style='background:#fff;color:#333;padding:4px 12px;border-radius:6px'>取消</b><b style='background:#C8442E;padding:4px 12px;border-radius:6px'>保存</b></span></span></div></div>"
-    },
-    {
-      "id": "loading-overlay",
-      "ch": 9,
-      "speak": "提交表单或加载大页面时，想盖一层半透明遮罩加转圈，防止用户乱点",
-      "cn": "全屏加载遮罩",
-      "en": "Loading Overlay / Spinner Mask",
-      "anti": "只在角落放个小转圈，用户仍点得到下面的按钮导致重复提交",
-      "fix": "半透明遮罩盖住整屏 + 居中转圈，拦截点击直到完成",
-      "bad": "/* 右下角小 spinner，底下按钮还能点 */",
-      "good": ".mask{position:fixed;inset:0;background:rgba(0,0,0,.35)}",
-      "tip": [
-        "遮罩拦截点击，防重复提交",
-        "转圈居中并加文字说明",
-        "完成后淡出而非瞬间消失",
-        "可设最短展示时长避免闪烁"
-      ],
-      "plat": {
-        "web": "fixed 全屏遮罩 + spinner",
-        "app": "ProgressDialog / 加载态组件",
-        "mini": "wx.showLoading 全屏遮罩"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='font-size:10px;color:#333'>提交中…</div><div style='position:absolute;right:14px;bottom:14px;width:18px;height:18px;border:2px solid #ccc;border-top-color:#C8442E;border-radius:50%'></div><div style='font-size:9px;color:#bbb;margin-top:6px'>下面的按钮还能点</div></div></div>",
-      "vd_good": "<div class='m-phone'><div style='position:absolute;inset:0;background:rgba(26,26,26,.4);display:flex;flex-direction:column;align-items:center;justify-content:center'><div style='width:22px;height:22px;border:2px solid #fff;border-top-color:transparent;border-radius:50%'></div><div style='font-size:9px;color:#fff;margin-top:6px'>提交中…</div></div></div>"
     },
     {
       "id": "popover",
