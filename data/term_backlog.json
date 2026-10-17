@@ -1,54 +1,5 @@
 {
   "source": "码译·VibeCode 术语大全日更 backlog",
   "note": "每日自动化从中取若干条追加进 terms.json 后重建部署",
-  "terms": [
-    {
-      "id": "ripple",
-      "ch": 8,
-      "speak": "点按钮的时候想要那种水波纹从手指位置扩散开的效果，像 Material Design",
-      "cn": "点击水波纹",
-      "en": "Ripple Effect",
-      "anti": "只有 hover 变色，点击没有位置相关的反馈，显得『死』",
-      "fix": "点击处生成一个从圆心扩散并淡出的圆形波纹，位置跟随点击点",
-      "bad": "button:hover{ background:#ddd; } /* 无点击反馈 */",
-      "good": ".ripple{position:relative;overflow:hidden} .ripple::after{animation:ripple .6s}",
-      "tip": [
-        "波纹起点用 event.offset 定位",
-        "动画结束自动移除 DOM 节点",
-        "别在禁用按钮上触发",
-        "尊重 reduce-motion 关掉动画"
-      ],
-      "plat": {
-        "web": "伪元素 + transform scale 动画",
-        "app": "RippleDrawable / 组件内置",
-        "mini": "bindtouchstart 生成扩散圆"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-body'><div style='padding:8px 18px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>点我</div><div style='font-size:9px;color:#bbb;margin-top:8px'>点了没反应…</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-body'><div style='position:relative;overflow:hidden;padding:8px 18px;background:#C8442E;color:#fff;border-radius:6px;font-size:10px'>点我<span style='position:absolute;left:14px;top:6px;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6)'></span></div></div></div>"
-    },
-    {
-      "id": "popover",
-      "ch": 9,
-      "speak": "点一个信息图标想弹一个小卡片，里面能放文字也能放按钮，不是纯提示",
-      "cn": "气泡卡片",
-      "en": "Popover",
-      "anti": "用 tooltip 只能放一行文字，想放操作按钮放不下",
-      "fix": "点触发元素弹一个小卡片浮层，可含文字、链接、按钮，带小箭头指向来源",
-      "bad": "title='说明' /* 只能纯文字，无交互 */",
-      "good": ".pop{position:absolute;小卡片;带箭头;点击外部关闭}",
-      "tip": [
-        "Popover 可含交互，Tooltip 只解释",
-        "带小箭头指向触发元素",
-        "点外部/ Esc 关闭",
-        "移动端可降级为底部弹层"
-      ],
-      "plat": {
-        "web": "absolute 小卡片 + 箭头 + 外部点击关闭",
-        "app": "Popover 组件",
-        "mini": "popup 气泡 + 箭头"
-      },
-      "vd_bad": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#bbb'>ⓘ</div><div style='font-size:9px;color:#bbb;margin-top:6px'>只能看一行字</div></div></div>",
-      "vd_good": "<div class='m-phone'><div class='m-bar'>设置</div><div class='m-body'><div style='font-size:16px;color:#C8442E'>ⓘ</div><div style='position:absolute;left:30px;top:52px;background:#fff;border:1px solid #eee;border-radius:8px;padding:8px;width:120px;font-size:9px;color:#333'>可在此更换主题与语言<span style='color:#C8442E;display:block;margin-top:4px'>去设置 ›</span></div></div></div>"
-    }
-  ]
+  "terms": []
 }
